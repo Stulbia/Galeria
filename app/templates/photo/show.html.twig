@@ -17,7 +17,7 @@
             <dt>{{ 'label.title'|trans }}</dt>
             <dd>{{  photo.title }}</dd>
             <dt>{{ 'label.gallery'|trans }}</dt>
-            <dd>{{  photo.gallery.title }}</dd>
+            <dd><a href="{{ url('gallery_show', {id: photo.gallery.id}) }}" title="{{ 'action.show'|trans }}"> {{  photo.gallery.title }}</dd>
         </dl>
         <p>
             <a href="{{ url('photo_index') }}" title="{{ 'action.back_to_list'|trans }}">

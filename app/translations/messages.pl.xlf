@@ -10,6 +10,10 @@
                 <source>action.show</source>
                 <target>Szczegóły</target>
             </trans-unit>
+            <trans-unit id="action.back_to_list">
+                            <source>action.back_to_list</source>
+                            <target>Widok Listy</target>
+                        </trans-unit>
             <trans-unit id="action.edit">
                 <source>action.edit</source>
                 <target>Edytuj</target>
@@ -47,6 +51,10 @@
                 <source>label.tags</source>
                 <target>Tagi</target>
             </trans-unit>
+               <trans-unit id="label.gallery">
+                            <source>label.gallery</source>
+                            <target>Galeria</target>
+                        </trans-unit>
             <trans-unit id="message.empty_list">
                 <source>message.empty_list</source>
                 <target>Lista jest pusta.</target>
@@ -59,6 +67,10 @@
                 <source>title.gallery_list</source>
                 <target>Galeria Zdjęć</target>
             </trans-unit>
+            <trans-unit id="title.photo_list">
+                            <source>title.photo_list</source>
+                            <target>Zdjęcia</target>
+                        </trans-unit>
             <trans-unit id="title.gallery_view">
                 <source>title.gallery_view</source>
                 <target>Widok #%id%</target>

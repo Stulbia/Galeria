@@ -39,12 +39,12 @@ class PhotoController extends AbstractController
      *
      * @return Response HTTP response
      */
-    #[Route(name: 'Photo_index', methods: 'GET')]
+    #[Route(name: 'photo_index', methods: 'GET')]
     public function index(#[MapQueryParameter] int $page = 1): Response
     {
         $pagination = $this->photoService->getPaginatedList($page);
 
-        return $this->render('Photo/index.html.twig', ['pagination' => $pagination]);
+        return $this->render('photo/index.html.twig', ['pagination' => $pagination]);
     }
 
 /**
@@ -57,7 +57,7 @@ class PhotoController extends AbstractController
 #[Route('/{id}', name: 'photo_show', requirements: ['id' => '[1-9]\d*'], methods: 'GET')]
     public function show(Photo $photo): Response
 {
-    return $this->render('Photo/show.html.twig', ['Photo' => $photo]);
+    return $this->render('photo/show.html.twig', ['photo' => $photo]);
 }
 
     /**
@@ -74,7 +74,7 @@ class PhotoController extends AbstractController
     $form = $this->createForm(
         PhotoType::class,
         $photo,
-        ['action' => $this->generateUrl('Photo_create')]
+        ['action' => $this->generateUrl('photo_create')]
     );
     $form->handleRequest($request);
 
@@ -89,7 +89,7 @@ class PhotoController extends AbstractController
         return $this->redirectToRoute('photo_index');
     }
 
-    return $this->render('Photo/create.html.twig',  ['form' => $form->createView()]);
+    return $this->render('photo/create.html.twig',  ['form' => $form->createView()]);
 }
 
     /**
@@ -108,8 +108,8 @@ class PhotoController extends AbstractController
         $photo,
         [
             'method' => 'PUT',
-            'action' => $this->generateUrl('Photo_edit', ['id' => $photo->getId()]),
-        ]
+            'action' => $this->generateUrl('photo_edit', ['id' => $photo->getId()]),]
+
     );
     $form->handleRequest($request);
 
@@ -125,10 +125,10 @@ class PhotoController extends AbstractController
     }
 
     return $this->render(
-        'Photo/edit.html.twig',
+        'photo/edit.html.twig',
         [
             'form' => $form->createView(),
-            'Photo' => $photo,
+            'photo' => $photo,
         ]
     );
 }
@@ -149,7 +149,7 @@ class PhotoController extends AbstractController
         $photo,
         [
             'method' => 'DELETE',
-            'action' => $this->generateUrl('Photo_delete', ['id' => $photo->getId()]),
+            'action' => $this->generateUrl('photo_delete', ['id' => $photo->getId()]),
         ]
     );
     $form->handleRequest($request);
@@ -166,10 +166,10 @@ class PhotoController extends AbstractController
     }
 
     return $this->render(
-        'Photo/delete.html.twig',
+        'photo/delete.html.twig',
         [
             'form' => $form->createView(),
-            'Photo' => $photo,
+            'photo' => $photo,
         ]
     );
 }
