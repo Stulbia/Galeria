@@ -94,7 +94,23 @@ class PhotoRepository extends ServiceEntityRepository
         return $qb;
     }
 
-
+    /**
+     * Select photos by Tags.
+     *
+     * @param Gallery $gallery Gallery
+     *
+     * @return QueryBuilder Query builder
+     *
+     * @throws NoResultException
+     */
+    public function findByTag($tag):QueryBuilder
+    {
+        return $this->createQueryBuilder('photo')
+            ->select('partial photo.{id, createdAt, updatedAt, title}')
+            ->join('photo.tags', 'tag')
+            ->where('tag.id = :tag')
+            ->setParameter('tag', $tag);
+    }
 
     /**
      * Save entity.
