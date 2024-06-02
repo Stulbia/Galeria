@@ -5,6 +5,7 @@
 
 namespace App\Service;
 
+use App\Entity\Gallery;
 use App\Entity\Photo;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 
@@ -21,6 +22,7 @@ interface PhotoServiceInterface
      * @return PaginationInterface<string, mixed> Paginated list
      */
     public function getPaginatedList(int $page): PaginationInterface;
+    public function findByGallery(Gallery $gallery, int $page): PaginationInterface;
 
     /**
      * Save entity.

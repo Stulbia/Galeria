@@ -8,6 +8,7 @@ namespace App\Controller;
 use App\Entity\Gallery;
 use App\Form\Type\GalleryType;
 use App\Service\GalleryServiceInterface;
+use App\Service\PhotoServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,7 +29,7 @@ class GalleryController extends AbstractController
 * @param GalleryServiceInterface $galleryService Photo service
 * @param TranslatorInterface      $translator  Translator
 */
-public function __construct(private readonly GalleryServiceInterface $galleryService, private readonly TranslatorInterface $translator)
+public function __construct(private readonly PhotoServiceInterface $photoService, private readonly GalleryServiceInterface $galleryService, private readonly TranslatorInterface $translator)
 {
 //        $this->galleryService = $photoService;
     }
@@ -100,9 +101,11 @@ public function __construct(private readonly GalleryServiceInterface $gallerySer
         requirements: ['id' => '[1-9]\d*'],
         methods: 'GET'
     )]
-    public function show(Gallery $gallery): Response
+    public function show(Gallery $gallery, #[MapQueryParameter] int $page = 1): Response
     {
-        return $this->render('gallery/show.html.twig', ['gallery' => $gallery]);
+        $pagination = $this->photoService->findByGallery($gallery,$page);
+        return $this->render('gallery/show.html.twig', ['gallery' => $gallery,'pagination' => $pagination]);
+
     }
 
     // ...

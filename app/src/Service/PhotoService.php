@@ -5,6 +5,7 @@
 
 namespace App\Service;
 
+use App\Entity\Gallery;
 use App\Entity\Photo;
 use App\Repository\PhotoRepository;
 use Knp\Component\Pager\Pagination\PaginationInterface;
@@ -70,6 +71,16 @@ class PhotoService implements PhotoServiceInterface
     public function delete(Photo $photo): void
     {
         $this->photoRepository->delete($photo);
+    }
+
+    public function findByGallery(Gallery $gallery, int $page): PaginationInterface
+    {
+        return $this->paginator->paginate(
+            $this->photoRepository->findByGallery($gallery),
+            $page,
+            self::PAGINATOR_ITEMS_PER_PAGE
+        );
+
     }
 
 }

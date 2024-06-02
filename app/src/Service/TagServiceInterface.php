@@ -34,4 +34,17 @@ interface TagServiceInterface
      */
     public function canBeDeleted(Tag $tag): bool;
 
+
+// ...
+
+    /**
+     * Find by title.
+     *
+     * @param string $title Tag title
+     *
+     * @return Tag|null Tag entity
+     */
+    public function findOneByTitle(string $title): ?Tag;
+// ...
+
 }

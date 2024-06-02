@@ -76,6 +76,27 @@ class PhotoRepository extends ServiceEntityRepository
     }
 
     /**
+     * Select photos from gallery.
+     *
+     * @param Gallery $gallery Gallery
+     *
+     * @return QueryBuilder Query builder
+     *
+     * @throws NoResultException
+     */
+    public function findByGallery($gallery):QueryBuilder
+    {
+        $qb = $this->createQueryBuilder('photo')
+            ->select('partial photo.{id, createdAt, updatedAt, title}')
+            ->where('photo.gallery = :gallery')
+            ->setParameter('gallery', $gallery);
+
+        return $qb;
+    }
+
+
+
+    /**
      * Save entity.
      *
      * @param Photo $photo Photo entity

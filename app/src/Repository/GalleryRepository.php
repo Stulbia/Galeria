@@ -47,6 +47,7 @@ class GalleryRepository extends ServiceEntityRepository
             ->orderBy('gallery.updatedAt', 'DESC');
     }
 
+
     /**
      * Get or create new query builder.
      *
