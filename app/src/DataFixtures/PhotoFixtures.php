@@ -7,9 +7,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Gallery;
 use App\Entity\Enum\PhotoStatus;
-use App\Entity\Tag;
 use App\Entity\Photo;
-//use App\Entity\User;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
 /**
@@ -35,6 +33,7 @@ class PhotoFixtures extends AbstractBaseFixtures implements DependentFixtureInte
         $this->createMany(20, 'photos', function (int $i) {
             $photo = new Photo();
             $photo->setTitle($this->faker->sentence);
+            $photo->setDescription($this->faker->sentence);
             $photo->setCreatedAt(
                 \DateTimeImmutable::createFromMutable(
                     $this->faker->dateTimeBetween('-100 days', '-1 days')

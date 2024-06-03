@@ -16,6 +16,10 @@
             <dd>{{ photo.updatedAt|format_date('long') }}</dd>
             <dt>{{ 'label.title'|trans }}</dt>
             <dd>{{  photo.title }}</dd>
+            {# ... #}
+            <dt>{{ 'label_description'|trans }}</dt>
+            <dd>{{ photo.description|markdown_to_html }}</dd>
+            {# ... #}
             <dt>{{ 'label.gallery'|trans }}</dt>
             <dd><a href="{{ url('gallery_show', {id: photo.gallery.id}) }}" title="{{ 'action.show'|trans }}"> {{  photo.gallery.title }}</dd>
         </dl>

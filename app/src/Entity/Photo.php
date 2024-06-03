@@ -9,6 +9,7 @@ use App\Repository\PhotoRepository;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -89,6 +90,14 @@ class Photo
     #[ORM\JoinTable(name: 'photos_tags')]
     private Collection $tags;
 
+
+    /**
+     * Photo Description
+     *  text|null /??
+     */
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $description = null;
+
     public function __construct()
     {
         $this->tags = new ArrayCollection();
@@ -164,12 +173,21 @@ class Photo
         $this->title = $title;
     }
 
+    /**
+     * Getter for gallery.
+     *
+     * @return  Gallery|null $gallery
+     */
     public function getGallery(): ?Gallery
     {
         return $this->gallery;
     }
 
-    public function setGallery(?Gallery $gallery): static
+    /**
+     * Setter for gallery.
+     *
+     * @param Gallery|null $gallery Gallery
+     */    public function setGallery(?Gallery $gallery): static
     {
         $this->gallery = $gallery;
 
@@ -208,6 +226,29 @@ class Photo
     public function removeTag(Tag $tag): static
     {
         $this->tags->removeElement($tag);
+
+        return $this;
+    }
+
+    /**
+     * Getter for description.
+     *
+     * @return string|null $description
+     */
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    /**
+     * Setter for description.
+     *
+     * @param string|null $description string
+     */
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
 
         return $this;
     }

@@ -44,11 +44,10 @@ class PhotoType extends AbstractType
         $builder->add(
             'title',
             TextType::class,
-            [
-                'label' => 'label.title',
+            [   'label' => 'label.title',
                 'required' => true,
-                'attr' => ['max_length' => 255],
-            ]);
+                'attr' => ['max_length' => 255], ]
+        );
         $builder->add(
             'gallery',
             EntityType::class,
@@ -60,6 +59,16 @@ class PhotoType extends AbstractType
                 'label' => 'label.gallery',
                 'placeholder' => 'label.none',
                 'required' => true,
+            ]
+        );
+
+        $builder->add(
+            'description',
+            TextType::class,
+            [
+                'label' => 'label.description',
+                'required' => false,
+//                'attr' => ['max_length' => 128],
             ]
         );
         $builder->add(
@@ -99,8 +108,4 @@ class PhotoType extends AbstractType
     {
         return 'photo';
     }
-
-
-
-
 }

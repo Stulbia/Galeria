@@ -1,0 +1,14 @@
+{# templates/_nav.html.twig #}
+<nav>
+    <ul>
+        <li><a href="{{ absolute_url('photo') }}"> {{'title.photo_list'|trans }} </a></li>
+        <li><a href="{{ absolute_url('gallery') }}">{{'title.gallery_list'|trans }}</a></li>
+        <li><a href="{{ absolute_url('tag') }}">{{'title.tag_list'|trans }}</a></li>
+
+{#        {% if app.user %}#}
+{#            <li><a href="{{ url('user_profile') }}">User</a></li>#}
+{#        {% else %}#}
+{#            <li><a href="{{ url('login') }}">Login</a></li>#}
+{#        {% endif %}#}
+    </ul>
+</nav>

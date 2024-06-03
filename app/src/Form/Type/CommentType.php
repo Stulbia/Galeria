@@ -35,18 +35,18 @@ class CommentType extends AbstractType
     {
         $builder->add(
             'content',
-            TextareaType::class,[
+            TextareaType::class,
+            [
+                'label' => 'label.content',
+                'required' => true,
                 'constraints' => [
-                        new Length([
-                            'max' => 2000,
-                            'maxMessage' => 'Comment cannot be longer than {{ limit }} characters',
-                        ]),
-                    [
-                        'label' => 'label.content',
-                        'required' => true,
-                    ]
-                ]
-            ]);
+                    new Length([
+                        'max' => 2000,
+                        'maxMessage' => 'Comment cannot be longer than {{ limit }} characters',
+                    ]),
+                ],
+            ]
+        );
 
         $builder->add(
             'alias',
@@ -55,10 +55,10 @@ class CommentType extends AbstractType
                 'label' => 'label.alias',
                 'required' => true,
                 'attr' => ['max_length' => 64],
-            ]);
-
-
+            ]
+        );
     }
+
 
     /**
      * Configures the options for this type.
