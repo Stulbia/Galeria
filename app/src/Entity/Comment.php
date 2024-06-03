@@ -5,8 +5,10 @@ namespace App\Entity;
 use App\Repository\CommentRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: CommentRepository::class)]
+#[ORM\Table(name: 'comments')]
 class Comment
 {
     #[ORM\Id]
@@ -15,21 +17,28 @@ class Comment
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Gedmo\Timestampable(on: 'create')]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column]
+    #[Gedmo\Timestampable(on: 'update')]
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $content = null;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(targetEntity: Photo::class, fetch: 'LAZY')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Photo $photo = null;
 
-    #[ORM\ManyToOne]
+
+    #[ORM\ManyToOne(targetEntity: User::class, fetch: 'LAZY')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
+
+    #[ORM\Column(length: 64)]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?string $alias = null;
 
     public function getId(): ?int
     {
@@ -92,6 +101,18 @@ class Comment
     public function setUser(?User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getAlias(): ?string
+    {
+        return $this->alias;
+    }
+
+    public function setAlias(string $alias): static
+    {
+        $this->alias = $alias;
 
         return $this;
     }

@@ -22,7 +22,7 @@ class GalleryFixtures extends AbstractBaseFixtures
      */
     public function loadData(): void
     {
-        $this->createMany(5, 'categories', function (int $i) {
+        $this->createMany(5, 'galleries', function (int $i) {
             $gallery = new Gallery();
             $gallery->setTitle($this->faker->unique()->word);
             $gallery->setCreatedAt(

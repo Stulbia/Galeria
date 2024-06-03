@@ -7,6 +7,7 @@ namespace App\Controller;
 
 use App\Entity\Photo;
 use App\Form\Type\PhotoType;
+use App\Service\CommentServiceInterface;
 use App\Service\PhotoServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
@@ -28,7 +29,7 @@ class PhotoController extends AbstractController
      * @param PhotoServiceInterface $photoService Photo service
      * @param TranslatorInterface  $translator  Translator
      */
-    public function __construct(private readonly PhotoServiceInterface $photoService, private readonly TranslatorInterface $translator)
+    public function __construct(private readonly PhotoServiceInterface $photoService, private readonly CommentServiceInterface $commentService, private readonly TranslatorInterface $translator)
     {
     }
 
@@ -55,9 +56,11 @@ class PhotoController extends AbstractController
  * @return Response HTTP response
  */
 #[Route('/{id}', name: 'photo_show', requirements: ['id' => '[1-9]\d*'], methods: 'GET')]
-    public function show(Photo $photo): Response
-{
-    return $this->render('photo/show.html.twig', ['photo' => $photo]);
+    public function show(Photo $photo,#[MapQueryParameter] int $page = 1): Response {
+    $pagination = $this->commentService->findByPhoto($photo,$page);
+    return $this->render('photo/show.html.twig', ['photo' => $photo
+        , 'pagination' => $pagination
+    ]);
 }
 
     /**

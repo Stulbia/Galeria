@@ -1,55 +1,58 @@
 <?php
 /**
- * Photo fixtures.
+ * Comment fixtures.
  */
 
 namespace App\DataFixtures;
 
-use App\Entity\Gallery;
-use App\Entity\Enum\PhotoStatus;
-use App\Entity\Tag;
+use App\Entity\comment;
 use App\Entity\Photo;
-//use App\Entity\User;
+use App\Entity\User;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
 /**
- * Class PhotoFixtures.
+ * Class CommentFixtures.
  *
  * @psalm-suppress MissingConstructor
  */
-class PhotoFixtures extends AbstractBaseFixtures implements DependentFixtureInterface
+class CommentFixtures extends AbstractBaseFixtures  implements DependentFixtureInterface
 {
     /**
      * Load data.
      *
-     * @psalm-suppress PossiblyNullPropertyFetch
      * @psalm-suppress PossiblyNullReference
      * @psalm-suppress UnusedClosureParam
      */
     public function loadData(): void
     {
-        if (null === $this->manager || null === $this->faker) {
-            return;
-        }
-
-        $this->createMany(20, 'photos', function (int $i) {
-            $photo = new Photo();
-            $photo->setTitle($this->faker->sentence);
-            $photo->setCreatedAt(
+        $this->createMany(20, 'comments', function (int $i) {
+            $comment = new comment();
+            $comment ->setContent($this->faker->sentence);
+            $comment->setCreatedAt(
                 \DateTimeImmutable::createFromMutable(
                     $this->faker->dateTimeBetween('-100 days', '-1 days')
                 )
             );
-            $photo->setUpdatedAt(
+            $comment->setUpdatedAt(
                 \DateTimeImmutable::createFromMutable(
                     $this->faker->dateTimeBetween('-100 days', '-1 days')
                 )
             );
-            /** @var Gallery $Gallery */
-            $Gallery = $this->getRandomReference('galleries');
-            $photo->setGallery($Gallery);
 
-            return $photo;
+            $comment->setAlias($this->faker->unique()->word);
+
+            /** @var Photo $Photo
+             */
+            $Photo = $this->getRandomReference('photos');
+            $comment->setPhoto($Photo);
+
+            /** @var User $User
+             */
+            $User = $this->getRandomReference('users');
+            $comment->setUser($User);
+
+
+            return $comment;
         });
 
         $this->manager->flush();
@@ -61,10 +64,10 @@ class PhotoFixtures extends AbstractBaseFixtures implements DependentFixtureInte
      *
      * @return string[] of dependencies
      *
-     * @psalm-return array{0: GalleryFixtures::class}
+     * @psalm-return array{0: PhotoFixtures::class}
      */
     public function getDependencies(): array
     {
-        return [GalleryFixtures::class];
+        return [PhotoFixtures::class];
     }
 }

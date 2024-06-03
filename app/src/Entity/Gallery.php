@@ -17,8 +17,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 #[ORM\Entity(repositoryClass: GalleryRepository::class)]
 #[ORM\Table(name: 'galleries')]
-#[ORM\UniqueConstraint(name: 'uq_galleries_title', columns: ['title'])]
-#[UniqueEntity(fields: ['title'])]
+
 class Gallery
 {
     /**
