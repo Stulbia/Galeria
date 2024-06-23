@@ -1,6 +1,6 @@
 <?php
 /**
- * User controller.
+ * Profile controller.
  */
 
 namespace App\Controller;
@@ -12,17 +12,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * Class UserController.
+ * Class ProfileController.
  */
-#[Route('/user')]
-#[IsGranted('ROLE_ADMIN')]
-class UserController extends AbstractController
+class ProfileController extends AbstractController
 {
     /**
      * Constructor.
@@ -34,60 +31,69 @@ class UserController extends AbstractController
     {
     }
 
-
     /**
-     * Index action.
+     * Register action.
      *
-     * @param int $page Page
+     * @param Request $request HTTP request
      *
      * @return Response HTTP response
      */
-    #[Route(name: 'user_index', methods: ['GET'])]
-    public function index(#[MapQueryParameter] int $page = 1): Response
+    #[Route('/register', name: 'user_register', methods: ['GET', 'POST'])]
+    public function register(Request $request): Response
     {
-        $pagination = $this->userManager->getPaginatedList($page);
+        $user = new User();
+        $form = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
 
-        return $this->render('user/index.html.twig', ['pagination' => $pagination]);
-    }
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->userManager->save($user);
 
-    /**
-     * Show action.
-     *
-     * @param User $user User
-     *
-     * @return Response HTTP response
-     */
-    #[Route('/{id}', name: 'user_show', requirements: ['id' => '[1-9]\d*'], methods: ['GET'])]
-    public function show(User $user): Response
-    {
-        $currentUser = $this->getUser();
+            $this->addFlash(
+                'success',
+                $this->translator->trans('message.registered_successfully')
+            );
 
-        // Redirect to the authenticated user's profile if they are viewing their own profile
-        if ($currentUser && $currentUser->getId() === $user->getId()) {
             return $this->redirectToRoute('user_profile');
         }
 
-        return $this->render('user/show.html.twig', ['user' => $user]);
+        return $this->render(
+            'profile/register.html.twig',
+            ['form' => $form->createView()]
+        );
+    }
+    /**
+     * View own profile action.
+     *
+     * @return Response HTTP response
+     */
+    #[Route('/profile', name: 'user_profile', methods: ['GET'])]
+    #[IsGranted('ROLE_USER')]
+    public function profile(): Response
+    {
+        $user = $this->getUser();
+
+        return $this->render('profile/index.html.twig', ['user' => $user]);
     }
 
     /**
      * Edit action.
      *
      * @param Request $request HTTP request
-     * @param User    $user    User entity
      *
      * @return Response HTTP response
      */
-    #[Route('/{id}/edit', name: 'user_edit', requirements: ['id' => '[1-9]\d*'], methods: ['GET', 'PUT'])]
-    #[IsGranted('EDIT', subject: 'user')]
-    public function edit(Request $request, User $user): Response
+    #[Route('/profile/edit', name: 'self_edit', methods: ['GET', 'PUT'])]
+    #[IsGranted('ROLE_USER')]
+    public function edit(Request $request): Response
     {
+        $user = $this->getUser();
+
         $form = $this->createForm(
             UserType::class,
             $user,
             [
                 'method' => 'PUT',
-                'action' => $this->generateUrl('user_edit', ['id' => $user->getId()]),
+                'action' => $this->generateUrl('self_edit'),
             ]
         );
         $form->handleRequest($request);
@@ -100,11 +106,11 @@ class UserController extends AbstractController
                 $this->translator->trans('message.updated_successfully')
             );
 
-            return $this->redirectToRoute('user_index');
+            return $this->redirectToRoute('user_profile');
         }
 
         return $this->render(
-            'user/edit.html.twig',
+            'profile/edit.html.twig',
             [
                 'form' => $form->createView(),
                 'user' => $user,
@@ -116,21 +122,22 @@ class UserController extends AbstractController
      * Delete action.
      *
      * @param Request $request HTTP request
-     * @param User    $user    User entity
      *
      * @return Response HTTP response
      */
-    #[Route('/{id}/delete', name: 'user_delete', requirements: ['id' => '[1-9]\d*'], methods: ['GET', 'DELETE'])]
-    #[IsGranted('DELETE', subject: 'user')]
-    public function delete(Request $request, User $user): Response
+    #[Route('/profile/delete', name: 'self_delete', methods: ['GET', 'DELETE'])]
+    #[IsGranted('ROLE_USER')]
+    public function delete(Request $request): Response
     {
+        $user = $this->getUser();
+
         if (!$this->userManager->canBeDeleted($user)) {
             $this->addFlash(
                 'warning',
-                $this->translator->trans('message.user_contains_photos')
+                $this->translator->trans('message.user_has_photos')
             );
 
-            return $this->redirectToRoute('user_index');
+            return $this->redirectToRoute('user_profile');
         }
 
         $form = $this->createForm(
@@ -138,7 +145,7 @@ class UserController extends AbstractController
             $user,
             [
                 'method' => 'DELETE',
-                'action' => $this->generateUrl('user_delete', ['id' => $user->getId()]),
+                'action' => $this->generateUrl('self_delete'),
             ]
         );
         $form->handleRequest($request);
@@ -151,11 +158,11 @@ class UserController extends AbstractController
                 $this->translator->trans('message.deleted_successfully')
             );
 
-            return $this->redirectToRoute('user_index');
+            return $this->redirectToRoute('app_logout');
         }
 
         return $this->render(
-            'user/delete.html.twig',
+            'profile/delete.html.twig',
             [
                 'form' => $form->createView(),
                 'user' => $user,

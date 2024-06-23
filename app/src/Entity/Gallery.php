@@ -59,7 +59,7 @@ class Gallery
 //    #[Gedmo\Slug(fields: ['title'])]
     #[Assert\Type('string')]
     #[Assert\NotBlank]
-    #[Assert\Length(min: 3, max: 255)]
+    #[Assert\Length(min: 3, max: 64)]
     private ?string $title = null;
 
     #[ORM\Column(length: 64, nullable: true)]

@@ -25,10 +25,6 @@ class GalleryService implements GalleryServiceInterface
     /**
      * Items per page.
      *
-     * Use constants to define configuration options that rarely change instead
-     * of specifying them in app/config/config.yml.
-     * See https://symfony.com/doc/current/best_practices.html#configuration
-     *
      * @constant int
      */
     private const PAGINATOR_ITEMS_PER_PAGE = 10;
