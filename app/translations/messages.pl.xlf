@@ -11,9 +11,9 @@
                 <target>Szczegóły</target>
             </trans-unit>
             <trans-unit id="action.back_to_list">
-                            <source>action.back_to_list</source>
-                            <target>Widok Listy</target>
-                        </trans-unit>
+                <source>action.back_to_list</source>
+                <target>Widok Listy</target>
+            </trans-unit>
             <trans-unit id="action.edit">
                 <source>action.edit</source>
                 <target>Edytuj</target>

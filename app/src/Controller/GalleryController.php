@@ -25,19 +25,19 @@ class GalleryController extends AbstractController
 {
 /**
 * Constructor.
-*
-* @param GalleryServiceInterface $galleryService Photo service
-* @param TranslatorInterface      $translator  Translator
+* @param PhotoServiceInterface   $photoService   Photo service
+* @param GalleryServiceInterface $galleryService Gallery service
+* @param TranslatorInterface     $translator     Translator
 */
-public function __construct(private readonly PhotoServiceInterface $photoService, private readonly GalleryServiceInterface $galleryService, private readonly TranslatorInterface $translator)
-{
-//        $this->galleryService = $photoService;
+    public function __construct(private readonly PhotoServiceInterface $photoService, private readonly GalleryServiceInterface $galleryService, private readonly TranslatorInterface $translator)
+    {
+    //        $this->galleryService = $photoService;
     }
 
     /**
      * Edit action.
      *
-     * @param Request  $request  HTTP request
+     * @param Request $request HTTP request
      * @param Gallery $gallery Gallery entity
      *
      * @return Response HTTP response
@@ -103,9 +103,9 @@ public function __construct(private readonly PhotoServiceInterface $photoService
     )]
     public function show(Gallery $gallery, #[MapQueryParameter] int $page = 1): Response
     {
-        $pagination = $this->photoService->findByGallery($gallery,$page);
-        return $this->render('gallery/show.html.twig', ['gallery' => $gallery,'pagination' => $pagination]);
+        $pagination = $this->photoService->findByGallery($gallery, $page);
 
+        return $this->render('gallery/show.html.twig', ['gallery' => $gallery, 'pagination' => $pagination]);
     }
 
     // ...

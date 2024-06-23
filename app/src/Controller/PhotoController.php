@@ -43,8 +43,14 @@ class PhotoController extends AbstractController
     #[Route(name: 'photo_index', methods: 'GET')]
     public function index(#[MapQueryParameter] int $page = 1): Response
     {
-        $pagination = $this->photoService->getPaginatedList($page);
-
+        $user = $this->getUser();
+if (isset($user)) {
+    $pagination = $this->photoService->getPaginatedUserList($page, $user);
+}
+else
+{
+    $pagination = $this->photoService->getPaginatedList($page);
+}
         return $this->render('photo/index.html.twig', ['pagination' => $pagination]);
     }
 
@@ -55,9 +61,12 @@ class PhotoController extends AbstractController
  *
  * @return Response HTTP response
  */
-#[Route('/{id}', name: 'photo_show', requirements: ['id' => '[1-9]\d*'], methods: 'GET')]
+    #[Route('/{id}', name: 'photo_show', requirements: ['id' => '[1-9]\d*'], methods: 'GET')]
+    #[IsGranted('VIEW', subject: 'photo')]
     public function show(Photo $photo,#[MapQueryParameter] int $page = 1): Response {
+
     $pagination = $this->commentService->findByPhoto($photo,$page);
+
     return $this->render('photo/show.html.twig', ['photo' => $photo
         , 'pagination' => $pagination
     ]);
@@ -73,7 +82,10 @@ class PhotoController extends AbstractController
     #[Route('/create', name: 'photo_create', methods: 'GET|POST', )]
     public function create(Request $request): Response
 {
+    /** @var User $user */
+    $user = $this->getUser();
     $photo = new Photo();
+    $photo->setAuthor($user);
     $form = $this->createForm(
         PhotoType::class,
         $photo,

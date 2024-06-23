@@ -26,17 +26,17 @@ class CommentController extends AbstractController
 * Constructor.
 *
 * @param CommentServiceInterface $commentService Photo service
-* @param TranslatorInterface      $translator  Translator
+* @param TranslatorInterface     $translator     Translator
 */
-public function __construct(private readonly CommentServiceInterface $commentService, private readonly TranslatorInterface $translator)
-{
+    public function __construct(private readonly CommentServiceInterface $commentService, private readonly TranslatorInterface $translator)
+    {
 //        $this->commentService = $photoService;
     }
 
     /**
      * Edit action.
      *
-     * @param Request  $request  HTTP request
+     * @param Request $request HTTP request
      * @param Comment $comment Comment entity
      *
      * @return Response HTTP response
@@ -76,6 +76,8 @@ public function __construct(private readonly CommentServiceInterface $commentSer
 
     /**
      * Index action.
+     *
+     * @param  int $page page
      *
      * @return Response HTTP response
      */
@@ -145,7 +147,7 @@ public function __construct(private readonly CommentServiceInterface $commentSer
     /**
      * Delete action.
      *
-     * @param Request  $request  HTTP request
+     * @param Request $request HTTP request
      * @param Comment $comment Comment entity
      *
      * @return Response HTTP response

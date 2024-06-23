@@ -7,6 +7,9 @@
 {% block body %}
     <h1>{{ 'title.photo_details'|trans({'%id%': photo.id|default('')}) }}</h1>
     {% if photo is defined and photo|length %}
+
+        <img src="{{ asset(photos_directory ~ photo.filename) }}" alt="photo">
+
         <dl class="dl-horizontal">
             <dt>{{ 'label.id'|trans }}</dt>
             <dd>{{ photo.id }}</dd>

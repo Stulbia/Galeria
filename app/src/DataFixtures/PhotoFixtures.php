@@ -8,6 +8,9 @@ namespace App\DataFixtures;
 use App\Entity\Gallery;
 use App\Entity\Enum\PhotoStatus;
 use App\Entity\Photo;
+use App\Entity\Tag;
+use App\Entity\User;
+use DateTimeImmutable;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
 /**
@@ -33,20 +36,36 @@ class PhotoFixtures extends AbstractBaseFixtures implements DependentFixtureInte
         $this->createMany(20, 'photos', function (int $i) {
             $photo = new Photo();
             $photo->setTitle($this->faker->sentence);
+            $photo->setFilename('barbie.png');
             $photo->setDescription($this->faker->sentence);
             $photo->setCreatedAt(
-                \DateTimeImmutable::createFromMutable(
+                DateTimeImmutable::createFromMutable(
                     $this->faker->dateTimeBetween('-100 days', '-1 days')
                 )
             );
             $photo->setUpdatedAt(
-                \DateTimeImmutable::createFromMutable(
+                DateTimeImmutable::createFromMutable(
                     $this->faker->dateTimeBetween('-100 days', '-1 days')
                 )
             );
-            /** @var Gallery $Gallery */
-            $Gallery = $this->getRandomReference('galleries');
-            $photo->setGallery($Gallery);
+            /** @var Gallery $gallery */
+            $gallery = $this->getRandomReference('galleries');
+            $photo->setGallery($gallery);
+
+            /** @var array<array-key, Tag> $tags */
+            $tags = $this->getRandomReferences(
+                'tags',
+                $this->faker->numberBetween(0, 5)
+            );
+            foreach ($tags as $tag) {
+                $photo->addTag($tag);
+            }
+
+//$photo->setStatus(PhotoStatus::from($this->faker->numberBetween(1, 2)));
+
+            /** @var User $author */
+            $author = $this->getRandomReference('users');
+            $photo->setAuthor($author);
 
             return $photo;
         });

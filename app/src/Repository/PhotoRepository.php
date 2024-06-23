@@ -7,6 +7,7 @@ namespace App\Repository;
 
 use App\Entity\Gallery;
 use App\Entity\Photo;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Exception\ORMException;
@@ -47,7 +48,7 @@ class PhotoRepository extends ServiceEntityRepository
     {
         return $this->getOrCreateQueryBuilder()
             ->select(
-                'partial photo.{id, createdAt, updatedAt, title}',
+                'partial photo.{id, createdAt, updatedAt, title, filename}',
                 'partial gallery.{id, title}'
             )
             ->join('photo.gallery', 'gallery')
@@ -86,14 +87,31 @@ class PhotoRepository extends ServiceEntityRepository
      */
     public function findByGallery($gallery):QueryBuilder
     {
-        $qb = $this->createQueryBuilder('photo')
-            ->select('partial photo.{id, createdAt, updatedAt, title}')
-            ->where('photo.gallery = :gallery')
+        $queryBuilder = $this->queryAll();
+
+        $queryBuilder->andWhere('photo.gallery = :gallery')
             ->setParameter('gallery', $gallery);
 
-        return $qb;
+        return $queryBuilder;
     }
 
+    // ...
+    /**
+     * Query tasks by author.
+     *
+     * @param User $user User entity
+     *
+     * @return QueryBuilder Query builder
+     */
+    public function queryByAuthor(User $user): QueryBuilder
+    {
+        $queryBuilder = $this->queryAll();
+
+        $queryBuilder->andWhere('photo.author = :author')
+            ->setParameter('author', $user);
+
+        return $queryBuilder;
+    }
 //    /**
 //     * Select photos by Tags.
 //     *

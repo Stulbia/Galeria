@@ -72,6 +72,17 @@ class Photo
     #[ORM\JoinColumn(nullable: false)]
     private ?Gallery $gallery = null;
 
+    // ...
+    /**
+     * Author.
+     *
+     * @var User|null
+     */
+    #[ORM\ManyToOne(targetEntity: User::class, fetch: 'EXTRA_LAZY')]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotBlank]
+    #[Assert\Type(User::class)]
+    private ?User $author = null;
 
     /**
      * Slug.
@@ -98,6 +109,20 @@ class Photo
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
+    /**
+     * Filename.
+     *
+     * @var string|null
+     */
+    #[ORM\Column(name: 'fileName', type: 'string', length: 191)]
+    #[Assert\Type('string')]
+    private ?string $filename = null;
+
+
+    /**
+     * Constructor.
+     *
+     */
     public function __construct()
     {
         $this->tags = new ArrayCollection();
@@ -187,18 +212,34 @@ class Photo
      * Setter for gallery.
      *
      * @param Gallery|null $gallery Gallery
-     */    public function setGallery(?Gallery $gallery): static
+     *
+     * @return Photo $this Photo
+     */
+    public function setGallery(?Gallery $gallery): static
     {
         $this->gallery = $gallery;
 
         return $this;
     }
 
+
+    /**
+     * Getter for Slug.
+     *
+     * @return string|null $slug Slug
+     */
     public function getSlug(): ?string
     {
         return $this->slug;
     }
 
+    /**
+     * Setter for Slug.
+     *
+     * @param string|null $slug Slug
+     *
+     * @return Photo $this Photo
+     */
     public function setSlug(?string $slug): static
     {
         $this->slug = $slug;
@@ -206,6 +247,31 @@ class Photo
         return $this;
     }
 
+
+
+    /**
+     * Getter for author.
+     *
+     * @return  User|null $author User
+     */
+    public function getAuthor(): ?User
+    {
+        return $this->author;
+    }
+
+    /**
+     * Setter for author.
+     *
+     * @param User|null $author User
+     *
+     * @return Photo $this Photo
+     */
+    public function setAuthor(?User $author): static
+    {
+        $this->author = $author;
+
+        return $this;
+    }
     /**
      * @return Collection<int, Tag>
      */
@@ -214,6 +280,13 @@ class Photo
         return $this->tags;
     }
 
+    /**
+     * Adds Tags.
+     *
+     * @param Tag $tag Tag
+     *
+     * @return Photo $this Photo
+     */
     public function addTag(Tag $tag): static
     {
         if (!$this->tags->contains($tag)) {
@@ -223,6 +296,13 @@ class Photo
         return $this;
     }
 
+    /**
+     * Removes Tags.
+     *
+     * @param Tag $tag Tag
+     *
+     * @return Photo $this Photo
+     */
     public function removeTag(Tag $tag): static
     {
         $this->tags->removeElement($tag);
@@ -244,12 +324,33 @@ class Photo
      * Setter for description.
      *
      * @param string|null $description string
+     *
+     * @return Photo $this Photo
      */
-
     public function setDescription(?string $description): static
     {
         $this->description = $description;
 
         return $this;
+    }
+
+    /**
+     * Getter for filename.
+     *
+     * @return string|null Filename
+     */
+    public function getFilename(): ?string
+    {
+        return $this->filename;
+    }
+
+    /**
+     * Setter for filename.
+     *
+     * @param string|null $filename Filename
+     */
+    public function setFilename(?string $filename): void
+    {
+        $this->filename = $filename;
     }
 }

@@ -7,6 +7,7 @@ namespace App\Service;
 
 use App\Entity\Gallery;
 use App\Entity\Photo;
+use App\Entity\User;
 use App\Repository\PhotoRepository;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -44,6 +45,15 @@ class PhotoService implements PhotoServiceInterface
      *
      * @return PaginationInterface<string, mixed> Paginated list
      */
+    public function getPaginatedUserList(int $page, User $author): PaginationInterface
+    {
+        return $this->paginator->paginate(
+            $this->photoRepository->queryByAuthor($author),
+            $page,
+            self::PAGINATOR_ITEMS_PER_PAGE
+        );
+    }
+
     public function getPaginatedList(int $page): PaginationInterface
     {
         return $this->paginator->paginate(
@@ -52,6 +62,7 @@ class PhotoService implements PhotoServiceInterface
             self::PAGINATOR_ITEMS_PER_PAGE
         );
     }
+
 
     /**
      * Save entity.

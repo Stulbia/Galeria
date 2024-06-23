@@ -1,14 +1,42 @@
 {# templates/_nav.html.twig #}
-<nav>
-    <ul>
-        <li><a href="{{ absolute_url('photo') }}"> {{'title.photo_list'|trans }} </a></li>
-        <li><a href="{{ absolute_url('gallery') }}">{{'title.gallery_list'|trans }}</a></li>
-        <li><a href="{{ absolute_url('tag') }}">{{'title.tag_list'|trans }}</a></li>
+    <div>
+        {% if app.user.avatar.filename is defined and app.user.avatar.filename|length %}
+            <img class="nav-profile-img" src="{{ asset(avatars_directory~app.user.avatar.filename) }}" alt="avatar" style="
+  width: 50px;
+  height: 50px;">
+        {% endif %}
+    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+        <div>{{ app.user.email }}</div>
+        <div>
+            <a href="{{ url('app_logout') }}">{{ 'action_logout'|trans }}</a>
+        </div>
+    {% else %}
+        <div>
+            <a href="{{ url('app_login') }}">{{ 'action_login'|trans }}</a>
+        </div>
+    {% endif %}
+    </div>
+    <div>
+        <a  href="{{ url('photo_index') }}" title="{{ 'all_photos'|trans }}">
+            {{ 'all_photos'|trans }}
+        </a>
+    </div>
+    <div>
+        <a  href="{{ url('gallery_index') }}" title="{{ 'all_galleries'|trans }}">
+            {{ 'all_galleries'|trans }}
+        </a>
+    </div>
+     <div>
+        <a  href="{{ url('tag_index') }}" title="{{ 'all_tags'|trans }}">
+            {{ 'all_tags'|trans }}
+        </a>
+     </div>
+    <div>
+        <a  href="{{ url('user_index') }}" title="{{ 'user'|trans }}">
+            {{ 'my_profile'|trans }}
+        </a>
+    </div>
 
-{#        {% if app.user %}#}
-{#            <li><a href="{{ url('user_profile') }}">User</a></li>#}
-{#        {% else %}#}
-{#            <li><a href="{{ url('login') }}">Login</a></li>#}
-{#        {% endif %}#}
-    </ul>
-</nav>
+        </nav>
+
+
