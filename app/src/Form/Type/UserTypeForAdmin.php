@@ -17,7 +17,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 /**
  * Class UserType.
  */
-class UserType extends AbstractType
+class UserTypeForAdmin extends AbstractType
 {
 /**
 * Constructor.
@@ -36,30 +36,30 @@ class UserType extends AbstractType
             ]),
             ],
         ])
-            ->add('password', RepeatedType::class, [
-                'type' => PasswordType::class,
-                'first_options' => [
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Please enter a password',
-                    ]),
-                ],
-                'label' => 'Password',
-                ],
-                'second_options' => [
-                'label' => 'Repeat Password',
-                ],
-                'invalid_message' => 'The password fields must match.',
-            ]);
-//        ->add('roles', ChoiceType::class, [
-//            'choices' => [
-//            'User' => 'ROLE_USER',
-//            'Admin' => 'ROLE_ADMIN',
-//            ],
-//            'multiple' => true,
-//            'expanded' => true,
-//            'label' => 'Roles',
-////        ]);
+//            ->add('password', RepeatedType::class, [
+//                'type' => PasswordType::class,
+//                'first_options' => [
+//                'constraints' => [
+//                    new NotBlank([
+//                        'message' => 'Please enter a password',
+//                    ]),
+//                ],
+//                'label' => 'Password',
+//                ],
+//                'second_options' => [
+//                'label' => 'Repeat Password',
+//                ],
+//                'invalid_message' => 'The password fields must match.',
+//            ])
+        ->add('roles', ChoiceType::class, [
+            'choices' => [
+            'User' => 'ROLE_USER',
+            'Admin' => 'ROLE_ADMIN',
+            ],
+            'multiple' => true,
+            'expanded' => true,
+            'label' => 'Roles',
+        ]);
     }
 
     /**

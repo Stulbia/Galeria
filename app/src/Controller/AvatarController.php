@@ -10,6 +10,7 @@ use App\Entity\User;
 use App\Form\Type\AvatarType;
 use App\Service\AvatarServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -94,9 +95,8 @@ class AvatarController extends AbstractController
      * @return Response HTTP response
      */
     #[Route(
-        '/{id}/edit',
+        '/edit',
         name: 'avatar_edit',
-        requirements: ['id' => '[1-9]\d*'],
         methods: 'GET|PUT'
     )]
     public function edit(Request $request): Response
@@ -138,6 +138,62 @@ class AvatarController extends AbstractController
 
         return $this->render(
             'avatar/edit.html.twig',
+            [
+                'form' => $form->createView(),
+                'avatar' => $avatar,
+            ]
+        );
+    }
+
+    /**
+     * Edit action.
+     *
+     * @param Request $request HTTP request
+     *
+     * @return Response HTTP response
+     */
+    #[Route(
+        '/delete',
+        name: 'avatar_delete',
+        methods: 'GET|DELETE'
+    )]
+    public function delete(Request $request): Response
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        if (!$user->getAvatar()) {
+            $this->addFlash(
+                'error',
+                $this->translator->trans('message.avatar_does_not_exist')
+            );
+
+            return $this->redirectToRoute('user_profile');
+        }
+
+        $avatar = $user->getAvatar();
+
+        $form = $this->createForm(
+            FormType::class,
+            $avatar,
+            [
+                'method' => 'DELETE',
+                'action' => $this->generateUrl('avatar_delete', ['id' => $avatar->getId()]),
+            ]
+        );
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->avatarService->delete($avatar);
+            $this->addFlash(
+                'success',
+                $this->translator->trans('message.deleted_successfully')
+            );
+
+            return $this->redirectToRoute('user_profile');
+        }
+
+        return $this->render(
+            'avatar/delete.html.twig',
             [
                 'form' => $form->createView(),
                 'avatar' => $avatar,

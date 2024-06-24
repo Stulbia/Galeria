@@ -8,6 +8,8 @@ namespace App\Service;
 
 
 
+use App\Entity\User;
+
 /**
  * Class UserManager.
  */
@@ -15,7 +17,7 @@ Interface UserManagerInterface
 {
 
 
-    function register($password, $email): void;
+    public function save(User $user, ):void;
 
 }
 

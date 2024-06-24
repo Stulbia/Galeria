@@ -60,6 +60,21 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->_em->persist($user);
         $this->_em->flush();
     }
+
+    /**
+     * Delete entity.
+     *
+     * @param User $user User entity
+     *
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function delete(User $user): void
+    {
+        assert($this->_em instanceof EntityManager);
+        $this->_em->remove($user);
+        $this->_em->flush();
+    }
     /**
      * Query all records.
      *
@@ -71,7 +86,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->select('partial user.{id, email, roles}')
             ->orderBy('user.email', 'DESC');
     }
-
+    /**
 
     /**
      * Get or create new query builder.

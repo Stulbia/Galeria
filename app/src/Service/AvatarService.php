@@ -10,7 +10,6 @@ use App\Entity\User;
 use App\Repository\AvatarRepository;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Class AvatarService.
@@ -27,6 +26,22 @@ class AvatarService implements AvatarServiceInterface
      */
     public function __construct(private readonly string $targetDirectory, private readonly AvatarRepository $avatarRepository, private readonly FileUploadServiceInterface $fileUploadService, private readonly Filesystem $filesystem)
     {
+    }
+
+    /**
+     * Create avatar.
+     *
+     * @param UploadedFile $uploadedFile Uploaded file
+     * @param Avatar       $avatar       Avatar entity
+     * @param User         $user         User entity
+     */
+    public function create(UploadedFile $uploadedFile, Avatar $avatar, User $user): void
+    {
+        $avatarFilename = $this->fileUploadService->upload($uploadedFile);
+
+        $avatar->setUser($user);
+        $avatar->setFilename($avatarFilename);
+        $this->avatarRepository->save($avatar);
     }
 
     /**
@@ -50,18 +65,18 @@ class AvatarService implements AvatarServiceInterface
     }
 
     /**
-     * Create avatar.
+     * Delete avatar.
      *
-     * @param UploadedFile $uploadedFile Uploaded file
-     * @param Avatar       $avatar       Avatar entity
-     * @param UserInterface         $user         User entity
+     * @param Avatar $avatar Avatar entity
      */
-    public function create(UploadedFile $uploadedFile, Avatar $avatar, UserInterface $user): void
+    public function delete(Avatar $avatar): void
     {
-        $avatarFilename = $this->fileUploadService->upload($uploadedFile);
+        $filename = $avatar->getFilename();
 
-        $avatar->setUser($user);
-        $avatar->setFilename($avatarFilename);
-        $this->avatarRepository->save($avatar);
+        if (null !== $filename) {
+            $this->filesystem->remove(
+                $this->targetDirectory.'/'.$filename
+            );
+        }
     }
 }

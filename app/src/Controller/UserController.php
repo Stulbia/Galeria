@@ -7,6 +7,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\Type\UserType;
+use App\Form\Type\UserTypeForAdmin;
 use App\Service\UserManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
@@ -83,7 +84,7 @@ class UserController extends AbstractController
     public function edit(Request $request, User $user): Response
     {
         $form = $this->createForm(
-            UserType::class,
+            UserTypeForAdmin::class,
             $user,
             [
                 'method' => 'PUT',
@@ -127,12 +128,11 @@ class UserController extends AbstractController
         if (!$this->userManager->canBeDeleted($user)) {
             $this->addFlash(
                 'warning',
-                $this->translator->trans('message.user_contains_photos')
+                $this->translator->trans('message.user_has_photos')
             );
 
             return $this->redirectToRoute('user_index');
         }
-
         $form = $this->createForm(
             FormType::class,
             $user,

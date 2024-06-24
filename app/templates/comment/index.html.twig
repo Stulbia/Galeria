@@ -1,11 +1,6 @@
-{% extends 'base.html.twig' %}
-
-{% block title %}
-    {{ 'title.comment_list'|trans }}
-{% endblock %}
 
 {% block body %}
-    <h1>{{ 'title.comment_list'|trans }}</h1>
+    <h2>{{ 'title.comment_list'|trans }}</h2>
     {% if pagination is defined and pagination.items|length %}
 
         <div class="navigation text-center">

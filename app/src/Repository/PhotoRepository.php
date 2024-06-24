@@ -75,6 +75,27 @@ class PhotoRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleScalarResult();
     }
+    /**
+     * Count photos by user.
+     *
+     * @param User $user User
+     *
+     * @return int Number of photos by user
+     *
+     * @throws NoResultException
+     * @throws NonUniqueResultException
+     */
+    public function countByUser(User $user): int
+    {
+        $qb = $this->getOrCreateQueryBuilder();
+
+        return $qb->select($qb->expr()->countDistinct('photo.id'))
+            ->where('photo.author = :author')
+            ->setParameter(':author', $user)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
 
     /**
      * Select photos from gallery.

@@ -15,9 +15,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
- * Class UserType.
+ * Class UserUpdateType.
  */
-class UserType extends AbstractType
+class UserUpdateType extends AbstractType
 {
 /**
 * Constructor.
@@ -32,25 +32,10 @@ class UserType extends AbstractType
         ->add('email', EmailType::class, [
             'constraints' => [
             new NotBlank([
-                'message' => 'Please enter an email',
+                'message' => 'New email',
             ]),
             ],
-        ])
-            ->add('password', RepeatedType::class, [
-                'type' => PasswordType::class,
-                'first_options' => [
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Please enter a password',
-                    ]),
-                ],
-                'label' => 'Password',
-                ],
-                'second_options' => [
-                'label' => 'Repeat Password',
-                ],
-                'invalid_message' => 'The password fields must match.',
-            ]);
+        ]);
 //        ->add('roles', ChoiceType::class, [
 //            'choices' => [
 //            'User' => 'ROLE_USER',

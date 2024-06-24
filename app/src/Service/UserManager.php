@@ -5,9 +5,14 @@
 
 namespace App\Service;
 
+use App\Entity\Avatar;
 use App\Entity\Enum\UserRole;
 use App\Entity\User;
+use App\Repository\AvatarRepository;
+use App\Repository\PhotoRepository;
 use App\Repository\UserRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -17,38 +22,20 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
  */ class UserManager implements UserManagerInterface
 {
 /**
- * @param UserPasswordHasherInterface $passwordHasher Password hasher
- * @param PaginatorInterface          $paginator      Paginator
- * @param UserRepository              $userRepository UserRepository
+ * constructor.
+ *
+ * @param PaginatorInterface $paginator        Paginator
+ * @param UserRepository     $userRepository   UserRepository
+ * @param PhotoRepository    $photoRepository  UserRepository
+ * @param AvatarRepository   $avatarRepository UserRepository
  *
  */
-    public function __construct(private readonly UserPasswordHasherInterface $passwordHasher, private readonly PaginatorInterface $paginator, private readonly UserRepository $userRepository)
+    public function __construct(private readonly PaginatorInterface $paginator, private readonly UserRepository $userRepository, private readonly PhotoRepository $photoRepository, private readonly AvatarRepository $avatarRepository)
     {
-    }
-    /**
-     * Class UserManager.
-     *
-     *@param string $password password
-     *
-     *@param string $email    email
-     *
-     */
-    public function register($password, $email):void
-    {
-        $user = new User();
-        $user->setEmail($email);
-        $user->setRoles([UserRole::ROLE_USER->value]);
-        $user->setPassword(
-            $this->passwordHasher->hashPassword(
-                $user,
-                $password
-            )
-        );
-        $this->userRepository->save($user);
     }
 
     /**
-     * Updates email
+     * saves user
      *
      * @param User $user user
      *
@@ -77,5 +64,35 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
             $page,
             self::PAGINATOR_ITEMS_PER_PAGE
         );
+    }
+    /**
+     *Can User be deleted?
+     *
+     * @param User $user User entity
+     *
+     * @return bool Result
+     */
+    public function canBeDeleted(User $user): bool
+    {
+        try {
+            $result = $this-> photoRepository ->countByUser($user);
+
+            return !($result > 0);
+        } catch (NoResultException|NonUniqueResultException) {
+            return false;
+        }
+    }
+    /**
+     * Delete entity.
+     *
+     * @param User $user User entity
+     */
+    public function delete(User $user): void
+    {
+        $avatar = $user->getAvatar();
+        if ($avatar) {
+            $this->avatarRepository->delete($avatar);
+        }
+        $this->userRepository->delete($user);
     }
 }

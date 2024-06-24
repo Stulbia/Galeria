@@ -5,13 +5,19 @@
 
 namespace App\Controller;
 
+use App\Entity\Enum\UserRole;
 use App\Entity\User;
 use App\Form\Type\UserType;
-use App\Service\UserManagerInterface;
+use App\Form\Type\UserUpdateType;
+use App\Service\UserManager;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use PHPUnit\Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -24,10 +30,11 @@ class ProfileController extends AbstractController
     /**
      * Constructor.
      *
-     * @param UserManagerInterface $userManager User service
-     * @param TranslatorInterface  $translator  Translator
+     * @param UserPasswordHasherInterface $passwordHasher PasswordHasher
+     * @param UserManager                 $userManager    User service
+     * @param TranslatorInterface         $translator     Translator
      */
-    public function __construct(private readonly UserManagerInterface $userManager, private readonly TranslatorInterface $translator)
+    public function __construct(private readonly UserPasswordHasherInterface $passwordHasher, private readonly UserManager $userManager, private readonly TranslatorInterface $translator)
     {
     }
 
@@ -46,14 +53,26 @@ class ProfileController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->userManager->save($user);
+            try {
+                    $password = $user->getPassword();
+                    $user->setRoles([UserRole::ROLE_USER->value]);
+                    $hashedPassword = $this->passwordHasher->hashPassword($user, $password);
+                    $user->setPassword($hashedPassword);
+                    $this->userManager->save($user);
 
-            $this->addFlash(
-                'success',
-                $this->translator->trans('message.registered_successfully')
-            );
+                $this->addFlash(
+                    'success',
+                    $this->translator->trans('message.registered_successfully')
+                );
+            } catch (UniqueConstraintViolationException $e) {
+                       $this->addFlash('error', 'message.Email in use.');
 
-            return $this->redirectToRoute('user_profile');
+                   return $this->redirectToRoute('user_register');
+            } catch (Exception $e) {
+                  $this->addFlash('error', 'message.An error occurred: '.$e->getMessage());
+            }
+
+                return $this->redirectToRoute('user_profile');
         }
 
         return $this->render(
@@ -89,7 +108,7 @@ class ProfileController extends AbstractController
         $user = $this->getUser();
 
         $form = $this->createForm(
-            UserType::class,
+            UserUpdateType::class,
             $user,
             [
                 'method' => 'PUT',
@@ -99,70 +118,25 @@ class ProfileController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->userManager->save($user);
+            try {
+                $this->userManager->save($user);
+                $this->addFlash(
+                    'success',
+                    $this->translator->trans('message.updated_successfully')
+                );
+            } catch (UniqueConstraintViolationException $e) {
+                $this->addFlash('error', 'Email in use.');
 
-            $this->addFlash(
-                'success',
-                $this->translator->trans('message.updated_successfully')
-            );
+                return $this->redirectToRoute('self_edit');
+            } catch (Exception $e) {
+                $this->addFlash('error', 'An error occurred: ' . $e->getMessage());
+            }
 
             return $this->redirectToRoute('user_profile');
         }
 
         return $this->render(
             'profile/edit.html.twig',
-            [
-                'form' => $form->createView(),
-                'user' => $user,
-            ]
-        );
-    }
-
-    /**
-     * Delete action.
-     *
-     * @param Request $request HTTP request
-     *
-     * @return Response HTTP response
-     */
-    #[Route('/profile/delete', name: 'self_delete', methods: ['GET', 'DELETE'])]
-    #[IsGranted('ROLE_USER')]
-    public function delete(Request $request): Response
-    {
-        $user = $this->getUser();
-
-        if (!$this->userManager->canBeDeleted($user)) {
-            $this->addFlash(
-                'warning',
-                $this->translator->trans('message.user_has_photos')
-            );
-
-            return $this->redirectToRoute('user_profile');
-        }
-
-        $form = $this->createForm(
-            FormType::class,
-            $user,
-            [
-                'method' => 'DELETE',
-                'action' => $this->generateUrl('self_delete'),
-            ]
-        );
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->userManager->delete($user);
-
-            $this->addFlash(
-                'success',
-                $this->translator->trans('message.deleted_successfully')
-            );
-
-            return $this->redirectToRoute('app_logout');
-        }
-
-        return $this->render(
-            'profile/delete.html.twig',
             [
                 'form' => $form->createView(),
                 'user' => $user,
