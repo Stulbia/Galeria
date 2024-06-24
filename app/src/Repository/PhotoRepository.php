@@ -7,6 +7,7 @@ namespace App\Repository;
 
 use App\Entity\Gallery;
 use App\Entity\Photo;
+use App\Entity\Tag;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManager;
@@ -181,6 +182,24 @@ class PhotoRepository extends ServiceEntityRepository
         $this->_em->flush();
     }
 
+
+    /**
+     * Find by Tags
+     *
+     * @param Tag[] $tags
+     *
+     * @return Photo[]
+     */
+    public function findByTags(array $tags): array
+    {
+        $queryBuilder = $this->createQueryBuilder('p')
+            ->distinct() // Użycie distinct, aby uniknąć duplikatów
+            ->innerJoin('p.tags', 't')
+            ->andWhere('t IN (:tags)')
+            ->setParameter('tags', $tags);
+
+        return $queryBuilder->getQuery()->getResult();
+    }
     /**
      * Get or create new query builder.
      *

@@ -7,8 +7,10 @@ namespace App\Service;
 
 use App\Entity\Gallery;
 use App\Entity\Photo;
+use App\Entity\Tag;
 use App\Entity\User;
 use Knp\Component\Pager\Pagination\PaginationInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Interface PhotoServiceInterface.
@@ -32,7 +34,7 @@ interface PhotoServiceInterface
      *
      * @param Photo $photo Photo entity
      */
-    public function save(Photo $photo): void;
+    public function save(Photo $photo,UploadedFile $uploadedFile,User $user): void;
 
     /**
      * Delete entity.
@@ -40,4 +42,14 @@ interface PhotoServiceInterface
      * @param Photo $photo Photo entity
      */
     public function delete(Photo $photo): void;
+
+
+    /**
+     * Find Photos by Tag Name
+     *
+     * @param Tag[] $tagName Tag Name
+     *
+     * @return Photo[]
+     */
+    public function findByTags(array $tagName): array;
 }

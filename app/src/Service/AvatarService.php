@@ -19,12 +19,12 @@ class AvatarService implements AvatarServiceInterface
     /**
      * Constructor.
      *
-     * @param string                     $targetDirectory   Target directory
-     * @param AvatarRepository           $avatarRepository  Avatar repository
-     * @param FileUploadServiceInterface $fileUploadService File upload service
-     * @param Filesystem                 $filesystem        Filesystem component
+     * @param string                       $targetDirectory     Target directory
+     * @param AvatarRepository             $avatarRepository    Avatar repository
+     * @param AvatarUploadServiceInterface $avatarUploadService Avatar upload service
+     * @param Filesystem                   $filesystem          Filesystem component
      */
-    public function __construct(private readonly string $targetDirectory, private readonly AvatarRepository $avatarRepository, private readonly FileUploadServiceInterface $fileUploadService, private readonly Filesystem $filesystem)
+    public function __construct(private readonly string $targetDirectory, private readonly AvatarRepository $avatarRepository, private readonly AvatarUploadServiceInterface $avatarUploadService, private readonly Filesystem $filesystem)
     {
     }
 
@@ -37,7 +37,7 @@ class AvatarService implements AvatarServiceInterface
      */
     public function create(UploadedFile $uploadedFile, Avatar $avatar, User $user): void
     {
-        $avatarFilename = $this->fileUploadService->upload($uploadedFile);
+        $avatarFilename = $this->avatarUploadService->upload($uploadedFile);
 
         $avatar->setUser($user);
         $avatar->setFilename($avatarFilename);
@@ -78,5 +78,6 @@ class AvatarService implements AvatarServiceInterface
                 $this->targetDirectory.'/'.$filename
             );
         }
+        $this->avatarRepository->delete($avatar);
     }
 }

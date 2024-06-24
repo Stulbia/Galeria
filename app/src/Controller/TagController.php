@@ -7,6 +7,7 @@ namespace App\Controller;
 
 use App\Entity\Tag;
 use App\Form\Type\TagType;
+use App\Service\PhotoServiceInterface;
 use App\Service\TagServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
@@ -28,7 +29,7 @@ class TagController extends AbstractController
 * @param TagServiceInterface $tagService Photo service
 * @param TranslatorInterface      $translator  Translator
 */
-public function __construct(private readonly TagServiceInterface $tagService, private readonly TranslatorInterface $translator)
+public function __construct(private readonly TagServiceInterface $tagService, private readonly TranslatorInterface $translator, private readonly PhotoServiceInterface $photoService)
 {
 //        $this->tagService = $photoService;
     }

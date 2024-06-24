@@ -6,7 +6,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Form\Type\UserType;
+use App\Form\Type\ChangePasswordAdminType;
 use App\Form\Type\UserTypeForAdmin;
 use App\Service\UserManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -61,13 +61,6 @@ class UserController extends AbstractController
     #[Route('/{id}', name: 'user_show', requirements: ['id' => '[1-9]\d*'], methods: ['GET'])]
     public function show(User $user): Response
     {
-        $currentUser = $this->getUser();
-
-        // Redirect to the authenticated user's profile if they are viewing their own profile
-        if ($currentUser && $currentUser->getId() === $user->getId()) {
-            return $this->redirectToRoute('user_profile');
-        }
-
         return $this->render('user/show.html.twig', ['user' => $user]);
     }
 
@@ -161,5 +154,49 @@ class UserController extends AbstractController
                 'user' => $user,
             ]
         );
+    }
+
+
+    /**
+     * Change Password.
+     *
+     * @param Request $request HTTP request
+     * @param User    $user    User
+     *
+     * @return Response HTTP response
+     */
+    #[Route('/{id}/password', name: 'user_password', requirements: ['id' => '[1-9]\d*'], methods: ['GET', 'PUT'])]
+    public function changePassword(Request $request, User $user): Response
+    {
+        $form = $this->createForm(
+            ChangePasswordAdminType::class,
+            $user,
+            [
+                'method' => 'PUT',
+                'action' => $this->generateUrl('user_password', ['id' => $user->getId()]),
+            ]
+        );
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $newPassword = $form->get('newPassword')->getData();
+            $confirmPassword = $form->get('confirmPassword')->getData();
+            if ($newPassword !== $confirmPassword) {
+                $this->addFlash('error', 'New passwords do not match.');
+            } else {
+                try {
+                    $this->userManager->upgradePassword($user, $newPassword);
+                    $this->addFlash('success', 'Password updated successfully.');
+
+                    return $this->redirectToRoute('user_profile');
+                } catch (\Exception $e) {
+                    $this->addFlash('error', 'An error occurred while updating the password: '.$e->getMessage());
+                }
+            }
+        }
+
+        return $this->render('profile/password.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 }

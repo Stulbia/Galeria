@@ -7,14 +7,13 @@ namespace App\Controller;
 
 use App\Entity\Enum\UserRole;
 use App\Entity\User;
+use App\Form\Type\ChangePasswordType;
 use App\Form\Type\UserType;
 use App\Form\Type\UserUpdateType;
 use App\Service\UserManager;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use PHPUnit\Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -30,11 +29,10 @@ class ProfileController extends AbstractController
     /**
      * Constructor.
      *
-     * @param UserPasswordHasherInterface $passwordHasher PasswordHasher
-     * @param UserManager                 $userManager    User service
-     * @param TranslatorInterface         $translator     Translator
+     * @param UserManager         $userManager User service
+     * @param TranslatorInterface $translator  Translator
      */
-    public function __construct(private readonly UserPasswordHasherInterface $passwordHasher, private readonly UserManager $userManager, private readonly TranslatorInterface $translator)
+    public function __construct(private readonly UserManager $userManager, private readonly TranslatorInterface $translator)
     {
     }
 
@@ -54,11 +52,8 @@ class ProfileController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                    $password = $user->getPassword();
                     $user->setRoles([UserRole::ROLE_USER->value]);
-                    $hashedPassword = $this->passwordHasher->hashPassword($user, $password);
-                    $user->setPassword($hashedPassword);
-                    $this->userManager->save($user);
+                    $this->userManager->register($user);
 
                 $this->addFlash(
                     'success',
@@ -129,7 +124,7 @@ class ProfileController extends AbstractController
 
                 return $this->redirectToRoute('self_edit');
             } catch (Exception $e) {
-                $this->addFlash('error', 'An error occurred: ' . $e->getMessage());
+                $this->addFlash('error', 'An error occurred: '.$e->getMessage());
             }
 
             return $this->redirectToRoute('user_profile');
@@ -142,5 +137,45 @@ class ProfileController extends AbstractController
                 'user' => $user,
             ]
         );
+    }
+
+    /**
+     * Change Password.
+     *
+     * @param Request $request HTTP request
+     *
+     * @return Response HTTP response
+     */
+    #[Route('/profile/password', name: 'change_password')]
+    public function changePassword(Request $request): Response
+    {
+        $user = $this->getUser();
+        $form = $this->createForm(ChangePasswordType::class);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $currentPassword = $form->get('currentPassword')->getData();
+            $newPassword = $form->get('newPassword')->getData();
+            $confirmPassword = $form->get('confirmPassword')->getData();
+            if (!$this->userManager->verifyPassword($user, $currentPassword)) {
+                $this->addFlash('error', 'Current password is incorrect.');
+            } elseif ($newPassword !== $confirmPassword) {
+                $this->addFlash('error', 'New passwords do not match.');
+            } else {
+                try {
+                    $this->userManager->upgradePassword($user, $newPassword);
+                    $this->addFlash('success', 'Password updated successfully.');
+
+                    return $this->redirectToRoute('user_profile');
+                } catch (\Exception $e) {
+                    $this->addFlash('error', 'An error occurred while updating the password: '.$e->getMessage());
+                }
+            }
+        }
+
+        return $this->render('profile/password.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 }

@@ -1,0 +1,21 @@
+{# templates/photo/search.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Search Photos by Tags</h1>
+
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    <button type="submit" class="btn btn-primary">Search</button>
+    {{ form_end(form) }}
+
+    {% if photos is not empty %}
+        <h2>Results:</h2>
+        <ul>
+            {% for photo in photos %}
+                <li>{{ photo.filename }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}

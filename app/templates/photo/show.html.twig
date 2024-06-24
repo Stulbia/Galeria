@@ -36,5 +36,6 @@
             {{ 'message.record_not_found'|trans }}
         </p>
     {% endif %}
+    {% block comment %} {% endblock %}
     {% include 'comment/index.html.twig' %}
 {% endblock %}

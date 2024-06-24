@@ -5,8 +5,6 @@
 
 namespace App\Service;
 
-use App\Entity\Avatar;
-use App\Entity\Enum\UserRole;
 use App\Entity\User;
 use App\Repository\AvatarRepository;
 use App\Repository\PhotoRepository;
@@ -24,18 +22,33 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 /**
  * constructor.
  *
- * @param PaginatorInterface $paginator        Paginator
- * @param UserRepository     $userRepository   UserRepository
- * @param PhotoRepository    $photoRepository  UserRepository
- * @param AvatarRepository   $avatarRepository UserRepository
+ * @param UserPasswordHasherInterface $passwordHasher   PasswordHasher
+ * @param PaginatorInterface          $paginator        Paginator
+ * @param UserRepository              $userRepository   UserRepository
+ * @param PhotoRepository             $photoRepository  UserRepository
+ * @param AvatarRepository            $avatarRepository UserRepository
  *
  */
-    public function __construct(private readonly PaginatorInterface $paginator, private readonly UserRepository $userRepository, private readonly PhotoRepository $photoRepository, private readonly AvatarRepository $avatarRepository)
+    public function __construct(private readonly UserPasswordHasherInterface $passwordHasher, private readonly PaginatorInterface $paginator, private readonly UserRepository $userRepository, private readonly PhotoRepository $photoRepository, private readonly AvatarRepository $avatarRepository)
     {
+    }
+    /**
+     * saves a new user
+     *
+     * @param User $user user
+     *
+     */
+    public function register(User $user): void
+    {
+        $password = $user->getPassword();
+        $hashedPassword = $this->passwordHasher->hashPassword($user, $password);
+        $user->setPassword($hashedPassword);
+        $this->save($user);
     }
 
     /**
-     * saves user
+    /**
+     * saves user data changes
      *
      * @param User $user user
      *
@@ -94,5 +107,31 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
             $this->avatarRepository->delete($avatar);
         }
         $this->userRepository->delete($user);
+    }
+    /**
+     * Change Password.
+     *
+     * @param User   $user             User entity
+     * @param string $newPlainPassword New Plain Password
+     */
+    public function upgradePassword(User $user, string $newPlainPassword): void
+    {
+
+        $newHashedPassword = $this->passwordHasher->hashPassword($user, $newPlainPassword);
+
+        $this->userRepository->upgradePassword($user, $newHashedPassword);
+    }
+
+    /**
+     * Verify Password.
+     *
+     * @param User   $user          User entity
+     * @param string $plainPassword Plain Password
+     *
+     * @return bool
+     */
+    public function verifyPassword(User $user, string $plainPassword): bool
+    {
+        return $this->passwordHasher->isPasswordValid($user, $plainPassword);
     }
 }

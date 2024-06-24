@@ -5,12 +5,16 @@
 
 namespace App\Controller;
 
+use App\Entity\Comment;
 use App\Entity\Photo;
+use App\Form\Type\CommentType;
+use App\Form\Type\TagSearchType;
 use App\Form\Type\PhotoType;
 use App\Service\CommentServiceInterface;
 use App\Service\PhotoServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
@@ -92,9 +96,9 @@ else
         ['action' => $this->generateUrl('photo_create')]
     );
     $form->handleRequest($request);
-
     if ($form->isSubmitted() && $form->isValid()) {
-        $this->photoService->save($photo);
+        $file = $form->get('file')->getData();
+        $this->photoService->save($photo,$file,$user);
 
         $this->addFlash(
             'success',
@@ -118,6 +122,8 @@ else
     #[Route('/{id}/edit', name: 'photo_edit', requirements: ['id' => '[1-9]\d*'], methods: 'GET|PUT')]
     public function edit(Request $request, Photo $photo): Response
 {
+    /** @var User $user */
+    $user = $this->getUser();
     $form = $this->createForm(
         PhotoType::class,
         $photo,
@@ -129,7 +135,9 @@ else
     $form->handleRequest($request);
 
     if ($form->isSubmitted() && $form->isValid()) {
-        $this->photoService->save($photo);
+        /** @var UploadedFile $file */
+        $file = $form->get('file')->getData();
+        $this->photoService->edit($file,$photo,$user);
 
         $this->addFlash(
             'success',
@@ -188,4 +196,60 @@ else
         ]
     );
 }
+
+    /**
+     * Search.
+     *
+     * @param Request  $request HTTP request
+     *
+     * @return Response HTTP response
+     */
+    #[Route('/search', name: 'photos_search')]
+    public function search(Request $request ): Response
+    {
+        $form = $this->createForm(TagSearchType::class);
+        $form->handleRequest($request);
+
+        $photos = [];
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var Tag[] $tags */
+            $tags = $form->get('tags')->getData();
+            $tagsArray = $tags->toArray();
+            $photos = $this->photoService->findByTags($tagsArray);
+        }
+
+        return $this->render('photo/search.html.twig', [
+            'form' => $form->createView(),
+            'photos' => $photos,
+        ]);
+    }
+
+    #[Route(
+        '/{id}/comment',
+        name: 'comment_create',
+        methods: 'GET|POST',
+    )]
+    public function comment(Request $request,Photo $photo): Response
+    {
+        $comment = new Comment();
+        $form = $this->createForm(CommentType::class, $comment);
+        $form->handleRequest($request);
+        $comment->setPhoto($photo);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->commentService->save($comment);
+
+            $this->addFlash(
+                'success',
+                $this->translator->trans('message.created_successfully')
+            );
+
+            return $this->redirectToRoute('comment_index');
+        }
+
+        return $this->render(
+            'photo/comment.html.twig',
+            ['form' => $form->createView()]
+        );
+    }
 }
