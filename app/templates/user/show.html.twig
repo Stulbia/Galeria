@@ -8,22 +8,25 @@
     <h1>{{ 'title.user_details'|trans({'%id%': user.id|default('')}) }}</h1>
     {% if user is defined and user|length %}
         <dl class="dl-horizontal">
-            <dt>{{ 'label.id'|trans }}</dt>
-            <dd>{{ user.id }}</dd>
+            <dt>{{ 'label.name'|trans }}</dt>
+            <dd>{{ user.name }}</dd>
+            <dt>{{ 'label.name'|trans }}</dt>
+            <dd>{{ user.name }}</dd>
             <dt>{{ 'label.email'|trans }}</dt>
             <dd>{{  user.email }}</dd>
+        {% if is_granted('ROLE_ADMIN') %}
             <dt>{{ 'label.roles'|trans }}</dt>
             <dd>
                 {% for role in user.roles %}
                     {{ role }}{% if not loop.last %}, {% endif %}
                 {% endfor %}
             </dd>
-            {# ... #}
         <p>
-            <a href="{{ url('user_index') }}" title="{{ 'action.back_to_list'|trans }}">
+            <a href="{{ url('user_list') }}" title="{{ 'action.back_to_list'|trans }}">
                 {{ 'action.back_to_list'|trans }}
             </a>
         </p>
+        {% endif %}
     {% else %}
         <p>
             {{ 'message.record_not_found'|trans }}

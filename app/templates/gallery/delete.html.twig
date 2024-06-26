@@ -18,7 +18,6 @@
 {#    </div>#}
 {#    {{ form_end(form) }}#}
 {#{% endblock %}#}
-
 {% include 'default/_form.html.twig' with {
     page_title: 'title.gallery_delete'|trans({'%id%': gallery.id|default('')}),
     form: form,

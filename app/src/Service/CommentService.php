@@ -36,13 +36,11 @@ class CommentService implements CommentServiceInterface
     /**
      * Constructor.
      *
-     * @param CommentRepository $commentRepository Comment repository
-     * @param PaginatorInterface $paginator      Paginator
-     * @param PhotoRepository $photoRepository Photo repository
+     * @param CommentRepository  $commentRepository Comment repository
+     * @param PaginatorInterface $paginator         Paginator
+     * @param PhotoRepository    $photoRepository   Photo repository
      */
-    public function __construct(private readonly CommentRepository $commentRepository,
-                                private readonly PaginatorInterface $paginator,
-                                private readonly PhotoRepository $photoRepository)
+    public function __construct(private readonly CommentRepository $commentRepository, private readonly PaginatorInterface $paginator, private readonly PhotoRepository $photoRepository)
     {
     }
 
@@ -62,6 +60,14 @@ class CommentService implements CommentServiceInterface
         );
     }
 
+    /**
+     * Get paginated list by Photo
+     *
+     * @param Photo $photo Photo
+     * @param int   $page  Page number
+     *
+     * @return PaginationInterface<string, mixed> Paginated list
+     */
     public function findByPhoto(Photo $photo, int $page): PaginationInterface
     {
         return $this->paginator->paginate(
@@ -69,9 +75,16 @@ class CommentService implements CommentServiceInterface
             $page,
             self::PAGINATOR_ITEMS_PER_PAGE
         );
-
     }
 
+    /**
+     * Get paginated list by Photo
+     *
+     * @param User $user User
+     * @param int  $page Page number
+     *
+     * @return PaginationInterface<string, mixed> Paginated list
+     */
     public function findByUser(User $user, int $page): PaginationInterface
     {
         return $this->paginator->paginate(
@@ -79,40 +92,35 @@ class CommentService implements CommentServiceInterface
             $page,
             self::PAGINATOR_ITEMS_PER_PAGE
         );
-
     }
-
     /**
      * Save entity.
      *
      * @param Comment $comment Comment entity
-     *
-     */
-    /**
-     * Save entity.
-     *
-     * @param Comment $comment Comment entity
+     * @param User    $user    User entity
+     * @param Photo   $photo   Photo
      *
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function save(Comment $comment): void
+    public function save(Comment $comment, User $user, Photo $photo): void
     {
-//        if (null === $comment->getId()) {
-//            $comment->setCreatedAt(new \DateTimeImmutable());
-//        }
-//        $comment->setUpdatedAt(new \DateTimeImmutable());
+        $comment->setUser($user);
+        $comment->setPhoto($photo);
 
         $this->commentRepository->save($comment);
-
-
     }
 
-
+    /** Delete entity.
+    *
+    * @param Comment $comment Comment entity
+    *
+    * @throws ORMException
+    * @throws OptimisticLockException
+    */
     public function delete(Comment $comment): void
     {
         $this->commentRepository->delete($comment);
-
     }
 
 

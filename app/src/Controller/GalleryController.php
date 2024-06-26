@@ -74,7 +74,6 @@ class GalleryController extends AbstractController
             ]
         );
     }
-
     /**
      * Index action.
      *

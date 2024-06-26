@@ -49,7 +49,7 @@ class PhotoRepository extends ServiceEntityRepository
     {
         return $this->getOrCreateQueryBuilder()
             ->select(
-                'partial photo.{id, createdAt, updatedAt, title, filename}',
+                'partial photo.{id, createdAt, updatedAt, title, description, filename}',
                 'partial gallery.{id, title}'
             )
             ->join('photo.gallery', 'gallery')

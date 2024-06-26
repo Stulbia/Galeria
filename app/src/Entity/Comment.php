@@ -1,119 +1,196 @@
 <?php
-
+/**
+ * Comment entity.
+ */
 namespace App\Entity;
 
 use App\Repository\CommentRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use DateTimeImmutable;
 
+/**
+ * Class Comment.
+ *
+ * @psalm-suppress MissingConstructor
+ */
 #[ORM\Entity(repositoryClass: CommentRepository::class)]
 #[ORM\Table(name: 'comments')]
 class Comment
 {
+
+    /**
+     * Primary key.
+     *
+     * @var int|null
+     */
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
+
+    /**
+     * Created at.
+     *
+     * @var DateTimeImmutable
+     *
+     * @psalm-suppress PropertyNotSetInConstructor
+     */
     #[ORM\Column]
     #[Gedmo\Timestampable(on: 'create')]
-    private ?\DateTimeImmutable $createdAt = null;
+    private DateTimeImmutable $createdAt;
 
+    /**
+     * Updated at.
+     *
+     * @var DateTimeImmutable
+     *
+     * @psalm-suppress PropertyNotSetInConstructor
+     */
     #[ORM\Column]
     #[Gedmo\Timestampable(on: 'update')]
-    private ?\DateTimeImmutable $updatedAt = null;
+    private DateTimeImmutable $updatedAt;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $content = null;
+    /**
+     * Content.
+     *
+     * @var string
+     */
+    #[ORM\Column(type: 'string', nullable: true)]
+    private string $content;
 
+    /**
+     * Photo.
+     *
+     * @var Photo|null
+     */
     #[ORM\ManyToOne(targetEntity: Photo::class, fetch: 'LAZY')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Photo $photo = null;
 
 
+    /**
+     * User
+     *
+     * @var User|null
+     */
     #[ORM\ManyToOne(targetEntity: User::class, fetch: 'LAZY')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
-    #[ORM\Column(length: 64)]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?string $alias = null;
-
+    /**
+     * Getter for Id.
+     *
+     * @return int|null Id
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    /**
+     * Getter for created at.
+     *
+     * @return DateTimeImmutable Created at
+     */
+    public function getCreatedAt(): DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    /**
+     * Setter for created at.
+     *
+     * @param DateTimeImmutable $createdAt Created at
+     */
+    public function setCreatedAt(DateTimeImmutable $createdAt): void
     {
         $this->createdAt = $createdAt;
-
-        return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeImmutable
+    /**
+     * Getter for updated at.
+     *
+     * @return DateTimeImmutable Updated at
+     */
+    public function getUpdatedAt(): DateTimeImmutable
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
+    /**
+     * Setter for updated at.
+     *
+     * @param DateTimeImmutable|null $updatedAt Updated at
+     */
+    public function setUpdatedAt(?DateTimeImmutable $updatedAt):void
     {
         $this->updatedAt = $updatedAt;
-
-        return $this;
     }
 
+    /**
+     * Getter for content.
+     *
+     * @return string|null content
+     */
     public function getContent(): ?string
     {
         return $this->content;
     }
 
-    public function setContent(?string $content): static
+    /**
+     * Setter for content.
+     *
+     * @param string|null $content content
+     *
+     */
+    public function setContent(?string $content): void
     {
         $this->content = $content;
-
-        return $this;
     }
 
+
+    /**
+     * Getter for photo.
+     *
+     * @return Photo|null $photo
+     */
     public function getPhoto(): ?Photo
     {
         return $this->photo;
     }
-
-    public function setPhoto(?Photo $photo): static
+    /**
+     * Setter for photo.
+     *
+     * @param Photo|null $photo Photo
+     *
+     */
+    public function setPhoto(?Photo $photo): void
     {
         $this->photo = $photo;
-
-        return $this;
     }
 
-    public function getUser(): ?User
+
+    /**
+     * Getter for User.
+     *
+     * @return User $user User
+     *
+     */
+    public function getUser():User
     {
         return $this->user;
     }
 
-    public function setUser(?User $user): static
+    /**
+     * Setter for User.
+     *
+     * @param User $user Photo
+     *
+     */
+    public function setUser(User $user): void
     {
         $this->user = $user;
-
-        return $this;
-    }
-
-    public function getAlias(): ?string
-    {
-        return $this->alias;
-    }
-
-    public function setAlias(string $alias): static
-    {
-        $this->alias = $alias;
-
-        return $this;
     }
 }

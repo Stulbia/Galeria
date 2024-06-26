@@ -5,19 +5,14 @@
 {% endblock %}
 
 {% block body %}
-    <h1>{{ 'title.gallery_details'|trans({'%id%': gallery.id|default('')}) }}</h1>
+    <h1>{{  gallery.title }}</h1>
     {% if gallery is defined and gallery|length %}
         <dl class="dl-horizontal">
-            <dt>{{ 'label.id'|trans }}</dt>
-            <dd>{{ gallery.id }}</dd>
             <dt>{{ 'label.created_at'|trans }}</dt>
             <dd>{{ gallery.createdAt|format_date('long') }}</dd>
             <dt>{{ 'label.updated_at'|trans }}</dt>
             <dd>{{ gallery.updatedAt|format_date('long') }}</dd>
-            <dt>{{ 'label.title'|trans }}</dt>
-            <dd>{{  gallery.title }}</dd>
             <dt>{{ 'label.gallery'|trans }}</dt>
-{#            <dd>{{  gallery.gallery.title }}</dd>#}
         </dl>
         <p>
             <a href="{{ url('gallery_index') }}" title="{{ 'action.back_to_list'|trans }}">
@@ -29,6 +24,6 @@
             {{ 'message.record_not_found'|trans }}
         </p>
     {% endif %}
-    {% include 'photo/index.html.twig' %}
+    {% include 'photo/list.html.twig' %}
 
 {% endblock %}

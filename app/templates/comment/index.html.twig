@@ -1,68 +1,55 @@
 
+
 {% block body %}
-    <h2>{{ 'title.comment_list'|trans }}</h2>
-    {% if pagination is defined and pagination.items|length %}
+    <div class="container mt-4">
+        <h2>{{ 'title.comment_list'|trans }}</h2>
+        {% if pagination is defined and pagination.items|length %}
+            <div class="navigation text-center mb-3">
+                {{ knp_pagination_render(pagination) }}
+            </div>
 
-        <div class="navigation text-center">
-            {{ knp_pagination_render(pagination) }}
-        </div>
+            <div class="table-responsive">
+                <table class="table table-striped">
+{#                    <thead>#}
+{#                    <tr>#}
+{#                        <th>{{ knp_pagination_sortable(pagination, 'label.created_at'|trans, 'comment.createdAt') }}</th>#}
+{#                        <th>{{ 'label.actions'|trans }}</th>#}
+{#                    </tr>#}
+{#                    </thead>#}
+                    <tbody>
+                    {% for comment in pagination.items %}
+                        <tr>
+                            <td>
+                                <strong>{{ comment.user.name }}</strong><br>
+                                <small class="text-muted">{{ comment.user.email }}</small><br>
+                                <small class="text-muted">{{ comment.createdAt|format_date('long') }}</small><br>
+                                <p>{{ comment.content }}</p>
+                            </td>
+                            <td>
+                                {% if is_granted('EDIT', comment) %}
+                                    <a class="btn btn-outline-success btn-sm" href="{{ url('comment_edit', {id: comment.id}) }}" title="{{ 'action.edit'|trans }}">
+                                        {{ 'action.edit'|trans }}
+                                    </a>
+                                {% endif %}
+                                {% if is_granted('DELETE', comment) %}
+                                    <a class="btn btn-outline-danger btn-sm" href="{{ url('comment_delete', {id: comment.id}) }}" title="{{ 'action.delete'|trans }}">
+                                        {{ 'action.delete'|trans }}
+                                    </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
 
-{#        <a href="{{ url('comment_create') }}" title="{{ 'action.create'|trans }}">#}
-{#            {{ 'action.create'|trans }}#}
-{#        </a>#}
-
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>{{ knp_pagination_sortable(pagination, 'label.id'|trans, 'comment.id') }}</th>
-{#                <th>{{ knp_pagination_sortable(pagination, 'label.user'|trans, 'comment.user') }}</th>#}
-                <th>{{ knp_pagination_sortable(pagination, 'label.created_at'|trans, 'comment.createdAt') }}</th>
-                <th>{{ knp_pagination_sortable(pagination, 'label.updated_at'|trans, 'comment.updatedAt') }}</th>
-                <th>{{ knp_pagination_sortable(pagination, 'label.content'|trans, 'comment.content') }}</th>
-{#                <th>{{ knp_pagination_sortable(pagination, 'label_comment'|trans, 'comment.title') }}</th>#}
-{#                <th>{{ 'label.comment'|trans }}</th>#}
-                <th>{{ 'label.actions'|trans }}</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for comment in pagination.items %}
-                <tr>
-                    <td>{{ comment.id }}</td>
-{#                    <td>{{ comment.user }}</td>#}
-                    <td>{{ comment.createdAt|format_date('long') }}</td>
-                    <td>{{ comment.updatedAt|format_date('long') }}</td>
-                    <td>{{ comment.content}}</td>
-
-{#                    <td>#}
-{#                        <a href="{{ url('comment_show', {id: comment.id}) }}" title="{{ 'action.show'|trans }}">#}
-{#                            {{ 'action.show'|trans }}#}
-{#                        </a>#}
-{#                        <a href="{{ url('comment_edit', {id: comment.id}) }}" title="{{ 'action.edit'|trans }}">#}
-{#                            {{ 'action.edit'|trans }}#}
-{#                        </a>#}
-{#                        <a href="{{ url('comment_delete', {id: comment.id}) }}" title="{{ 'action.delete'|trans }}">#}
-{#                            {{ 'action.delete'|trans }}#}
-{#                        </a>#}
-{#                    </td>#}
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-
-        <div class="navigation text-center">
-            {{ knp_pagination_render(pagination) }}
-        </div>
-
-    {% else %}
-        <p>
-{#            {{ 'message.empty_list'|trans }}#}
-
-            {# ... #}
-            {% include 'default/_single_alert_message.html.twig' with {
-                type: 'warning',
-                message: 'message.empty_list'|trans
-            } %}
-            {# ... #}
-        </p>
-    {% endif %}
+            <div class="navigation text-center mt-3">
+                {{ knp_pagination_render(pagination) }}
+            </div>
+        {% else %}
+            <div class="alert alert-warning">
+                {{ 'message.empty_list'|trans }}
+            </div>
+        {% endif %}
+    </div>
 {% endblock %}

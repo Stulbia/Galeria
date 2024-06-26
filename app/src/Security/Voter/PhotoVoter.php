@@ -6,6 +6,7 @@
 namespace App\Security\Voter;
 
 use App\Entity\Photo;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -37,6 +38,15 @@ class PhotoVoter extends Voter
     private const DELETE = 'DELETE';
 
     /**
+     *  Constructor.
+     *
+     * @param  Security $security Security
+     *
+     */
+    public function __construct(private readonly Security $security)
+    {
+    }
+    /**
      * Determines if the attribute and subject are supported by this voter.
      *
      * @param string $attribute An attribute
@@ -62,6 +72,9 @@ class PhotoVoter extends Voter
      */
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
+        if ($this->security->isGranted('ROLE_ADMIN')) {
+            return true;
+        }
         $user = $token->getUser();
         if (!$user instanceof UserInterface) {
             return false;

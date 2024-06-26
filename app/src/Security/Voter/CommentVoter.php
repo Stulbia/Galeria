@@ -1,41 +1,41 @@
 <?php
 /**
- * User voter.
+ * Comment voter.
  */
+
 namespace App\Security\Voter;
 
-use App\Entity\User;
+use App\Entity\Comment;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * UserVoter.
+ * Class CommentVoter.
  */
-class UserVoter extends Voter
+class CommentVoter extends Voter
 {
+    /**
+     * Edit permission.
+     *
+     * @const string
+     */
+    private const EDIT = 'EDIT';
 
     /**
      * View permission.
      *
      * @const string
      */
-    const VIEW = 'VIEW';
-
-    /**
-     * Edit permission.
-     *
-     * @const string
-     */
-    const EDIT = 'EDIT';
+    private const VIEW = 'VIEW';
 
     /**
      * Delete permission.
      *
      * @const string
      */
-    const DELETE = 'DELETE';
+    private const DELETE = 'DELETE';
 
     /**
      *  Constructor.
@@ -46,8 +46,6 @@ class UserVoter extends Voter
     public function __construct(private readonly Security $security)
     {
     }
-
-
     /**
      * Determines if the attribute and subject are supported by this voter.
      *
@@ -58,8 +56,8 @@ class UserVoter extends Voter
      */
     protected function supports(string $attribute, mixed $subject): bool
     {
-        return in_array($attribute, [self::VIEW, self::EDIT, self::DELETE])
-            && $subject instanceof User;
+        return in_array($attribute, [self::EDIT, self::VIEW, self::DELETE])
+            && $subject instanceof Comment;
     }
 
     /**
@@ -74,64 +72,61 @@ class UserVoter extends Voter
      */
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
-        $currentUser = $token->getUser();
-
-        if (!$currentUser instanceof User) {
+        if ($this->security->isGranted('ROLE_ADMIN')) {
+            return true;
+        }
+        $user = $token->getUser();
+        if (!$user instanceof UserInterface) {
+            return false;
+        }
+        if (!$subject instanceof Comment) {
             return false;
         }
 
-        if ($this->security->isGranted('ROLE_ADMIN')) {
-              return true;
-        }
-
-        /** @var User $targetUser */
-        $targetUser = $subject;
-
         return match ($attribute) {
-            self::VIEW => $this->canView($targetUser, $currentUser),
-            self::EDIT => $this->canEdit($targetUser, $currentUser),
-            self::DELETE => $this->canDelete($targetUser, $currentUser),
+            self::EDIT => $this->canEdit($subject, $user),
+            self::VIEW => $this->canView($subject, $user),
+            self::DELETE => $this->canDelete($subject, $user),
             default => false,
         };
     }
 
-
     /**
-     * Checks if user can be viewed.
+     * Checks if user can edit comment.
      *
-     * @param UserInterface $targetUser  Target User
-     * @param UserInterface $currentUser Current User
+     * @param Comment       $comment Comment entity
+     * @param UserInterface $user    User
      *
      * @return bool Result
      */
-    private function canView(UserInterface $targetUser, UserInterface $currentUser): bool
+    private function canEdit(Comment $comment, UserInterface $user): bool
     {
-         return $currentUser === $targetUser;
+        return $comment->getUser() === $user;
     }
 
     /**
-     * Checks if user can edit another user.
+     * Checks if user can view comment.
      *
-     * @param UserInterface $targetUser  Target User
-     * @param UserInterface $currentUser Current User
+     * @param Comment       $comment Comment entity
+     * @param UserInterface $user    User
      *
      * @return bool Result
      */
-    private function canEdit(UserInterface $targetUser, UserInterface $currentUser): bool
+    private function canView(Comment $comment, UserInterface $user): bool
     {
-        return $currentUser === $targetUser;
+        return $comment->getUser() === $user;
     }
 
     /**
-     * Checks if user can delete another user.
+     * Checks if user can delete comment.
      *
-     * @param UserInterface $targetUser  Target User
-     * @param UserInterface $currentUser Current User
+     * @param Comment       $comment Comment entity
+     * @param UserInterface $user    User
      *
      * @return bool Result
      */
-    private function canDelete(UserInterface $targetUser, UserInterface $currentUser): bool
+    private function canDelete(Comment $comment, UserInterface $user): bool
     {
-        return $currentUser === $targetUser;
+        return $comment->getUser() === $user;
     }
 }

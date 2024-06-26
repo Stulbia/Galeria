@@ -1,9 +1,12 @@
 <?php
-
+/**
+ * Comment repository.
+ */
 namespace App\Repository;
 
 use App\Entity\Comment;
 use App\Entity\Photo;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Exception\ORMException;
@@ -13,7 +16,14 @@ use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Comment>
+ * Class PhotoRepository.
+ *
+ * @method Comment|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Comment|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Comment[]    findAll()
+ * @method Comment[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ *
+ * @extends ServiceEntityRepository<Photo>
  */
 class CommentRepository extends ServiceEntityRepository
 {
@@ -27,12 +37,18 @@ class CommentRepository extends ServiceEntityRepository
         parent::__construct($registry, Comment::class);
     }
 
+    /**
+     * Query all records.
+     *
+     * @return QueryBuilder Query builder
+     */
     public function queryAll(): QueryBuilder
     {
         return $this->getOrCreateQueryBuilder()
             ->select(
                 'partial comment.{photo, id, createdAt, updatedAt, content, user}',
-                'partial photo.{id, title}' ,
+                'partial photo.{id, title}',
+                'partial user.{id, email, name}',
             )
             ->join('comment.photo', 'photo')
             ->orderBy('comment.updatedAt', 'DESC');
@@ -40,25 +56,29 @@ class CommentRepository extends ServiceEntityRepository
 
 
     /**
-     * Select photos from gallery.
+     * Select Comments by Photo.
      *
      * @param Photo $photo Photo
      *
      * @return QueryBuilder Query builder
      *
-     * @throws NoResultException
      */
-    public function findByPhoto($photo):QueryBuilder
+    public function findByPhoto(Photo $photo): QueryBuilder
     {
-        $qb = $this->createQueryBuilder('comment')
-            ->select('partial comment.{ user, photo, id, createdAt, updatedAt, content}')
+        return $this->createQueryBuilder('comment')
+            ->select('partial comment.{id, createdAt, updatedAt, content}')
             ->where('comment.photo = :photo')
             ->setParameter('photo', $photo);
-
-        return $qb;
     }
-
-    public function findByUser($user):QueryBuilder
+    /**
+     * Select Comments by User
+     *
+     * @param User $user User
+     *
+     * @return QueryBuilder Query builder
+     *
+     */
+    public function findByUser(User $user):QueryBuilder
     {
         return $this->createQueryBuilder('comments')
             ->select('partial comment.{ id, user, createdAt, updatedAt, content, photo}')

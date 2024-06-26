@@ -146,7 +146,7 @@ class ProfileController extends AbstractController
      *
      * @return Response HTTP response
      */
-    #[Route('/profile/password', name: 'change_password')]
+    #[Route('/profile/password', name: 'self_password')]
     public function changePassword(Request $request): Response
     {
         $user = $this->getUser();

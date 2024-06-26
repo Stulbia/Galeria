@@ -19,6 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -47,16 +48,11 @@ class PhotoController extends AbstractController
     #[Route(name: 'photo_index', methods: 'GET')]
     public function index(#[MapQueryParameter] int $page = 1): Response
     {
-        $user = $this->getUser();
-if (isset($user)) {
-    $pagination = $this->photoService->getPaginatedUserList($page, $user);
-}
-else
-{
-    $pagination = $this->photoService->getPaginatedList($page);
-}
+        $pagination = $this->photoService->getPaginatedList($page);
+
         return $this->render('photo/index.html.twig', ['pagination' => $pagination]);
     }
+
 
 /**
  * Show action.
@@ -66,7 +62,7 @@ else
  * @return Response HTTP response
  */
     #[Route('/{id}', name: 'photo_show', requirements: ['id' => '[1-9]\d*'], methods: 'GET')]
-    #[IsGranted('VIEW', subject: 'photo')]
+//    #[IsGranted('VIEW', subject: 'photo')]
     public function show(Photo $photo,#[MapQueryParameter] int $page = 1): Response {
 
     $pagination = $this->commentService->findByPhoto($photo,$page);
@@ -112,7 +108,7 @@ else
 }
 
     /**
-     * Edit action.
+     * EditEdit action.
      *
      * @param Request $request HTTP request
      * @param Photo    $photo    Photo entity
@@ -120,6 +116,7 @@ else
      * @return Response HTTP response
      */
     #[Route('/{id}/edit', name: 'photo_edit', requirements: ['id' => '[1-9]\d*'], methods: 'GET|PUT')]
+    #[IsGranted('EDIT', subject: 'photo')]
     public function edit(Request $request, Photo $photo): Response
 {
     /** @var User $user */
@@ -230,26 +227,29 @@ else
         name: 'comment_create',
         methods: 'GET|POST',
     )]
+    #[IsGranted('ROLE_USER')]
     public function comment(Request $request,Photo $photo): Response
     {
         $comment = new Comment();
         $form = $this->createForm(CommentType::class, $comment);
         $form->handleRequest($request);
-        $comment->setPhoto($photo);
+
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->commentService->save($comment);
+            $user = $this->getUser();
+            $this->commentService->save($comment, $user, $photo);
 
             $this->addFlash(
                 'success',
                 $this->translator->trans('message.created_successfully')
             );
 
-            return $this->redirectToRoute('comment_index');
+            return $this->redirectToRoute('photo_show',  ['id' => $photo->getId()]);
         }
 
         return $this->render(
             'photo/comment.html.twig',
-            ['form' => $form->createView()]
+            ['form' => $form->createView(), 'photo' => $photo]
         );
     }
 }
+

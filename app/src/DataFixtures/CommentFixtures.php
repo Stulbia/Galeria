@@ -39,7 +39,7 @@ class CommentFixtures extends AbstractBaseFixtures  implements DependentFixtureI
                 )
             );
 
-            $comment->setAlias($this->faker->unique()->word);
+//            $comment->setAlias($this->faker->unique()->word);
 
             /** @var Photo $Photo
              */

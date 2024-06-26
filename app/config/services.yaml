@@ -46,3 +46,7 @@ services:
     App\Service\PhotoService:
         arguments:
              $targetDirectory: '%photos_directory%'
+
+    App\Security\AccessDeniedHandler:
+        tags:
+            - { name: 'monolog.logger', channel: 'security' }

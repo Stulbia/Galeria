@@ -1,42 +1,57 @@
-{# templates/_nav.html.twig #}
-    <div>
-        {% if app.user.avatar.filename is defined and app.user.avatar.filename|length %}
-            <img class="nav-profile-img" src="{{ asset(avatars_directory~app.user.avatar.filename) }}" alt="avatar" style="
-  width: 50px;
-  height: 50px;">
-        {% endif %}
-    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-        <div>{{ app.user.email }}</div>
-        <div>
-            <a href="{{ url('app_logout') }}">{{ 'action_logout'|trans }}</a>
-        </div>
-    {% else %}
-        <div>
-            <a href="{{ url('app_login') }}">{{ 'action_login'|trans }}</a>
-        </div>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    {% if is_granted('ROLE_USER') %}
+
     {% endif %}
-    </div>
-    <div>
-        <a  href="{{ url('photo_index') }}" title="{{ 'all_photos'|trans }}">
-            {{ 'all_photos'|trans }}
-        </a>
-    </div>
-    <div>
-        <a  href="{{ url('gallery_index') }}" title="{{ 'all_galleries'|trans }}">
-            {{ 'all_galleries'|trans }}
-        </a>
-    </div>
-     <div>
-        <a  href="{{ url('tag_index') }}" title="{{ 'all_tags'|trans }}">
-            {{ 'all_tags'|trans }}
-        </a>
-     </div>
-    <div>
-        <a  href="{{ url('user_profile') }}" title="{{ 'profile'|trans }}">
-            {{ 'my_profile'|trans }}
-        </a>
-    </div>
+    <div class="container">
+        <a class="navbar-brand" href="{{ path('photo_index') }}">{{ 'Photo_App'|trans }}</a>
 
-        </nav>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
+            <ul class="navbar-nav ml-auto">
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('photo_index') }}" title="{{ 'all_photos'|trans }}">{{ 'all_photos'|trans }}</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('gallery_index') }}" title="{{ 'all_galleries'|trans }}">{{ 'all_galleries'|trans }}</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('tag_index') }}" title="{{ 'all_tags'|trans }}">{{ 'all_tags'|trans }}</a>
+                </li>
+
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('user_list') }}" title="{{ 'users_list'|trans }}">{{ 'users_list'|trans }}</a>
+                    </li>
+                {% endif %}
+
+                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('user_index') }}" title="{{ 'profile'|trans }}">{{ app.user.name }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_logout') }}">{{ 'action_logout'|trans }}</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_login') }}">{{ 'action_login'|trans }}</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('user_register') }}">{{ 'action_register'|trans }}</a>
+                    </li>
+                {% endif %}
+                <div>
+                    {% if app.user.avatar.filename is defined and app.user.avatar.filename|length %}
+                        <img class="nav-profile-img" src="{{ asset(avatars_directory~app.user.avatar.filename) }}" alt="avatar" style="width: 50px; height: 50px;">
+                    {% endif %}
+                </div>
+            </ul>
+        </div>
+    </div>
+</nav>

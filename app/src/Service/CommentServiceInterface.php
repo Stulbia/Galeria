@@ -24,7 +24,7 @@ interface CommentServiceInterface
      * @return PaginationInterface<string, mixed> Paginated list
      */
     public function getPaginatedList(int $page): PaginationInterface;
-    public function save(Comment $comment): void;
+    public function save(Comment $comment, User $user, Photo $photo): void;
 
     public function delete(Comment $comment): void;
 

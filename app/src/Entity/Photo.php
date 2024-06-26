@@ -104,7 +104,7 @@ class Photo
 
     /**
      * Photo Description
-     *  text|null /??
+     *  text|null
      */
     #[ORM\Column(type: Types::TEXT, length: 255, nullable: true)]
     private ?string $description = null;

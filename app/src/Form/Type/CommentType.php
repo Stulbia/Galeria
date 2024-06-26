@@ -47,16 +47,6 @@ class CommentType extends AbstractType
                 ],
             ]
         );
-
-        $builder->add(
-            'alias',
-            TextType::class,
-            [
-                'label' => 'label.alias',
-                'required' => true,
-                'attr' => ['max_length' => 64],
-            ]
-        );
     }
 
 
