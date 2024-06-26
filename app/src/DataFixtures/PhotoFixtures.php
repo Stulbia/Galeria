@@ -39,7 +39,7 @@ class PhotoFixtures extends AbstractBaseFixtures implements DependentFixtureInte
             $photo->setTitle($this->faker->sentence);
             $photo->setFilename('barbie.png');
             $photo->setDescription($this->faker->sentence);
-            $photo->setStatus([PhotoStatus::PUBLIC->value]);
+            $photo->setStatus(PhotoStatus::PUBLIC);
             $photo->setCreatedAt(
                 DateTimeImmutable::createFromMutable(
                     $this->faker->dateTimeBetween('-100 days', '-1 days')

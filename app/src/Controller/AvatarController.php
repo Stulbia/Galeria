@@ -154,6 +154,7 @@ class AvatarController extends AbstractController
      * @param Request $request HTTP request
      *
      * @return Response HTTP response
+     *
      * @throws ORMException
      * @throws OptimisticLockException
      */

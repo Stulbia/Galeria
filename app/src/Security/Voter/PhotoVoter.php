@@ -78,6 +78,13 @@ class PhotoVoter extends Voter
         }
         $user = $token->getUser();
         if (!$user instanceof UserInterface) {
+            if ($subject->getStatus() === "PUBLIC") {
+                return match ($attribute) {
+                    self::VIEW => true,
+                    default => false,
+                };
+            }
+
             return false;
         }
         if (!$subject instanceof Photo) {
@@ -115,7 +122,12 @@ class PhotoVoter extends Voter
      */
     private function canView(Photo $photo, UserInterface $user): bool
     {
-        return $photo->getAuthor() === $user;
+        return true;
+//        if ($photo->getStatus() === 'PRIVATE') {
+//            return $photo->getAuthor() === $user;
+//        }
+//
+//        return true;
     }
 
     /**

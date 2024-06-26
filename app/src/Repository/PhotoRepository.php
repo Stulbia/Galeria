@@ -8,11 +8,13 @@ namespace App\Repository;
 
 use App\Dto\PhotoListFiltersDto;
 use App\Dto\PhotoListInputFiltersDto;
+use App\Entity\Enum\PhotoStatus;
 use App\Entity\Gallery;
 use App\Entity\Photo;
 use App\Entity\Tag;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\NonUniqueResultException;
@@ -206,10 +208,10 @@ class PhotoRepository extends ServiceEntityRepository
                 ->setParameter('tag', $filters->tag);
         }
 
-//        if ($filters->photoStatus instanceof PhotoStatus) {
-//            $queryBuilder->andWhere('photo.status = :status')
-//                ->setParameter('status', $filters->photoStatus->value, Types::STRING);
-//        }
+        if ($filters->photoStatus instanceof PhotoStatus) {
+            $queryBuilder->andWhere('photo.status = :status')
+                ->setParameter('status', $filters->photoStatus->value, Types::STRING);
+        }
 
         return $queryBuilder;
     }

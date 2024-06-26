@@ -15,6 +15,7 @@
         <table class="table table-striped">
             <thead>
             <tr>
+                <th> {{ 'label.avatar'|trans }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'label.id'|trans, 'user.id') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'label.email'|trans, 'user.email') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'label.roles'|trans, 'user.roles') }}</a></th>
@@ -25,6 +26,11 @@
 
             {% for user in pagination.items %}
                 <tr>
+                    <td>
+                    {% if user.avatar.filename is defined and user.avatar.filename|length %}
+                        <img class="nav-profile-img" src="{{ asset(avatars_directory~user.avatar.filename) }}" alt="avatar" style="width: 50px; height: 50px;">
+                    {% endif %}
+                    </td>
                     <td>{{ user.id }}</td>
                     <td>{{ user.email }}</td>
                     <td>

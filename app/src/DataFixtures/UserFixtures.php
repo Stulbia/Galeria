@@ -6,7 +6,6 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Avatar;
 use App\Entity\Enum\UserRole;
 use App\Entity\User;
 use Doctrine\Persistence\ObjectManager;

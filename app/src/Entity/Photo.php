@@ -62,10 +62,10 @@ class Photo
     /**
      * Status.
      *
-     * @var array<int, string>
+     * @var string $status
      */
-    #[ORM\Column(type: 'json')]
-    private array $status = [];
+    #[ORM\Column(type: 'string')]
+    private string $status = "PUBLIC";
     /**
      * Title.
      *
@@ -157,25 +157,25 @@ class Photo
     /**
      * Getter for status.
      *
-     * @return array<int, string> status
+     * @return string status
      */
-    public function getStatus(): array
+    public function getStatus(): string
     {
-        $status = $this->status;
 //        //gwarancja, że jest zawsze status?
 //        $roles[] = PhotoStatus::ROLE_USER->value;
 
-        return array_unique($status);
+        return $this->status;
     }
 
     /**
      * Setter for status.
      *
-     * @param array<int, string> $status Status
+     * @param PhotoStatus $status Status
      */
-    public function setStatus(array $status): void
+    public function setStatus(PhotoStatus $status): void
     {
-        $this->status = $status;
+        $enum = $status->label();
+        $this->status = $enum;
     }
     /**
      * Getter for created at.

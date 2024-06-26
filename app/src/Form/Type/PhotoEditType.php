@@ -76,8 +76,8 @@ class PhotoEditType extends AbstractType
         );
         $builder->add('status', ChoiceType::class, [
             'choices' => [
-            'label.public' => '1',
-            'label.private' => '2',
+            'label.public' => PhotoStatus::PUBLIC,
+            'label.private' => PhotoStatus::PRIVATE,
             ],
             'multiple' => false,
             'expanded' => true,

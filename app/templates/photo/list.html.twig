@@ -32,6 +32,7 @@
             <tbody>
 
             {% for photo in pagination.items %}
+                {% if is_granted('VIEW', photo) %}
                 <tr>
                     <td>
 
@@ -83,6 +84,7 @@
                         {# ... #}
                     </td>
                 </tr>
+            {% endif %}
             {% endfor %}
             </tbody>
         </table>

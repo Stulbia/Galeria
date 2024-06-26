@@ -18,7 +18,7 @@ interface UserManagerInterface
     /**
      * saves a new user
      *
-     * @param UserInterface user
+     * @param UserInterface $user user
      *
      */
     public function register(UserInterface $user): void;

@@ -53,11 +53,8 @@ class PhotoController extends AbstractController
     #[Route(name: 'photo_index', methods: 'GET')]
     public function index(#[MapQueryString(resolver: PhotoListInputFiltersDtoResolver::class)] PhotoListInputFiltersDto $filters, #[MapQueryParameter] int $page = 1): Response
     {
-        /** @var User $user */
-        $user = $this->getUser();
         $pagination = $this->photoService->getPaginatedList( $page,
-            $filters,
-            $user);
+            $filters);
 
         return $this->render('photo/index.html.twig', ['pagination' => $pagination]);
     }
@@ -202,33 +199,6 @@ class PhotoController extends AbstractController
         );
     }
 
-    /**
-     * Search.
-     *
-     * @param Request  $request HTTP request
-     *
-     * @return Response HTTP response
-     */
-    #[Route('/search', name: 'photos_search')]
-    public function search(Request $request): Response
-    {
-        $form = $this->createForm(TagSearchType::class);
-        $form->handleRequest($request);
-
-        $photos = [];
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            /** @var Tag[] $tags */
-            $tags = $form->get('tags')->getData();
-            $tagsArray = $tags->toArray();
-            $photos = $this->photoService->findByTags($tagsArray);
-        }
-
-        return $this->render('photo/search.html.twig', [
-            'form' => $form->createView(),
-            'photos' => $photos,
-        ]);
-    }
 
     #[Route(
         '/{id}/comment',

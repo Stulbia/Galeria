@@ -1,8 +1,8 @@
 <?php
 
 /**
-* Comment controller.
-*/
+ * Comment controller.
+ */
 
 namespace App\Controller;
 
@@ -19,20 +19,19 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
-* Class CommentController.
-*/
+ * Class CommentController.
+ */
 #[Route('/comment')]
 class CommentController extends AbstractController
 {
-/**
-* Constructor.
-*
-* @param CommentServiceInterface $commentService Photo service
-* @param TranslatorInterface     $translator     Translator
-*/
+    /**
+     * Constructor.
+     *
+     * @param CommentServiceInterface $commentService Comment service
+     * @param TranslatorInterface     $translator     Translator
+     */
     public function __construct(private readonly CommentServiceInterface $commentService, private readonly TranslatorInterface $translator)
     {
-//        $this->commentService = $photoService;
     }
 
     /**
@@ -82,7 +81,7 @@ class CommentController extends AbstractController
     /**
      * Index action.
      *
-     * @param  int $page page
+     * @param int $page Page
      *
      * @return Response HTTP response
      */
@@ -112,45 +111,6 @@ class CommentController extends AbstractController
         return $this->render('comment/show.html.twig', ['comment' => $comment]);
     }
 
-//    // ...
-//    /**
-//     * Create action.
-//     *
-//     * @param Request $request HTTP request
-//     *
-//     * @return Response HTTP response
-//     */
-//    #[Route(
-//        '/create',
-//        name: 'comment_create',
-//        methods: 'GET|POST',
-//    )]
-//    #[IsGranted('ROLE_USER')]
-//    public function create(Request $request): Response
-//    {
-//        $comment = new Comment();
-//        $form = $this->createForm(CommentType::class, $comment);
-//        $form->handleRequest($request);
-//
-//        if ($form->isSubmitted() && $form->isValid()) {
-//            $user = $this->getUser();
-//            $this->commentService->save($comment, $user, $photo);
-//
-//            $this->addFlash(
-//                'success',
-//                $this->translator->trans('message.created_successfully')
-//            );
-//
-//            return $this->redirectToRoute('comment_index');
-//        }
-//
-//        return $this->render(
-//            'comment/create.html.twig',
-//            ['form' => $form->createView()]
-//        );
-//    }
-
-
     /**
      * Delete action.
      *
@@ -163,7 +123,6 @@ class CommentController extends AbstractController
     #[IsGranted('DELETE', subject: 'comment')]
     public function delete(Request $request, Comment $comment): Response
     {
-
         $form = $this->createForm(
             FormType::class,
             $comment,
