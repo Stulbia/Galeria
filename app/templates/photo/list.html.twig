@@ -1,5 +1,4 @@
 {% block body %}
-    <h1>{{ 'title.photo_list'|trans }}</h1>
 
     {% if is_granted('ROLE_USER') %}
         <div class="navigation text-center">
@@ -18,12 +17,13 @@
         <table class="table table-striped">
             <thead>
             <tr>
-                <th> </th>
+                <th>{{ 'label.photo'|trans }}</a></th>
                 <th>{{ knp_pagination_sortable(pagination, 'label.title'|trans, 'photo.title') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'label.description'|trans, 'photo.description') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'label.created_at'|trans, 'photo.createdAt') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'label.updated_at'|trans, 'photo.updatedAt') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'label.gallery'|trans, 'gallery.title') }}</a></th>
+                <th>{{ 'label.tags'|trans }}</a></th>
                 {#                <th>{{ 'label.gallery'|trans }}</th>#}
                 <th>{{ 'label.actions'|trans }}</th>
 
@@ -42,8 +42,24 @@
                     <td>{{ photo.description }}</td>
                     <td>{{ photo.createdAt|format_date('long') }}</td>
                     <td>{{ photo.updatedAt|format_date('long') }}</td>
-                    <td> <a  href="{{ url('gallery_show', {id: photo.gallery.id}) }}">{{ photo.gallery.title }}</a></td>
+                    <td> <a class="btn btn-outline-primary"
+                            href="{{ url('photo_index', {'galleryId' : photo.gallery.id, 'statusId' : photo.status}) }}"
+                            title="{{ photo.gallery.title }}">
+                            {{ photo.gallery.title }}
+                        </a></td>
+                    <td>  {% if photo.tags is defined and photo.tags|length %}
+                            {% for tag in photo.tags %}
+                                <a class="btn btn-outline-primary"
+                                   href="{{ url('photo_index', {'tagId' : tag.id, 'statusId' : photo.status}) }}"
+                                   title="{{ tag.title }}">
+                                    {{ tag.title }}
+                                </a>
+                            {% endfor %}
+                        {% else %}
+                            &nbsp;
+                        {% endif %}</td>
                     <td>
+
                         {# ... #}
                         <div class="list-group">
                             <a href="{{ path('photo_show', {id: photo.id}) }}" class="list-group-item list-group-item-action btn btn-outline-primary" title="{{ 'action.show'|trans }}">

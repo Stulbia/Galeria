@@ -1,18 +1,15 @@
 <?php
+
 /**
  * Photo Status.
  */
 
 namespace App\Entity\Enum;
 
-/**
- * Enum PhotoStatus.
- */
 enum PhotoStatus: string
 {
     case PUBLIC = 'PUBLIC';
     case PRIVATE = 'PRIVATE';
-
     /**
      * Get the role label.
      *
@@ -21,8 +18,8 @@ enum PhotoStatus: string
     public function label(): string
     {
         return match ($this) {
-            PhotoStatus::PUBLIC => 'label.PUBLIC',
-            PhotoStatus::PRIVATE => 'label.PRIVATE',
+            self::PUBLIC => 'PUBLIC',
+            self::PRIVATE => 'PRIVATE',
         };
     }
 }

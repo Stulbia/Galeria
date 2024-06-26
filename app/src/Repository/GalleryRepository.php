@@ -1,7 +1,9 @@
 <?php
+
 /**
  * Gallery repository.
  */
+
 namespace App\Repository;
 
 use App\Entity\Gallery;

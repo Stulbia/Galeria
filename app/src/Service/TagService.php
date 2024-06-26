@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tag service.
  */
@@ -6,16 +7,13 @@
 namespace App\Service;
 
 use App\Entity\Tag;
-//use App\Form\Type\TagType;
 use App\Repository\TagRepository;
-use App\Repository\PhotoRepository;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\OptimisticLockException;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use Psr\Log\InvalidArgumentException;
 
 /**
  * Class TagService.
@@ -36,13 +34,10 @@ class TagService implements TagServiceInterface
     /**
      * Constructor.
      *
-     * @param TagRepository $tagRepository Tag repository
-     * @param PaginatorInterface $paginator  Paginator
-     * @param PhotoRepository $photoRepository Photo repository
+     * @param TagRepository      $tagRepository Tag repository
+     * @param PaginatorInterface $paginator     Paginator
      */
-    public function __construct(private readonly TagRepository $tagRepository,
-                                private readonly PaginatorInterface $paginator,
-                                private readonly PhotoRepository $photoRepository)
+    public function __construct(private readonly TagRepository $tagRepository, private readonly PaginatorInterface $paginator)
     {
     }
 
@@ -63,12 +58,35 @@ class TagService implements TagServiceInterface
     }
 
 
+
     /**
-     * Save entity.
+     * Find by title.
      *
-     * @param Tag $tag Tag entity
+     * @param string $title Tag title
+     *
+     * @return Tag|null Tag entity
      *
      */
+    public function findOneByTitle(string $title): ?Tag
+    {
+        return $this->tagRepository->findOneByTitle($title);
+    }
+
+    /**
+     * Find by id.
+     *
+     * @param int $id Tag id
+     *
+     * @return Tag|null Tag entity
+     *
+     * @throws NonUniqueResultException
+     */
+    public function findOneById(int $id): ?Tag
+    {
+        return $this->tagRepository->findOneById($id);
+    }
+
+
     /**
      * Save entity.
      *
@@ -79,57 +97,20 @@ class TagService implements TagServiceInterface
      */
     public function save(Tag $tag): void
     {
-//        if (null === $tag->getId()) {
-//            $tag->setCreatedAt(new \DateTimeImmutable());
-//        }
-//        $tag->setUpdatedAt(new \DateTimeImmutable());
-
         $this->tagRepository->save($tag);
-
-
     }
-
-
-    public function delete(Tag $tag): void
-    {
-        $this->tagRepository->delete($tag);
-
-    }
-
     /**
-     * Can Tag be deleted?
+     * Delete entity.
      *
      * @param Tag $tag Tag entity
      *
-     * @return bool Result
-     */
-    public function canBeDeleted(Tag $tag): bool
-    {
-        try {
-            $result = $this-> photoRepository ->countByTag($tag);
-
-            return !($result > 0);
-        } catch (NoResultException|NonUniqueResultException) {
-            return false;
-        }
-    }
-
-
-
-// ...
-    /**
-     * Find by title.
+     * @throws ORMException If an ORM error occurs.
+     * @throws OptimisticLockException If a version conflict occurs.
+     * @throws InvalidArgumentException If the provided tag is invalid.
      *
-     * @param string $title Tag title
-     *
-     * @return Tag|null Tag entity
      */
-    public function findOneByTitle(string $title): ?Tag
+    public function delete(Tag $tag): void
     {
-        return $this->tagRepository->findOneByTitle($title);
+        $this->tagRepository->delete($tag);
     }
-// ...
-
-
-
 }

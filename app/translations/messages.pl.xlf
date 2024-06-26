@@ -6,13 +6,164 @@
                 <source>label.actions</source>
                 <target>Operacje</target>
             </trans-unit>
+            <trans-unit id="label.login">
+                <source>action.login</source>
+                <target>Zaloguj</target>
+            </trans-unit>
+            <trans-unit id="label.all_photos">
+                <source>label.all_photos</source>
+                <target>Wszystkie zdjęcia</target>
+            </trans-unit>
+            <trans-unit id="title.comments">
+                <source>title.comments</source>
+                <target>Komentarze</target>
+            </trans-unit>
+            <trans-unit id="label.remember_me">
+                <source>label.remember_me</source>
+                <target>Zapamiętaj mnie</target>
+            </trans-unit>
+
+            <trans-unit id="action.sign_in">
+                <source>action.sign_in</source>
+                <target>Zaloguj się</target>
+            </trans-unit>
+            <trans-unit id="label.confirmPassword">
+                <source>label.confirmPassword</source>
+                <target>Potwtórz hasło</target>
+            </trans-unit>
+
+            <trans-unit id="label.newPassword">
+                <source>label.newPassword</source>
+                <target>Nowe hasło</target>
+            </trans-unit>
+
+            <trans-unit id="title.login_title">
+                <source>title.login_title</source>
+                <target>Zaloguj się</target>
+            </trans-unit>
+
+            <trans-unit id="label.password">
+                <source>label.password</source>
+                <target>Hasło</target>
+            </trans-unit>
+
+
+            <trans-unit id="title.comment_list">
+                <source>title.comment_list</source>
+                <target>Lista komentarzy</target>
+            </trans-unit>
+            <trans-unit id="label.description">
+                <source>label.description</source>
+                <target>Opis</target>
+            </trans-unit>
+            <trans-unit id="label.all_galleries">
+                <source>label.all_galleries</source>
+                <target>Galerie</target>
+            </trans-unit>
+
+            <trans-unit id="label.all_tags">
+                <source>label.all_tags</source>
+                <target>Tagi</target>
+            </trans-unit>
+            <trans-unit id="label.users_list">
+                <source>label.users_list</source>
+                <target>Lista użytkowników</target>
+            </trans-unit>
+            <trans-unit id="action.logout">
+                <source>action.logout</source>
+                <target>Wyloguj</target>
+            </trans-unit>
+            <trans-unit id="action.register">
+                <source>action.register</source>
+                <target>Zarejestruj się</target>
+            </trans-unit>
+            <trans-unit id="action.comment">
+                <source>action.comment</source>
+                <target>Skomentuj</target>
+            </trans-unit>
+
+            <trans-unit id="label.email">
+                <source>label.email</source>
+                <target>E-mail</target>
+            </trans-unit>
+
+            <trans-unit id="label.roles">
+                <source>label.roles</source>
+                <target>Role</target>
+            </trans-unit>
+
+            <trans-unit id="label.name">
+                <source>label.name</source>
+                <target>Imię</target>
+            </trans-unit>
+
+            <trans-unit id="title.user_details">
+                <source>title.user_details</source>
+                <target>Szczegóły użytkownika</target>
+            </trans-unit>
+
+            <trans-unit id="title.user_edit">
+                <source>title.user_edit</source>
+                <target>Edycja użytkownika</target>
+            </trans-unit>
+
+            <trans-unit id="title.tag_edit">
+                <source>title.tag_edit</source>
+                <target>Edycja tagu</target>
+            </trans-unit>
+
+            <trans-unit id="title.tag_list">
+                <source>title.tag_list</source>
+                <target>Lista tagów</target>
+            </trans-unit>
+
+            <trans-unit id="title.tag_delete">
+                <source>title.tag_delete</source>
+                <target>Usuwanie tagu</target>
+            </trans-unit>
+
+            <trans-unit id="title.gallery_edit">
+                <source>title.gallery_edit</source>
+                <target>Edycja galerii</target>
+            </trans-unit>
+
+            <trans-unit id="title.gallery_delete">
+                <source>title.gallery_delete</source>
+                <target>Usuwanie galerii</target>
+            </trans-unit>
+
+            <trans-unit id="title.photo_delete">
+                <source>title.photo_delete</source>
+                <target>Usuwanie zdjęcia</target>
+            </trans-unit>
+
+            <trans-unit id="title.photo_edit">
+                <source>title.photo_edit</source>
+                <target>Edycja zdjęcia</target>
+            </trans-unit>
+
+
+            <trans-unit id="message.form_error">
+                <source>message.form_error</source>
+                <target>Wystąpił błąd formularza.</target>
+            </trans-unit>
+
+            <trans-unit id="label.logged_in_as">
+                <source>label.logged_in_as</source>
+                <target>Zalogowany jako</target>
+            </trans-unit>
+
             <trans-unit id="action.show">
                 <source>action.show</source>
                 <target>Szczegóły</target>
             </trans-unit>
             <trans-unit id="action.back_to_list">
                 <source>action.back_to_list</source>
-                <target>Widok Listy</target>
+                <target>Wróć</target>
+            </trans-unit>
+            <trans-unit id="action.save">
+                <source>action.save</source>
+                <target>Zapisz</target>
             </trans-unit>
             <trans-unit id="action.edit">
                 <source>action.edit</source>
@@ -75,6 +226,133 @@
                 <source>title.gallery_view</source>
                 <target>Widok #%id%</target>
             </trans-unit>
+
+            <trans-unit id="message.created_successfully">
+                <source>message.created_successfully</source>
+                <target>Pomyślnie utworzono.</target>
+            </trans-unit>
+
+            <trans-unit id="message.edited_successfully">
+                <source>message.edited_successfully</source>
+                <target>Pomyślnie edytowano.</target>
+            </trans-unit>
+
+            <trans-unit id="message.avatar_does_not_exist">
+                <source>message.avatar_does_not_exist</source>
+                <target>Avatar nie istnieje.</target>
+            </trans-unit>
+
+            <trans-unit id="message.deleted_successfully">
+                <source>message.deleted_successfully</source>
+                <target>Pomyślnie usunięto.</target>
+            </trans-unit>
+
+            <trans-unit id="message.gallery_contains_photos">
+                <source>message.gallery_contains_photos</source>
+                <target>Galeria zawiera zdjęcia.</target>
+            </trans-unit>
+
+            <trans-unit id="message.registered_successfully">
+                <source>message.registered_successfully</source>
+                <target>Pomyślnie zarejestrowano.</target>
+            </trans-unit>
+
+            <trans-unit id="message.updated_successfully">
+                <source>message.updated_successfully</source>
+                <target>Pomyślnie zaktualizowano.</target>
+            </trans-unit>
+
+            <trans-unit id="title.avatar_create">
+                <source>title.avatar_create</source>
+                <target>Utwórz avatar</target>
+            </trans-unit>
+
+            <trans-unit id="title.avatar_delete">
+                <source>title.avatar_delete</source>
+                <target>Usuń avatar</target>
+            </trans-unit>
+
+            <trans-unit id="title.avatar_edit">
+                <source>title.avatar_edit</source>
+                <target>Edytuj avatar</target>
+            </trans-unit>
+
+            <trans-unit id="title.comment_create">
+                <source>title.comment_create</source>
+                <target>Utwórz komentarz</target>
+            </trans-unit>
+
+            <trans-unit id="title.comment_delete">
+                <source>title.comment_delete</source>
+                <target>Usuń komentarz</target>
+            </trans-unit>
+
+            <trans-unit id="title.comment_edit">
+                <source>title.comment_edit</source>
+                <target>Edytuj komentarz</target>
+            </trans-unit>
+
+            <trans-unit id="title.gallery_create">
+                <source>title.gallery_create</source>
+                <target>Utwórz galerię</target>
+            </trans-unit>
+
+            <trans-unit id="title.gallery_details">
+                <source>title.gallery_details</source>
+                <target>Szczegóły galerii</target>
+            </trans-unit>
+
+            <trans-unit id="label.profile">
+                <source>label.profile</source>
+                <target>Profil</target>
+            </trans-unit>
+
+            <trans-unit id="title.user_delete">
+                <source>title.user_delete</source>
+                <target>Usuń użytkownika</target>
+            </trans-unit>
+
+            <trans-unit id="title.user_list">
+                <source>title.user_list</source>
+                <target>Lista użytkowników</target>
+            </trans-unit>
+
+            <trans-unit id="title.user_create">
+                <source>title.user_create</source>
+                <target>Utwórz użytkownika</target>
+            </trans-unit>
+
+            <trans-unit id="title.comment_details">
+                <source>title.comment_details</source>
+                <target>Szczegóły komentarza</target>
+            </trans-unit>
+
+            <trans-unit id="title.photo_create">
+                <source>title.photo_create</source>
+                <target>Utwórz zdjęcie</target>
+            </trans-unit>
+
+            <trans-unit id="title.photo_details">
+                <source>title.photo_details</source>
+                <target>Szczegóły zdjęcia</target>
+            </trans-unit>
+
+            <trans-unit id="title.tag_create">
+                <source>title.tag_create</source>
+                <target>Utwórz tag</target>
+            </trans-unit>
+
+            <trans-unit id="title.tag_details">
+                <source>title.tag_details</source>
+                <target>Szczegóły tagu</target>
+            </trans-unit>
+
+            <trans-unit id="label.tag">
+                <source>label.tag</source>
+                <target>Tag</target>
+            </trans-unit>
+
+
         </body>
     </file>
 </xliff>

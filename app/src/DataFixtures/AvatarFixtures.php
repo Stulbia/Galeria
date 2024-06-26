@@ -1,4 +1,5 @@
 <?php
+
 /**
  * User fixtures.
  */
@@ -46,29 +47,23 @@ class AvatarFixtures extends AbstractBaseFixtures implements DependentFixtureInt
         }
 
         $this->createMany(5, 'avatars', function (int $i) {
+
             /** @var User $user */
             $user = $this->getReference(sprintf('users_%s', strval($i)));
             $avatar  = new Avatar();
             $avatar->setFilename(sprintf('user%d.png', $i));
             $avatar->setUser($user);
-
             return $avatar;
         });
-
         $this->createMany(1, 'admins_avatars', function (int $i) {
+
             /** @var User $user */
             $user = $this->getReference(sprintf('admins_%s', strval($i)));
             $avatar  = new Avatar();
             $avatar->setFilename(sprintf('admin%d.png', $i));
             $avatar->setUser($user);
-
-
-
             return $avatar;
         });
-
         $this->manager->flush();
     }
-
-
 }

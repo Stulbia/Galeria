@@ -1,7 +1,9 @@
 <?php
+
 /**
  * User voter.
  */
+
 namespace App\Security\Voter;
 
 use App\Entity\User;
@@ -15,29 +17,25 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class UserVoter extends Voter
 {
-
     /**
      * View permission.
      *
      * @const string
      */
     const VIEW = 'VIEW';
-
-    /**
+/**
      * Edit permission.
      *
      * @const string
      */
     const EDIT = 'EDIT';
-
-    /**
+/**
      * Delete permission.
      *
      * @const string
      */
     const DELETE = 'DELETE';
-
-    /**
+/**
      *  Constructor.
      *
      * @param  Security $security Security
@@ -75,18 +73,16 @@ class UserVoter extends Voter
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
         $currentUser = $token->getUser();
-
         if (!$currentUser instanceof User) {
             return false;
         }
 
         if ($this->security->isGranted('ROLE_ADMIN')) {
-              return true;
+            return true;
         }
 
         /** @var User $targetUser */
         $targetUser = $subject;
-
         return match ($attribute) {
             self::VIEW => $this->canView($targetUser, $currentUser),
             self::EDIT => $this->canEdit($targetUser, $currentUser),

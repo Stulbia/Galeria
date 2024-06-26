@@ -1,10 +1,12 @@
 <?php
+
 /**
  * Photo entity.
  */
 
 namespace App\Entity;
 
+use App\Entity\Enum\PhotoStatus;
 use App\Repository\PhotoRepository;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -12,7 +14,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -57,6 +58,14 @@ class Photo
     #[Gedmo\Timestampable(on: 'update')]
     private ?DateTimeImmutable $updatedAt;
 
+
+    /**
+     * Status.
+     *
+     * @var array<int, string>
+     */
+    #[ORM\Column(type: 'json')]
+    private array $status = [];
     /**
      * Title.
      *
@@ -95,12 +104,19 @@ class Photo
     /**
      * @var Collection<int, Tag>
      */
-//    #[ORM\ManyToMany(targetEntity: Tag::class)]
     #[Assert\Valid]
     #[ORM\ManyToMany(targetEntity: Tag::class, fetch: 'EXTRA_LAZY', orphanRemoval: true)]
     #[ORM\JoinTable(name: 'photos_tags')]
     private Collection $tags;
 
+    /**
+     * @var Collection|<int, Comment>
+     *
+     */
+
+    #[ORM\OneToMany(targetEntity: Comment::class, mappedBy:"photo", fetch: "EXTRA_LAZY", cascade: ["remove"])]
+    #[ORM\JoinTable(name: 'photos_comments')]
+    private Collection $comments;
 
     /**
      * Photo Description
@@ -126,6 +142,7 @@ class Photo
     public function __construct()
     {
         $this->tags = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     /**
@@ -137,7 +154,29 @@ class Photo
     {
         return $this->id;
     }
+    /**
+     * Getter for status.
+     *
+     * @return array<int, string> status
+     */
+    public function getStatus(): array
+    {
+        $status = $this->status;
+//        //gwarancja, że jest zawsze status?
+//        $roles[] = PhotoStatus::ROLE_USER->value;
 
+        return array_unique($status);
+    }
+
+    /**
+     * Setter for status.
+     *
+     * @param array<int, string> $status Status
+     */
+    public function setStatus(array $status): void
+    {
+        $this->status = $status;
+    }
     /**
      * Getter for created at.
      *
@@ -272,7 +311,58 @@ class Photo
 
         return $this;
     }
+
+
     /**
+     * Get Comments
+     *
+     * @return Collection<int, Comment>
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    /**
+     * Adds Comments.
+     *
+     * @param Comment $comment Comment
+     *
+     * @return Photo $this Photo
+     */
+    public function addComment(Comment $comment): static
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments->add($comment);
+            $comment->setPhoto($this); // Ensure the inverse side of the relation is updated
+        }
+
+        return $this;
+    }
+
+    /**
+     * Removes Comments.
+     *
+     * @param Comment $comment Comment
+     *
+     * @return Photo $this Photo
+     */
+    public function removeComment(Comment $comment): static
+    {
+        if ($this->comments->removeElement($comment)) {
+            // Ensure the inverse side of the relation is nullified
+            if ($comment->getPhoto() === $this) {
+                $comment->setPhoto(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get Tags
+     *
+     *
      * @return Collection<int, Tag>
      */
     public function getTags(): Collection

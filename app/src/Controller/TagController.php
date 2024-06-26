@@ -1,4 +1,5 @@
 <?php
+
 /**
 * Tag controller.
 */
@@ -7,7 +8,6 @@ namespace App\Controller;
 
 use App\Entity\Tag;
 use App\Form\Type\TagType;
-use App\Service\PhotoServiceInterface;
 use App\Service\TagServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
@@ -26,19 +26,18 @@ class TagController extends AbstractController
 /**
 * Constructor.
 *
-* @param TagServiceInterface $tagService Photo service
-* @param TranslatorInterface      $translator  Translator
+* @param TagServiceInterface $tagService Tag service
+* @param TranslatorInterface $translator Translator
 */
-public function __construct(private readonly TagServiceInterface $tagService, private readonly TranslatorInterface $translator, private readonly PhotoServiceInterface $photoService)
-{
-//        $this->tagService = $photoService;
+    public function __construct(private readonly TagServiceInterface $tagService, private readonly TranslatorInterface $translator)
+    {
     }
 
     /**
      * Edit action.
      *
-     * @param Request  $request  HTTP request
-     * @param Tag $tag Tag entity
+     * @param Request $request HTTP request
+     * @param Tag     $tag     Tag entity
      *
      * @return Response HTTP response
      */
@@ -77,6 +76,8 @@ public function __construct(private readonly TagServiceInterface $tagService, pr
 
     /**
      * Index action.
+     *
+     * @param int $page Page
      *
      * @return Response HTTP response
      */
@@ -146,23 +147,14 @@ public function __construct(private readonly TagServiceInterface $tagService, pr
     /**
      * Delete action.
      *
-     * @param Request  $request  HTTP request
-     * @param Tag $tag Tag entity
+     * @param Request $request HTTP request
+     * @param Tag     $tag     Tag entity
      *
      * @return Response HTTP response
      */
     #[Route('/{id}/delete', name: 'tag_delete', requirements: ['id' => '[1-9]\d*'], methods: 'GET|DELETE')]
     public function delete(Request $request, Tag $tag): Response
     {
-        if(!$this->tagService->canBeDeleted($tag)) {
-            $this->addFlash(
-                'warning',
-                $this->translator->trans('message.tag_contains_photos')
-            );
-
-            return $this->redirectToRoute('tag_index');
-        }
-
         $form = $this->createForm(
             FormType::class,
             $tag,

@@ -1,4 +1,5 @@
 <?php
+
 /**
 * Comment controller.
 */
@@ -163,17 +164,17 @@ class CommentController extends AbstractController
     public function delete(Request $request, Comment $comment): Response
     {
 
-//        $form = $this->createForm(
-//            FormType::class,
-//            $comment,
-//            [
-//                'method' => 'DELETE',
-//                'action' => $this->generateUrl('comment_delete', ['id' => $comment->getId()]),
-//            ]
-//        );
-//        $form->handleRequest($request);
-//
-//        if ($form->isSubmitted() && $form->isValid()) {
+        $form = $this->createForm(
+            FormType::class,
+            $comment,
+            [
+                'method' => 'DELETE',
+                'action' => $this->generateUrl('comment_delete', ['id' => $comment->getId()]),
+            ]
+        );
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->commentService->delete($comment);
 
             $this->addFlash(
@@ -182,14 +183,14 @@ class CommentController extends AbstractController
             );
 
             return $this->redirectToRoute('photo_show', ['id' => $comment->getPhoto()->getId()]);
-//        }
-//
-//        return $this->render(
-//            'comment/delete.html.twig',
-//            [
-//                'form' => $form->createView(),
-//                'comment' => $comment,
-//            ]
-//        );
+        }
+
+        return $this->render(
+            'comment/delete.html.twig',
+            [
+                'form' => $form->createView(),
+                'comment' => $comment,
+            ]
+        );
     }
 }

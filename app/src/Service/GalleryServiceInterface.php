@@ -1,4 +1,7 @@
 <?php
+
+/** @noinspection PhpClassNamingConventionInspection */
+
 /**
  * Gallery service interface.
  */
@@ -6,7 +9,10 @@
 namespace App\Service;
 
 use App\Entity\Gallery;
+use Doctrine\ORM\Exception\ORMException;
+use Doctrine\ORM\OptimisticLockException;
 use Knp\Component\Pager\Pagination\PaginationInterface;
+use Psr\Log\InvalidArgumentException;
 
 /**
  * Interface GalleryServiceInterface.
@@ -21,8 +27,26 @@ interface GalleryServiceInterface
      * @return PaginationInterface<string, mixed> Paginated list
      */
     public function getPaginatedList(int $page): PaginationInterface;
+
+    /**
+     * Save entity.
+     *
+     * @param Gallery $gallery Gallery entity
+     *
+     */
     public function save(Gallery $gallery): void;
 
+
+    /**
+     * Delete entity.
+     *
+     * @param Gallery $gallery Gallery entity
+     *
+     * @throws ORMException If an ORM error occurs.
+     * @throws OptimisticLockException If a version conflict occurs.
+     * @throws InvalidArgumentException If the provided tag is invalid.
+     *
+     */
     public function delete(Gallery $gallery): void;
 
     /**
@@ -33,5 +57,4 @@ interface GalleryServiceInterface
      * @return bool Result
      */
     public function canBeDeleted(Gallery $gallery): bool;
-
 }

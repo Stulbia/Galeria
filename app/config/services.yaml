@@ -50,3 +50,7 @@ services:
     App\Security\AccessDeniedHandler:
         tags:
             - { name: 'monolog.logger', channel: 'security' }
+
+    App\Resolver\PhotoListInputFiltersDtoResolver:
+        tags:
+            - { name: 'controller.argument_value_resolver' }

@@ -1,7 +1,9 @@
 <?php
+
 /**
  * Comment repository.
  */
+
 namespace App\Repository;
 
 use App\Entity\Comment;
@@ -10,7 +12,6 @@ use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Exception\ORMException;
-use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
@@ -78,7 +79,7 @@ class CommentRepository extends ServiceEntityRepository
      * @return QueryBuilder Query builder
      *
      */
-    public function findByUser(User $user):QueryBuilder
+    public function findByUser(User $user): QueryBuilder
     {
         return $this->createQueryBuilder('comments')
             ->select('partial comment.{ id, user, createdAt, updatedAt, content, photo}')

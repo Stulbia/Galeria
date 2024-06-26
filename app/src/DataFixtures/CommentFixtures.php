@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Comment fixtures.
  */
@@ -15,7 +16,7 @@ use Doctrine\Common\DataFixtures\DependentFixtureInterface;
  *
  * @psalm-suppress MissingConstructor
  */
-class CommentFixtures extends AbstractBaseFixtures  implements DependentFixtureInterface
+class CommentFixtures extends AbstractBaseFixtures implements DependentFixtureInterface
 {
     /**
      * Load data.

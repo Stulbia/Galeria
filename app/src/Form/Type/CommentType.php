@@ -1,4 +1,5 @@
 <?php
+
 /**
  * \App\Entity\Comment type.
  */
@@ -42,7 +43,7 @@ class CommentType extends AbstractType
                 'constraints' => [
                     new Length([
                         'max' => 2000,
-                        'maxMessage' => 'Comment cannot be longer than {{ limit }} characters',
+                        'maxMessage' => 'message.max {{ limit }} characters',
                     ]),
                 ],
             ]

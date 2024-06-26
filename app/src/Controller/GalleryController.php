@@ -1,14 +1,19 @@
 <?php
+
 /**
 * Gallery controller.
 */
 
 namespace App\Controller;
 
+use App\Dto\PhotoListInputFiltersDto;
 use App\Entity\Gallery;
 use App\Form\Type\GalleryType;
 use App\Service\GalleryServiceInterface;
 use App\Service\PhotoServiceInterface;
+use Doctrine\ORM\Exception\ORMException;
+use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\OptimisticLockException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\Request;
@@ -77,6 +82,8 @@ class GalleryController extends AbstractController
     /**
      * Index action.
      *
+     * @param int $page Page
+     *
      * @return Response HTTP response
      */
     #[Route(name: 'gallery_index', methods: 'GET')]
@@ -91,8 +98,11 @@ class GalleryController extends AbstractController
      * Show action.
      *
      * @param Gallery $gallery Gallery
+     * @param int     $page    Page
      *
      * @return Response HTTP response
+     *
+     * @throws NoResultException
      */
     #[Route(
         '/{id}',
@@ -102,7 +112,8 @@ class GalleryController extends AbstractController
     )]
     public function show(Gallery $gallery, #[MapQueryParameter] int $page = 1): Response
     {
-        $pagination = $this->photoService->findByGallery($gallery, $page);
+        $filters = new PhotoListInputFiltersDto($gallery->getId(), null, 'PUBLIC');
+        $pagination = $this->photoService->getPaginatedList($page, $filters);
 
         return $this->render('gallery/show.html.twig', ['gallery' => $gallery, 'pagination' => $pagination]);
     }
@@ -147,15 +158,18 @@ class GalleryController extends AbstractController
     /**
      * Delete action.
      *
-     * @param Request  $request  HTTP request
+     * @param Request $request HTTP request
      * @param Gallery $gallery Gallery entity
      *
      * @return Response HTTP response
+     *
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     #[Route('/{id}/delete', name: 'gallery_delete', requirements: ['id' => '[1-9]\d*'], methods: 'GET|DELETE')]
     public function delete(Request $request, Gallery $gallery): Response
     {
-        if(!$this->galleryService->canBeDeleted($gallery)) {
+        if (!$this->galleryService->canBeDeleted($gallery)) {
             $this->addFlash(
                 'warning',
                 $this->translator->trans('message.gallery_contains_photos')

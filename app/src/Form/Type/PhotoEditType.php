@@ -13,16 +13,14 @@ use App\Form\DataTransformer\TagsDataTransformer;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Image;
 
 /**
  * Class PhotoType.
  */
-class PhotoType extends AbstractType
+class PhotoEditType extends AbstractType
 {
     /**
      * Constructor.
@@ -46,28 +44,6 @@ class PhotoType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-
-        $builder->add(
-            'file',
-            FileType::class,
-            [
-                'mapped' => false,
-                'label' => 'label.file',
-                'required' => true,
-                'constraints' => new Image(
-                    [
-                        'maxSize' => '1024k', //1mb
-                        'mimeTypes' => [
-                            'image/png',
-                            'image/jpeg',
-                            'image/pjpeg',
-                            'image/jpeg',
-                            'image/pjpeg',
-                        ],
-                    ]
-                ),
-            ]
-        );
         $builder->add(
             'title',
             TextType::class,
@@ -98,11 +74,10 @@ class PhotoType extends AbstractType
                 'attr' => ['max_length' => 255],
             ]
         );
-
         $builder->add('status', ChoiceType::class, [
             'choices' => [
-                'label.public' => PhotoStatus::PUBLIC,
-                'label.private' => PhotoStatus::PRIVATE,
+            'label.public' => '1',
+            'label.private' => '2',
             ],
             'multiple' => false,
             'expanded' => true,

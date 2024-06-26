@@ -1,7 +1,9 @@
 <?php
+
 /**
  * Class AccessDeniedHandler.
  */
+
 namespace App\Security;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -24,12 +26,11 @@ class AccessDeniedHandler implements AccessDeniedHandlerInterface
      *
      * @return RedirectResponse RedirectResponse
      */
-    public function handle(Request $request, AccessDeniedException $accessDeniedException):RedirectResponse
+    public function handle(Request $request, AccessDeniedException $accessDeniedException): RedirectResponse
     {
         // Get the referrer URL (the previous page)
         $refererUrl = $request->headers->get('referer');
-
-        // If there's no referrer, redirect to the home page or any default page
+// If there's no referrer, redirect to the home page or any default page
         if (!$refererUrl) {
             $refererUrl = '/';
         }

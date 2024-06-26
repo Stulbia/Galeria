@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Avatar controller.
  */
@@ -9,6 +10,8 @@ use App\Entity\Avatar;
 use App\Entity\User;
 use App\Form\Type\AvatarType;
 use App\Service\AvatarServiceInterface;
+use Doctrine\ORM\Exception\ORMException;
+use Doctrine\ORM\OptimisticLockException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -151,6 +154,8 @@ class AvatarController extends AbstractController
      * @param Request $request HTTP request
      *
      * @return Response HTTP response
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     #[Route(
         '/delete',

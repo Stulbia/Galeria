@@ -1,7 +1,9 @@
 <?php
+
 /**
  * Change Password type.
  */
+
 namespace App\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
@@ -25,17 +27,17 @@ class ChangePasswordType extends AbstractType
     {
         $builder
             ->add('newPassword', PasswordType::class, [
-                'label' => 'New Password',
+                'label' => 'label.newPassword',
                 'mapped' => false,
                 'constraints' => [
-                    new NotBlank(['message' => 'Please enter a new password']),
+                    new NotBlank(['message' => 'message.enter_password']),
                 ],
             ])
             ->add('confirmPassword', PasswordType::class, [
-                'label' => 'Confirm New Password',
+                'label' => 'label.confirmPassword',
                 'mapped' => false,
                 'constraints' => [
-                    new NotBlank(['message' => 'Please confirm your new password']),
+                    new NotBlank(['message' => 'message.confirm_password']),
                 ],
             ]);
     }

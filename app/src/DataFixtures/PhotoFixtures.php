@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Photo fixtures.
  */
@@ -38,6 +39,7 @@ class PhotoFixtures extends AbstractBaseFixtures implements DependentFixtureInte
             $photo->setTitle($this->faker->sentence);
             $photo->setFilename('barbie.png');
             $photo->setDescription($this->faker->sentence);
+            $photo->setStatus([PhotoStatus::PUBLIC->value]);
             $photo->setCreatedAt(
                 DateTimeImmutable::createFromMutable(
                     $this->faker->dateTimeBetween('-100 days', '-1 days')
@@ -61,7 +63,7 @@ class PhotoFixtures extends AbstractBaseFixtures implements DependentFixtureInte
                 $photo->addTag($tag);
             }
 
-//$photo->setStatus(PhotoStatus::from($this->faker->numberBetween(1, 2)));
+            //$photo->setStatus(PhotoStatus::from($this->faker->numberBetween(1, 2)));
 
             /** @var User $author */
             $author = $this->getRandomReference('users');

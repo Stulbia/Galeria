@@ -3,7 +3,7 @@
 
     {% endif %}
     <div class="container">
-        <a class="navbar-brand" href="{{ path('photo_index') }}">{{ 'Photo_App'|trans }}</a>
+        <a class="navbar-brand" href="{{ path('photo_index') }}">{{ 'Photo_App' }}</a>
 
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -14,36 +14,36 @@
             <ul class="navbar-nav ml-auto">
 
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ path('photo_index') }}" title="{{ 'all_photos'|trans }}">{{ 'all_photos'|trans }}</a>
+                    <a class="nav-link" href="{{ path('photo_index') }}" title="{{ 'label.all_photos'|trans }}">{{ 'label.all_photos'|trans }}</a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ path('gallery_index') }}" title="{{ 'all_galleries'|trans }}">{{ 'all_galleries'|trans }}</a>
+                    <a class="nav-link" href="{{ path('gallery_index') }}" title="{{ 'label.all_galleries'|trans }}">{{ 'label.all_galleries'|trans }}</a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ path('tag_index') }}" title="{{ 'all_tags'|trans }}">{{ 'all_tags'|trans }}</a>
+                    <a class="nav-link" href="{{ path('tag_index') }}" title="{{ 'label.all_tags'|trans }}">{{ 'label.all_tags'|trans }}</a>
                 </li>
 
                 {% if is_granted('ROLE_ADMIN') %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('user_list') }}" title="{{ 'users_list'|trans }}">{{ 'users_list'|trans }}</a>
+                        <a class="nav-link" href="{{ path('user_list') }}" title="{{ 'label.users_list'|trans }}">{{ 'label.users_list'|trans }}</a>
                     </li>
                 {% endif %}
 
                 {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('user_index') }}" title="{{ 'profile'|trans }}">{{ app.user.name }}</a>
+                        <a class="nav-link" href="{{ path('user_index') }}" title="{{ 'label.profile'|trans }}">{{ app.user.name }}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_logout') }}">{{ 'action_logout'|trans }}</a>
+                        <a class="nav-link" href="{{ path('app_logout') }}">{{ 'action.logout'|trans }}</a>
                     </li>
                 {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_login') }}">{{ 'action_login'|trans }}</a>
+                        <a class="nav-link" href="{{ path('app_login') }}">{{ 'action.login'|trans }}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('user_register') }}">{{ 'action_register'|trans }}</a>
+                        <a class="nav-link" href="{{ path('user_register') }}">{{ 'action.register'|trans }}</a>
                     </li>
                 {% endif %}
                 <div>

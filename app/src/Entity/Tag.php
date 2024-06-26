@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: TagRepository::class)]
 #[ORM\Table(name:'tags')]
 #[ORM\UniqueConstraint(name: 'uq_tags_title', columns: ['title'])]
-#[UniqueEntity (fields: ['title'])]
+#[UniqueEntity(fields: ['title'])]
 class Tag
 {
     #[ORM\Id]

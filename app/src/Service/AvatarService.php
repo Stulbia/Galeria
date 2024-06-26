@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Avatar service.
  */
@@ -8,6 +9,8 @@ namespace App\Service;
 use App\Entity\Avatar;
 use App\Entity\User;
 use App\Repository\AvatarRepository;
+use Doctrine\ORM\Exception\ORMException;
+use Doctrine\ORM\OptimisticLockException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -34,6 +37,9 @@ class AvatarService implements AvatarServiceInterface
      * @param UploadedFile $uploadedFile Uploaded file
      * @param Avatar       $avatar       Avatar entity
      * @param User         $user         User entity
+     *
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function create(UploadedFile $uploadedFile, Avatar $avatar, User $user): void
     {
@@ -50,6 +56,9 @@ class AvatarService implements AvatarServiceInterface
      * @param UploadedFile $uploadedFile Uploaded file
      * @param Avatar       $avatar       Avatar entity
      * @param User         $user         User entity
+     *
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function update(UploadedFile $uploadedFile, Avatar $avatar, User $user): void
     {
@@ -68,6 +77,9 @@ class AvatarService implements AvatarServiceInterface
      * Delete avatar.
      *
      * @param Avatar $avatar Avatar entity
+     *
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function delete(Avatar $avatar): void
     {

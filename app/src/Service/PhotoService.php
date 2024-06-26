@@ -1,17 +1,24 @@
 <?php
+
 /**
  * Photo service.
  */
 
 namespace App\Service;
 
-use App\Entity\Gallery;
+use App\Dto\PhotoListFiltersDto;
+use App\Dto\PhotoListInputFiltersDto;
+use App\Entity\Enum\PhotoStatus;
 use App\Entity\Photo;
 use App\Entity\Tag;
 use App\Entity\User;
 use App\Repository\PhotoRepository;
+use Doctrine\ORM\Exception\ORMException;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\OptimisticLockException;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use Psr\Log\InvalidArgumentException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -28,8 +35,10 @@ class PhotoService implements PhotoServiceInterface
      * @param FileUploadServiceInterface $fileUploadService File upload service
      * @param Filesystem                 $filesystem        Filesystem component
      * @param PaginatorInterface         $paginator         Paginator
+     * @param TagServiceInterface        $tagService        Tag service
+     * @param GalleryServiceInterface    $galleryService    Gallery service
      */
-    public function __construct(private readonly string $targetDirectory, private readonly PhotoRepository $photoRepository, private readonly FileUploadServiceInterface $fileUploadService, private readonly Filesystem $filesystem, private readonly PaginatorInterface $paginator)
+    public function __construct(private readonly string $targetDirectory, private readonly PhotoRepository $photoRepository, private readonly FileUploadServiceInterface $fileUploadService, private readonly Filesystem $filesystem, private readonly PaginatorInterface $paginator, private readonly TagServiceInterface $tagService, private readonly GalleryServiceInterface $galleryService)
     {
     }
 
@@ -43,27 +52,45 @@ class PhotoService implements PhotoServiceInterface
      * @constant int
      */
     private const PAGINATOR_ITEMS_PER_PAGE = 10;
+
     /**
-     * Get paginated list.
+     * Get paginated list for all photos
      *
-     * @param int  $page   Page number
-     * @param User $author author
+     * @param int                      $page    Page number
+     * @param User                     $author  Photo author
+     * @param PhotoListInputFiltersDto $filters Filter
      *
      * @return PaginationInterface<string, mixed> Paginated list
+     *
+     * @throws NonUniqueResultException
      */
-    public function getPaginatedUserList(int $page, User $author): PaginationInterface
+    public function getPaginatedUserList(int $page, User $author, PhotoListInputFiltersDto $filters): PaginationInterface
     {
+        $filters = $this->prepareFilters($filters);
+
         return $this->paginator->paginate(
-            $this->photoRepository->queryByAuthor($author),
+            $this->photoRepository->queryByAuthor($author, $filters),
             $page,
             self::PAGINATOR_ITEMS_PER_PAGE
         );
     }
 
-    public function getPaginatedList(int $page): PaginationInterface
+    /**
+     * Get paginated list for all photos
+     *
+     * @param int                      $page    Page number
+     * @param PhotoListInputFiltersDto $filters Filter
+     *
+     * @return PaginationInterface<string, mixed> Paginated list
+     *
+     * @throws NonUniqueResultException
+     */
+    public function getPaginatedList(int $page, PhotoListInputFiltersDto $filters): PaginationInterface
     {
+        $filters = $this->prepareFilters($filters);
+
         return $this->paginator->paginate(
-            $this->photoRepository->queryAll(),
+            $this->photoRepository->queryAll($filters),
             $page,
             self::PAGINATOR_ITEMS_PER_PAGE
         );
@@ -79,29 +106,24 @@ class PhotoService implements PhotoServiceInterface
     public function save(Photo $photo, UploadedFile $uploadedFile, User $user): void
     {
         $photoFilename = $this->fileUploadService->upload($uploadedFile);
-
         $photo->setAuthor($user);
         $photo->setFilename($photoFilename);
-        $this->photoRepository->save($photo);
+        try {
+            $this->photoRepository->save($photo);
+        } catch (OptimisticLockException | ORMException) {
+        }
     }
 
     /**
      * Update photo.
      *
-     * @param UploadedFile $uploadedFile Uploaded file
-     * @param Photo        $photo        Photo entity
-     * @param User         $user         User entity
+     * @param Photo $photo Photo entity
      */
-    public function edit(UploadedFile $uploadedFile, Photo $photo, User $user): void
+    public function edit(Photo $photo): void
     {
-        $filename = $photo->getFilename();
-
-        if (null !== $filename) {
-            $this->filesystem->remove(
-                $this->targetDirectory.'/'.$filename
-            );
-
-            $this->save($photo, $uploadedFile, $user);
+        try {
+            $this->photoRepository->save($photo);
+        } catch (OptimisticLockException | ORMException) {
         }
     }
 
@@ -109,38 +131,19 @@ class PhotoService implements PhotoServiceInterface
      * Delete photo.
      *
      * @param Photo $photo Photo entity
+     *
+     * @throws ORMException If an ORM error occurs.
+     * @throws OptimisticLockException If a version conflict occurs.
+     * @throws InvalidArgumentException If the provided tag is invalid.
      */
     public function delete(Photo $photo): void
     {
         $filename = $photo->getFilename();
-
         if (null !== $filename) {
-            $this->filesystem->remove(
-                $this->targetDirectory.'/'.$filename
-            );
+            $this->filesystem->remove($this->targetDirectory.'/'.$filename);
         }
         $this->photoRepository->delete($photo);
     }
-
-
-    /**
-     * Find by Galleery
-     *
-     * @param Gallery $gallery Gallery entity
-     * @param int     $page    page
-     *
-     * @return PaginationInterface
-     */
-    public function findByGallery(Gallery $gallery, int $page): PaginationInterface
-    {
-        return $this->paginator->paginate(
-            $this->photoRepository->findByGallery($gallery),
-            $page,
-            self::PAGINATOR_ITEMS_PER_PAGE
-        );
-    }
-
-
     /**
      * Find Photos by Tag Name
      *
@@ -151,5 +154,24 @@ class PhotoService implements PhotoServiceInterface
     public function findByTags(array $tagName): array
     {
         return $this->photoRepository->findByTags($tagName);
+    }
+
+
+    /**
+     * Prepare filters for the photos list.
+     *
+     * @param PhotoListInputFiltersDto $filters Raw filters from request
+     *
+     * @return PhotoListFiltersDto Result filters
+     *
+     * @throws NonUniqueResultException
+     */
+    private function prepareFilters(PhotoListInputFiltersDto $filters): PhotoListFiltersDto
+    {
+        return new PhotoListFiltersDto(
+            null !== $filters->galleryId ? $this->galleryService->findOneById($filters->galleryId) : null,
+            null !== $filters->tagId ? $this->tagService->findOneById($filters->tagId) : null,
+            PhotoStatus::tryFrom($filters->statusId)
+        );
     }
 }

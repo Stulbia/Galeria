@@ -1,7 +1,9 @@
 <?php
+
 /**
  * Comment entity.
  */
+
 namespace App\Entity;
 
 use App\Repository\CommentRepository;
@@ -18,7 +20,6 @@ use DateTimeImmutable;
 #[ORM\Table(name: 'comments')]
 class Comment
 {
-
     /**
      * Primary key.
      *
@@ -66,10 +67,8 @@ class Comment
      * @var Photo|null
      */
     #[ORM\ManyToOne(targetEntity: Photo::class, fetch: 'LAZY')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: "CASCADE")]
     private ?Photo $photo = null;
-
-
     /**
      * User
      *
@@ -124,7 +123,7 @@ class Comment
      *
      * @param DateTimeImmutable|null $updatedAt Updated at
      */
-    public function setUpdatedAt(?DateTimeImmutable $updatedAt):void
+    public function setUpdatedAt(?DateTimeImmutable $updatedAt): void
     {
         $this->updatedAt = $updatedAt;
     }
@@ -178,7 +177,7 @@ class Comment
      * @return User $user User
      *
      */
-    public function getUser():User
+    public function getUser(): User
     {
         return $this->user;
     }

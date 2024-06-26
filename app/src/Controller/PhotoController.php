@@ -1,15 +1,19 @@
 <?php
+
 /**
  * Photo controller.
  */
 
 namespace App\Controller;
 
+use App\Dto\PhotoListInputFiltersDto;
 use App\Entity\Comment;
 use App\Entity\Photo;
 use App\Form\Type\CommentType;
-use App\Form\Type\TagSearchType;
+use App\Form\Type\PhotoEditType;
 use App\Form\Type\PhotoType;
+use App\Form\Type\TagSearchType;
+use App\Resolver\PhotoListInputFiltersDtoResolver;
 use App\Service\CommentServiceInterface;
 use App\Service\PhotoServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -41,14 +45,19 @@ class PhotoController extends AbstractController
     /**
      * Index action.
      *
+     * @param PhotoListInputFiltersDto $filters Input filters
      * @param int $page Page number
      *
      * @return Response HTTP response
      */
     #[Route(name: 'photo_index', methods: 'GET')]
-    public function index(#[MapQueryParameter] int $page = 1): Response
+    public function index(#[MapQueryString(resolver: PhotoListInputFiltersDtoResolver::class)] PhotoListInputFiltersDto $filters, #[MapQueryParameter] int $page = 1): Response
     {
-        $pagination = $this->photoService->getPaginatedList($page);
+        /** @var User $user */
+        $user = $this->getUser();
+        $pagination = $this->photoService->getPaginatedList( $page,
+            $filters,
+            $user);
 
         return $this->render('photo/index.html.twig', ['pagination' => $pagination]);
     }
@@ -63,14 +72,15 @@ class PhotoController extends AbstractController
  */
     #[Route('/{id}', name: 'photo_show', requirements: ['id' => '[1-9]\d*'], methods: 'GET')]
 //    #[IsGranted('VIEW', subject: 'photo')]
-    public function show(Photo $photo,#[MapQueryParameter] int $page = 1): Response {
+    public function show(Photo $photo, #[MapQueryParameter] int $page = 1): Response
+    {
 
-    $pagination = $this->commentService->findByPhoto($photo,$page);
+        $pagination = $this->commentService->findByPhoto($photo, $page);
 
-    return $this->render('photo/show.html.twig', ['photo' => $photo
+        return $this->render('photo/show.html.twig', ['photo' => $photo
         , 'pagination' => $pagination
-    ]);
-}
+        ]);
+    }
 
     /**
      * Create action.
@@ -79,36 +89,36 @@ class PhotoController extends AbstractController
      *
      * @return Response HTTP response
      */
-    #[Route('/create', name: 'photo_create', methods: 'GET|POST', )]
+    #[Route('/create', name: 'photo_create', methods: 'GET|POST',)]
     public function create(Request $request): Response
-{
+    {
     /** @var User $user */
-    $user = $this->getUser();
-    $photo = new Photo();
-    $photo->setAuthor($user);
-    $form = $this->createForm(
-        PhotoType::class,
-        $photo,
-        ['action' => $this->generateUrl('photo_create')]
-    );
-    $form->handleRequest($request);
-    if ($form->isSubmitted() && $form->isValid()) {
-        $file = $form->get('file')->getData();
-        $this->photoService->save($photo,$file,$user);
-
-        $this->addFlash(
-            'success',
-            $this->translator->trans('message.created_successfully')
+        $user = $this->getUser();
+        $photo = new Photo();
+        $photo->setAuthor($user);
+        $form = $this->createForm(
+            PhotoType::class,
+            $photo,
+            ['action' => $this->generateUrl('photo_create')]
         );
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $file = $form->get('file')->getData();
+            $this->photoService->save($photo, $file, $user);
 
-        return $this->redirectToRoute('photo_index');
+            $this->addFlash(
+                'success',
+                $this->translator->trans('message.created_successfully')
+            );
+
+            return $this->redirectToRoute('photo_index');
+        }
+
+        return $this->render('photo/create.html.twig', ['form' => $form->createView()]);
     }
 
-    return $this->render('photo/create.html.twig',  ['form' => $form->createView()]);
-}
-
     /**
-     * EditEdit action.
+     * Edit action.
      *
      * @param Request $request HTTP request
      * @param Photo    $photo    Photo entity
@@ -118,40 +128,38 @@ class PhotoController extends AbstractController
     #[Route('/{id}/edit', name: 'photo_edit', requirements: ['id' => '[1-9]\d*'], methods: 'GET|PUT')]
     #[IsGranted('EDIT', subject: 'photo')]
     public function edit(Request $request, Photo $photo): Response
-{
+    {
     /** @var User $user */
-    $user = $this->getUser();
-    $form = $this->createForm(
-        PhotoType::class,
-        $photo,
-        [
+        $user = $this->getUser();
+        $form = $this->createForm(
+            PhotoEditType::class,
+            $photo,
+            [
             'method' => 'PUT',
             'action' => $this->generateUrl('photo_edit', ['id' => $photo->getId()]),]
-
-    );
-    $form->handleRequest($request);
-
-    if ($form->isSubmitted() && $form->isValid()) {
-        /** @var UploadedFile $file */
-        $file = $form->get('file')->getData();
-        $this->photoService->edit($file,$photo,$user);
-
-        $this->addFlash(
-            'success',
-            $this->translator->trans('message.edited_successfully')
         );
+        $form->handleRequest($request);
 
-        return $this->redirectToRoute('photo_index');
-    }
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var UploadedFile $file */
+            $this->photoService->edit($photo);
 
-    return $this->render(
-        'photo/edit.html.twig',
-        [
+            $this->addFlash(
+                'success',
+                $this->translator->trans('message.edited_successfully')
+            );
+
+            return $this->redirectToRoute('photo_index');
+        }
+
+        return $this->render(
+            'photo/edit.html.twig',
+            [
             'form' => $form->createView(),
             'photo' => $photo,
-        ]
-    );
-}
+            ]
+        );
+    }
 
     /**
      * Delete action.
@@ -163,36 +171,36 @@ class PhotoController extends AbstractController
      */
     #[Route('/{id}/delete', name: 'photo_delete', requirements: ['id' => '[1-9]\d*'], methods: 'GET|DELETE')]
     public function delete(Request $request, Photo $photo): Response
-{
-    $form = $this->createForm(
-        FormType::class,
-        $photo,
-        [
+    {
+        $form = $this->createForm(
+            FormType::class,
+            $photo,
+            [
             'method' => 'DELETE',
             'action' => $this->generateUrl('photo_delete', ['id' => $photo->getId()]),
-        ]
-    );
-    $form->handleRequest($request);
-
-    if ($form->isSubmitted() && $form->isValid()) {
-        $this->photoService->delete($photo);
-
-        $this->addFlash(
-            'success',
-            $this->translator->trans('message.deleted_successfully')
+            ]
         );
+        $form->handleRequest($request);
 
-        return $this->redirectToRoute('photo_index');
-    }
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->photoService->delete($photo);
 
-    return $this->render(
-        'photo/delete.html.twig',
-        [
+            $this->addFlash(
+                'success',
+                $this->translator->trans('message.deleted_successfully')
+            );
+
+            return $this->redirectToRoute('photo_index');
+        }
+
+        return $this->render(
+            'photo/delete.html.twig',
+            [
             'form' => $form->createView(),
             'photo' => $photo,
-        ]
-    );
-}
+            ]
+        );
+    }
 
     /**
      * Search.
@@ -202,7 +210,7 @@ class PhotoController extends AbstractController
      * @return Response HTTP response
      */
     #[Route('/search', name: 'photos_search')]
-    public function search(Request $request ): Response
+    public function search(Request $request): Response
     {
         $form = $this->createForm(TagSearchType::class);
         $form->handleRequest($request);
@@ -228,7 +236,7 @@ class PhotoController extends AbstractController
         methods: 'GET|POST',
     )]
     #[IsGranted('ROLE_USER')]
-    public function comment(Request $request,Photo $photo): Response
+    public function comment(Request $request, Photo $photo): Response
     {
         $comment = new Comment();
         $form = $this->createForm(CommentType::class, $comment);
@@ -243,7 +251,7 @@ class PhotoController extends AbstractController
                 $this->translator->trans('message.created_successfully')
             );
 
-            return $this->redirectToRoute('photo_show',  ['id' => $photo->getId()]);
+            return $this->redirectToRoute('photo_show', ['id' => $photo->getId()]);
         }
 
         return $this->render(
@@ -252,4 +260,3 @@ class PhotoController extends AbstractController
         );
     }
 }
-

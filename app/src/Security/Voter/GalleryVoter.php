@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Gallery voter.
  */
@@ -22,22 +23,19 @@ class GalleryVoter extends Voter
      * @const string
      */
     private const EDIT = 'EDIT';
-
-    /**
+/**
      * View permission.
      *
      * @const string
      */
     private const VIEW = 'VIEW';
-
-    /**
+/**
      * Delete permission.
      *
      * @const string
      */
     private const DELETE = 'DELETE';
-
-    /**
+/**
      *  Constructor.
      *
      * @param  Security $security Security

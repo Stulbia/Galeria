@@ -1,7 +1,9 @@
 <?php
+
 /**
  * Avatar Repository.
  */
+
 namespace App\Repository;
 
 use App\Entity\Avatar;
@@ -20,7 +22,6 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class AvatarRepository extends ServiceEntityRepository
 {
-
     /**
      * Constructor for avatar
      *

@@ -11,24 +11,24 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class TagSearchType extends AbstractType
 {
-public function buildForm(FormBuilderInterface $builder, array $options)
-{
-$builder
-->add('tags', EntityType::class, [
-'class' => Tag::class,
-'choice_label' => 'title',
-'multiple' => true,
-'expanded' => true,
-])
-->add('search', SubmitType::class, [
-'label' => 'Search',
-]);
-}
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder
+        ->add('tags', EntityType::class, [
+        'class' => Tag::class,
+        'choice_label' => 'title',
+        'multiple' => true,
+        'expanded' => true,
+        ])
+        ->add('search', SubmitType::class, [
+        'label' => 'Search',
+        ]);
+    }
 
-public function configureOptions(OptionsResolver $resolver)
-{
-$resolver->setDefaults([
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
 // Konfiguracja formularza
-]);
-}
+        ]);
+    }
 }

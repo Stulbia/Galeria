@@ -19,11 +19,13 @@
                 {{ 'action.back_to_list'|trans }}
             </a>
         </p>
+        <h1>{{ 'title.photo_list'|trans }}</h1>
+        {% include 'photo/list.html.twig' %}
     {% else %}
         <p>
             {{ 'message.record_not_found'|trans }}
         </p>
     {% endif %}
-    {% include 'photo/list.html.twig' %}
+
 
 {% endblock %}

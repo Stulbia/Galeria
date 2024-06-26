@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tag service interface.
  */
@@ -21,8 +22,23 @@ interface TagServiceInterface
      * @return PaginationInterface<string, mixed> Paginated list
      */
     public function getPaginatedList(int $page): PaginationInterface;
+
+
+    /**
+     * Save entity.
+     *
+     * @param Tag $tag Tag entity
+     *
+     */
     public function save(Tag $tag): void;
 
+    /**
+     * Delete entity.
+     *
+     * @param Tag $tag Tag entity
+     *
+     *
+     */
     public function delete(Tag $tag): void;
 
     /**
@@ -32,19 +48,4 @@ interface TagServiceInterface
      *
      * @return bool Result
      */
-    public function canBeDeleted(Tag $tag): bool;
-
-
-// ...
-
-    /**
-     * Find by title.
-     *
-     * @param string $title Tag title
-     *
-     * @return Tag|null Tag entity
-     */
-    public function findOneByTitle(string $title): ?Tag;
-// ...
-
 }

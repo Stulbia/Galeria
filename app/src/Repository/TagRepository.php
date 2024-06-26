@@ -1,20 +1,19 @@
 <?php
+
 /**
  * Tag repository.
  */
+
 namespace App\Repository;
 
 use App\Entity\Tag;
-//use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Exception\ORMException;
-use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Config\Doctrine\Orm\EntityManagerConfig;
 
 /**
  * @method Tag|null find($id, $lockMode = null, $lockVersion = null)
@@ -47,6 +46,33 @@ class TagRepository extends ServiceEntityRepository
             ->orderBy('tag.updatedAt', 'DESC');
     }
 
+    /**
+     * FindOneByTitle
+     *
+     * @param string $title Title
+     *
+     * @return Tag|null The Tag entity or null if not found
+     */
+    public function findOneByTitle(string $title): ?Tag
+    {
+        $queryBuilder = $this->createQueryBuilder('tag')
+            ->andWhere('tag.title = :title')
+            ->setParameter('title', $title);
+
+        try {
+            return $queryBuilder->getQuery()->getSingleResult();
+        } catch (NoResultException $e) {
+            return null;
+        }
+    }
+    /**
+     * Save entity.
+     *
+     * @param Tag $tag Tag entity
+     *
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
     public function save(Tag $tag): void
     {
         assert($this->_em instanceof EntityManager);
@@ -83,6 +109,4 @@ class TagRepository extends ServiceEntityRepository
     {
         return $queryBuilder ?? $this->createQueryBuilder('tag');
     }
-
-
 }

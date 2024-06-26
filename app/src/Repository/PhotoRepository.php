@@ -1,10 +1,13 @@
 <?php
+
 /**
  * Photo repository.
  */
 
 namespace App\Repository;
 
+use App\Dto\PhotoListFiltersDto;
+use App\Dto\PhotoListInputFiltersDto;
 use App\Entity\Gallery;
 use App\Entity\Photo;
 use App\Entity\Tag;
@@ -43,17 +46,23 @@ class PhotoRepository extends ServiceEntityRepository
     /**
      * Query all records.
      *
+     * @param PhotoListFiltersDto $filters Filters
+     *
      * @return QueryBuilder Query builder
      */
-    public function queryAll(): QueryBuilder
+    public function queryAll(PhotoListFiltersDto $filters): QueryBuilder
     {
-        return $this->getOrCreateQueryBuilder()
+        $queryBuilder  = $this->getOrCreateQueryBuilder()
             ->select(
                 'partial photo.{id, createdAt, updatedAt, title, description, filename}',
-                'partial gallery.{id, title}'
+                'partial gallery.{id, title}',
+                'partial tags.{id, title}'
             )
             ->join('photo.gallery', 'gallery')
+            ->leftJoin('photo.tags', 'tags')
             ->orderBy('photo.updatedAt', 'DESC');
+
+        return $this->applyFiltersToList($queryBuilder, $filters);
     }
 
     /**
@@ -76,58 +85,20 @@ class PhotoRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleScalarResult();
     }
-    /**
-     * Count photos by user.
-     *
-     * @param User $user User
-     *
-     * @return int Number of photos by user
-     *
-     * @throws NoResultException
-     * @throws NonUniqueResultException
-     */
-    public function countByUser(User $user): int
-    {
-        $qb = $this->getOrCreateQueryBuilder();
-
-        return $qb->select($qb->expr()->countDistinct('photo.id'))
-            ->where('photo.author = :author')
-            ->setParameter(':author', $user)
-            ->getQuery()
-            ->getSingleScalarResult();
-    }
-
-
-    /**
-     * Select photos from gallery.
-     *
-     * @param Gallery $gallery Gallery
-     *
-     * @return QueryBuilder Query builder
-     *
-     * @throws NoResultException
-     */
-    public function findByGallery($gallery):QueryBuilder
-    {
-        $queryBuilder = $this->queryAll();
-
-        $queryBuilder->andWhere('photo.gallery = :gallery')
-            ->setParameter('gallery', $gallery);
-
-        return $queryBuilder;
-    }
 
     // ...
     /**
-     * Query tasks by author.
+     * Query photo by author.
      *
-     * @param User $user User entity
+     * @param User                     $user    User entity
+     * @param PhotoListInputFiltersDto $filters Filter
      *
      * @return QueryBuilder Query builder
+     *
      */
-    public function queryByAuthor(User $user): QueryBuilder
+    public function queryByAuthor(User $user, PhotoListFiltersDto $filters): QueryBuilder
     {
-        $queryBuilder = $this->queryAll();
+        $queryBuilder = $this->queryAll($filters);
 
         $queryBuilder->andWhere('photo.author = :author')
             ->setParameter('author', $user);
@@ -193,13 +164,14 @@ class PhotoRepository extends ServiceEntityRepository
     public function findByTags(array $tags): array
     {
         $queryBuilder = $this->createQueryBuilder('p')
-            ->distinct() // Użycie distinct, aby uniknąć duplikatów
+            ->distinct()
             ->innerJoin('p.tags', 't')
             ->andWhere('t IN (:tags)')
             ->setParameter('tags', $tags);
 
         return $queryBuilder->getQuery()->getResult();
     }
+
     /**
      * Get or create new query builder.
      *
@@ -212,4 +184,33 @@ class PhotoRepository extends ServiceEntityRepository
         return $queryBuilder ?? $this->createQueryBuilder('photo');
     }
 
+
+
+    /**
+     * Apply filters to paginated list.
+     *
+     * @param QueryBuilder        $queryBuilder Query builder
+     * @param PhotoListFiltersDto $filters      Filters
+     *
+     * @return QueryBuilder Query builder
+     */
+    private function applyFiltersToList(QueryBuilder $queryBuilder, PhotoListFiltersDto $filters): QueryBuilder
+    {
+        if ($filters->gallery instanceof Gallery) {
+            $queryBuilder->andWhere('gallery = :gallery')
+                ->setParameter('gallery', $filters->gallery);
+        }
+
+        if ($filters->tag instanceof Tag) {
+            $queryBuilder->andWhere('tags IN (:tag)')
+                ->setParameter('tag', $filters->tag);
+        }
+
+//        if ($filters->photoStatus instanceof PhotoStatus) {
+//            $queryBuilder->andWhere('photo.status = :status')
+//                ->setParameter('status', $filters->photoStatus->value, Types::STRING);
+//        }
+
+        return $queryBuilder;
+    }
 }

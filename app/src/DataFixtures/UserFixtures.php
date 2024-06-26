@@ -1,4 +1,5 @@
 <?php
+
 /**
  * User fixtures.
  */
@@ -11,7 +12,6 @@ use App\Entity\User;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Faker\Generator;
-
 
 /**
  * Class UserFixtures.

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Comment service interface.
  */
@@ -30,5 +31,4 @@ interface CommentServiceInterface
 
     public function findByPhoto(Photo $photo, int $page): PaginationInterface;
     public function findByUser(User $user, int $page): PaginationInterface;
-
 }

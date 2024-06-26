@@ -1,13 +1,12 @@
 <?php
+
 /**
  * Avatar upload service.
  */
 
 namespace App\Service;
 
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\String\Slugger\SluggerInterface;
 
 /**
  * Class AvatarUploadService.
@@ -17,10 +16,10 @@ class AvatarUploadService implements AvatarUploadServiceInterface
     /**
      * Constructor.
      *
-     * @param string           $targetDirectory Target directory
-     * @param SluggerInterface $slugger         Slugger
+     * @param string            $targetDirectory   Target directory
+     * @param FileUploadService $fileUploadService File Upload Service
      */
-    public function __construct(private readonly string $targetDirectory, private readonly SluggerInterface $slugger)
+    public function __construct(private readonly string $targetDirectory, private readonly FileUploadServiceInterface $fileUploadService)
     {
     }
 
@@ -33,22 +32,7 @@ class AvatarUploadService implements AvatarUploadServiceInterface
      */
     public function upload(UploadedFile $file): string
     {
-        $extension = $file->guessExtension();
-        $fileName = '';
-
-        if (null !== $extension) {
-            $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-            $safeFilename = $this->slugger->slug($originalFilename);
-            $fileName = $safeFilename.'-'.uniqid().'.'.$extension;
-        }
-
-        try {
-            $file->move($this->getTargetDirectory(), $fileName);
-        } catch (FileException) {
-            // ... handle exception if something happens during file upload
-        }
-
-        return $fileName;
+        return $this->fileUploadService->upload($file);
     }
 
     /**

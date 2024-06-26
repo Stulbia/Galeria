@@ -35,7 +35,7 @@ class PhotoListInputFiltersDtoResolver implements ValueResolverInterface
 
         $galleryId = $request->query->get('galleryId');
         $tagId = $request->query->get('tagId');
-        $statusId = $request->query->get('statusId', PhotoStatus::ACTIVE->value);
+        $statusId = $request->query->get('statusId', PhotoStatus::PUBLIC->value);
 
         return [new PhotoListInputFiltersDto($galleryId, $tagId, $statusId)];
     }

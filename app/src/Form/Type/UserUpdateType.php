@@ -1,7 +1,9 @@
 <?php
+
 /**
  * \App\Entity\User type.
  */
+
 namespace App\Form\Type;
 
 use App\Entity\User;
@@ -24,22 +26,24 @@ class UserUpdateType extends AbstractType
  * @param array<string, mixed> $options Form options
  *
 */
-    public function buildForm(FormBuilderInterface $builder, array $options):void
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
         ->add('email', EmailType::class, [
+            'label' => 'label.email',
             'constraints' => [
             new NotBlank([
-                'message' => 'New email',
+                'message' => 'message.email.not_blank',
             ]),
             ],
         ])
         ->add('name', TextType::class, [
+            'label' => 'label.name',
             'required' => true,
             'attr' => ['max_length' => 60],
             'constraints' => [
                 new NotBlank([
-                    'message' => 'Name',
+                    'message' => 'message.name.not_blank',
                 ]),
                 ],
         ]);
@@ -59,7 +63,7 @@ class UserUpdateType extends AbstractType
      *
      * @param OptionsResolver $resolver The resolver for the options
      */
-    public function configureOptions(OptionsResolver $resolver):void
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => User::class,

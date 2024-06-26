@@ -1,4 +1,5 @@
 <?php
+
 /**
  * User Manager.
  */
@@ -9,11 +10,10 @@ use App\Entity\User;
 use App\Repository\AvatarRepository;
 use App\Repository\PhotoRepository;
 use App\Repository\UserRepository;
-use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\NoResultException;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Class UserManager.
@@ -35,10 +35,10 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
     /**
      * saves a new user
      *
-     * @param User $user user
+     * @param UserInterface $user user
      *
      */
-    public function register(User $user): void
+    public function register(UserInterface $user): void
     {
         $password = $user->getPassword();
         $hashedPassword = $this->passwordHasher->hashPassword($user, $password);
@@ -50,10 +50,10 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
     /**
      * saves user data changes
      *
-     * @param User $user user
+     * @param UserInterface $user user
      *
      */
-    public function save(User $user): void
+    public function save(UserInterface $user): void
     {
             $this->userRepository->save($user);
     }
@@ -63,7 +63,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
      * @constant int
      */
     private const PAGINATOR_ITEMS_PER_PAGE = 10;
-    /**
+/**
      * Get paginated list.
      *
      * @param int $page Page number
@@ -72,41 +72,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
      */
     public function getPaginatedList(int $page): PaginationInterface
     {
-        return $this->paginator->paginate(
-            $this->userRepository->queryAll(),
-            $page,
-            self::PAGINATOR_ITEMS_PER_PAGE
-        );
-    }
-    /**
-     *Can User be deleted?
-     *
-     * @param User $user User entity
-     *
-     * @return bool Result
-     */
-    public function canBeDeleted(User $user): bool
-    {
-        try {
-            $result = $this-> photoRepository ->countByUser($user);
-
-            return !($result > 0);
-        } catch (NoResultException|NonUniqueResultException) {
-            return false;
-        }
-    }
-    /**
-     * Delete entity.
-     *
-     * @param User $user User entity
-     */
-    public function delete(User $user): void
-    {
-        $avatar = $user->getAvatar();
-        if ($avatar) {
-            $this->avatarRepository->delete($avatar);
-        }
-        $this->userRepository->delete($user);
+        return $this->paginator->paginate($this->userRepository->queryAll(), $page, self::PAGINATOR_ITEMS_PER_PAGE);
     }
     /**
      * Change Password.
@@ -114,11 +80,10 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
      * @param User   $user             User entity
      * @param string $newPlainPassword New Plain Password
      */
-    public function upgradePassword(User $user, string $newPlainPassword): void
+    public function upgradePassword(UserInterface $user, string $newPlainPassword): void
     {
 
         $newHashedPassword = $this->passwordHasher->hashPassword($user, $newPlainPassword);
-
         $this->userRepository->upgradePassword($user, $newHashedPassword);
     }
 
@@ -130,7 +95,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
      *
      * @return bool
      */
-    public function verifyPassword(User $user, string $plainPassword): bool
+    public function verifyPassword(UserInterface $user, string $plainPassword): bool
     {
         return $this->passwordHasher->isPasswordValid($user, $plainPassword);
     }

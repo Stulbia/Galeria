@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Comment service.
  */
@@ -9,10 +10,7 @@ use App\Entity\Comment;
 use App\Entity\Photo;
 use App\Entity\User;
 use App\Repository\CommentRepository;
-use App\Repository\PhotoRepository;
 use Doctrine\ORM\Exception\ORMException;
-use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\OptimisticLockException;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -38,9 +36,8 @@ class CommentService implements CommentServiceInterface
      *
      * @param CommentRepository  $commentRepository Comment repository
      * @param PaginatorInterface $paginator         Paginator
-     * @param PhotoRepository    $photoRepository   Photo repository
      */
-    public function __construct(private readonly CommentRepository $commentRepository, private readonly PaginatorInterface $paginator, private readonly PhotoRepository $photoRepository)
+    public function __construct(private readonly CommentRepository $commentRepository, private readonly PaginatorInterface $paginator)
     {
     }
 
@@ -122,11 +119,4 @@ class CommentService implements CommentServiceInterface
     {
         $this->commentRepository->delete($comment);
     }
-
-
-
-
-
-
-
 }

@@ -1,7 +1,9 @@
 <?php
+
 /**
  * User repository.
  */
+
 namespace App\Repository;
 
 use App\Entity\User;
@@ -14,6 +16,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @extends ServiceEntityRepository
@@ -49,30 +52,15 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     /**
      * Save entity.
      *
-     * @param User $user user
+     * @param UserInterface $user user
      *
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function save(User $user): void
+    public function save(UserInterface $user): void
     {
         assert($this->_em instanceof EntityManager);
         $this->_em->persist($user);
-        $this->_em->flush();
-    }
-
-    /**
-     * Delete entity.
-     *
-     * @param User $user User entity
-     *
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
-    public function delete(User $user): void
-    {
-        assert($this->_em instanceof EntityManager);
-        $this->_em->remove($user);
         $this->_em->flush();
     }
     /**
