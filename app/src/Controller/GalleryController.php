@@ -1,8 +1,8 @@
 <?php
 
 /**
-* Gallery controller.
-*/
+ * Gallery controller.
+ */
 
 namespace App\Controller;
 
@@ -23,20 +23,20 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
-* Class GalleryController.
-*/
+ * Class GalleryController.
+ */
 #[Route('/gallery')]
 class GalleryController extends AbstractController
 {
-/**
-* Constructor.
-* @param PhotoServiceInterface   $photoService   Photo service
-* @param GalleryServiceInterface $galleryService Gallery service
-* @param TranslatorInterface     $translator     Translator
-*/
+    /**
+     * Constructor.
+     *
+     * @param PhotoServiceInterface   $photoService   Photo service
+     * @param GalleryServiceInterface $galleryService Gallery service
+     * @param TranslatorInterface     $translator     Translator
+     */
     public function __construct(private readonly PhotoServiceInterface $photoService, private readonly GalleryServiceInterface $galleryService, private readonly TranslatorInterface $translator)
     {
-    //        $this->galleryService = $photoService;
     }
 
     /**
@@ -79,6 +79,7 @@ class GalleryController extends AbstractController
             ]
         );
     }
+
     /**
      * Index action.
      *
@@ -118,7 +119,6 @@ class GalleryController extends AbstractController
         return $this->render('gallery/show.html.twig', ['gallery' => $gallery, 'pagination' => $pagination]);
     }
 
-    // ...
     /**
      * Create action.
      *
@@ -153,7 +153,6 @@ class GalleryController extends AbstractController
             ['form' => $form->createView()]
         );
     }
-
 
     /**
      * Delete action.

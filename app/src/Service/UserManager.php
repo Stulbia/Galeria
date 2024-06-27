@@ -10,6 +10,10 @@ use App\Entity\User;
 use App\Repository\AvatarRepository;
 use App\Repository\PhotoRepository;
 use App\Repository\UserRepository;
+use Doctrine\ORM\Exception\ORMException;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\OptimisticLockException;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -25,11 +29,10 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @param UserPasswordHasherInterface $passwordHasher   PasswordHasher
  * @param PaginatorInterface          $paginator        Paginator
  * @param UserRepository              $userRepository   UserRepository
- * @param PhotoRepository             $photoRepository  UserRepository
  * @param AvatarRepository            $avatarRepository UserRepository
  *
  */
-    public function __construct(private readonly UserPasswordHasherInterface $passwordHasher, private readonly PaginatorInterface $paginator, private readonly UserRepository $userRepository, private readonly PhotoRepository $photoRepository, private readonly AvatarRepository $avatarRepository)
+    public function __construct(private readonly UserPasswordHasherInterface $passwordHasher, private readonly PaginatorInterface $paginator, private readonly UserRepository $userRepository, private readonly AvatarRepository $avatarRepository)
     {
     }
     /**
@@ -55,7 +58,10 @@ use Symfony\Component\Security\Core\User\UserInterface;
      */
     public function save(UserInterface $user): void
     {
+        try {
             $this->userRepository->save($user);
+        } catch (OptimisticLockException|ORMException $e) {
+        }
     }
     /**
      * Items per page.
@@ -98,5 +104,19 @@ use Symfony\Component\Security\Core\User\UserInterface;
     public function verifyPassword(UserInterface $user, string $plainPassword): bool
     {
         return $this->passwordHasher->isPasswordValid($user, $plainPassword);
+    }
+
+    /**
+     * Verify if this is the last admin.
+     *
+     * @return bool
+     */
+    public function canBeDowngraded(): bool
+    {
+        try {
+            return $this->userRepository->countByAdmin() > 1;
+        } catch (NoResultException|NonUniqueResultException $e) {
+            return false;
+        }
     }
 }

@@ -55,4 +55,10 @@ interface UserManagerInterface
      * @return bool
      */
     public function verifyPassword(UserInterface $user, string $plainPassword): bool;
+    /**
+     * Verify if this is the last admin.
+     *
+     * @return bool
+     */
+    public function canBeDowngraded(): bool;
 }

@@ -27,9 +27,15 @@
             {% for user in pagination.items %}
                 <tr>
                     <td>
-                    {% if user.avatar.filename is defined and user.avatar.filename|length %}
-                        <img class="nav-profile-img" src="{{ asset(avatars_directory~user.avatar.filename) }}" alt="avatar" style="width: 50px; height: 50px;">
-                    {% endif %}
+                    <a href="{{ url('avatar_index', {id: user.id}) }}">
+                        {% if user.avatar.filename is defined and user.avatar.filename|length %}
+                        <img class="nav-profile-img" src="{{ asset(avatars_directory~user.avatar.filename) }}" alt="avatar" style="width: 50px; height: 50px;" >
+                        {% else %}
+                            <img class="nav-profile-img" src="{{ asset('uploads/avatars/default.png') }}"
+                                 alt="avatar" style="width: 50px; height: 50px;" >
+                        {% endif %}
+
+                    </a>
                     </td>
                     <td>{{ user.id }}</td>
                     <td>{{ user.email }}</td>
@@ -38,6 +44,7 @@
                             {{ role }}{% if not loop.last %}, {% endif %}
                         {% endfor %}
                     </td>
+                 {% if is_granted('ROLE_ADMIN') %}
                     <td>
                             <a class="btn btn-outline-primary" href="{{ url('user_show', {id: user.id}) }}" title="{{ 'action.show'|trans }}">
                                 {{ 'action.show'|trans }}
@@ -45,7 +52,14 @@
                             <a class="btn btn-outline-success" href="{{ url('user_edit', {id: user.id}) }}" title="{{ 'action.edit'|trans }}">
                                 {{ 'action.edit'|trans }}
                             </a>
+                            <a class="btn btn-outline-success" href="{{ url('user_edit_admin', {id: user.id}) }}" title="{{ 'action.edit.admin'|trans }}">
+                            {{ 'action.edit.admin'|trans }}
+                            </a>
+                        <a class="btn btn-outline-success" href="{{ url('user_password', {id: user.id}) }}" title="{{ 'action.edit.password'|trans }}">
+                            {{ 'action.edit.password'|trans }}
+                        </a>
                     </td>
+                 {% endif %}
                 </tr>
             {% endfor %}
             </tbody>

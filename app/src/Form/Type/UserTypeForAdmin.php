@@ -30,24 +30,6 @@ class UserTypeForAdmin extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-        ->add('email', EmailType::class, [
-            'label' => 'label.email',
-            'constraints' => [
-            new NotBlank([
-                'message' => 'message.email.not_blank',
-            ]),
-            ],
-        ])
-        ->add('name', TextType::class, [
-            'required' => true,
-            'label' => 'label.name',
-            'attr' => ['max_length' => 60],
-            'constraints' => [
-                new NotBlank([
-                    'message' => 'message.name.not_blank',
-                ]),
-            ],
-        ])
         ->add('roles', ChoiceType::class, [
             'label' => 'label.roles',
             'choices' => [

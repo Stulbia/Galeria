@@ -10,6 +10,8 @@ use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Exception\ORMException;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
@@ -74,7 +76,24 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->select('partial user.{id, email,name, roles}')
             ->orderBy('user.email', 'DESC');
     }
+
     /**
+     * Count all admins.
+     *
+     * @return int The amount of admins
+     *
+     * @throws NoResultException
+     * @throws NonUniqueResultException
+     */
+    public function countByAdmin(): ?int
+    {
+        $qb = $this->createQueryBuilder('user');
+        $qb->select($qb->expr()->countDistinct('user.id'))
+            ->where('user.roles LIKE :role')
+            ->setParameter('role', '%ROLE_ADMIN%');
+
+        return (int) $qb->getQuery()->getSingleScalarResult();
+    }
 
     /**
      * Get or create new query builder.
@@ -87,28 +106,4 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     {
         return $queryBuilder ?? $this->createQueryBuilder('user');
     }
-    //    /**
-    //     * @return User[] Returns an array of User objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('u')
-    //            ->andWhere('u.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('u.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-    //    public function findOneBySomeField($value): ?User
-    //    {
-    //        return $this->createQueryBuilder('u')
-    //            ->andWhere('u.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
 }

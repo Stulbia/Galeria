@@ -1,8 +1,8 @@
 <?php
 
 /**
-* Tag controller.
-*/
+ * Tag controller.
+ */
 
 namespace App\Controller;
 
@@ -18,17 +18,17 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
-* Class TagController.
-*/
+ * Class TagController.
+ */
 #[Route('/tag')]
 class TagController extends AbstractController
 {
-/**
-* Constructor.
-*
-* @param TagServiceInterface $tagService Tag service
-* @param TranslatorInterface $translator Translator
-*/
+    /**
+     * Constructor.
+     *
+     * @param TagServiceInterface $tagService Tag service
+     * @param TranslatorInterface $translator Translator
+     */
     public function __construct(private readonly TagServiceInterface $tagService, private readonly TranslatorInterface $translator)
     {
     }
@@ -96,18 +96,12 @@ class TagController extends AbstractController
      *
      * @return Response HTTP response
      */
-    #[Route(
-        '/{id}',
-        name: 'tag_show',
-        requirements: ['id' => '[1-9]\d*'],
-        methods: 'GET'
-    )]
+    #[Route('/{id}', name: 'tag_show', requirements: ['id' => '[1-9]\d*'], methods: 'GET')]
     public function show(Tag $tag): Response
     {
         return $this->render('tag/show.html.twig', ['tag' => $tag]);
     }
 
-    // ...
     /**
      * Create action.
      *
@@ -115,11 +109,7 @@ class TagController extends AbstractController
      *
      * @return Response HTTP response
      */
-    #[Route(
-        '/create',
-        name: 'tag_create',
-        methods: 'GET|POST',
-    )]
+    #[Route('/create', name: 'tag_create', methods: 'GET|POST')]
     public function create(Request $request): Response
     {
         $tag = new Tag();
@@ -142,7 +132,6 @@ class TagController extends AbstractController
             ['form' => $form->createView()]
         );
     }
-
 
     /**
      * Delete action.

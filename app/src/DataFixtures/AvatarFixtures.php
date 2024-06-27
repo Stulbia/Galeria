@@ -18,12 +18,6 @@ use Faker\Generator;
  */
 class AvatarFixtures extends AbstractBaseFixtures implements DependentFixtureInterface
 {
-//    /**
-//     * @param UserPasswordHasherInterface $passwordHasher Password hasher
-//     */
-//    public function __construct(private readonly UserPasswordHasherInterface $passwordHasher)
-//    {
-//    }
 
     /**
      * This method must return an array of fixtures classes
@@ -51,8 +45,9 @@ class AvatarFixtures extends AbstractBaseFixtures implements DependentFixtureInt
             /** @var User $user */
             $user = $this->getReference(sprintf('users_%s', strval($i)));
             $avatar  = new Avatar();
-            $avatar->setFilename(sprintf('user%d.png', $i));
+            $avatar->setFilename('penguin.jpg');
             $avatar->setUser($user);
+
             return $avatar;
         });
         $this->createMany(1, 'admins_avatars', function (int $i) {
@@ -60,8 +55,9 @@ class AvatarFixtures extends AbstractBaseFixtures implements DependentFixtureInt
             /** @var User $user */
             $user = $this->getReference(sprintf('admins_%s', strval($i)));
             $avatar  = new Avatar();
-            $avatar->setFilename(sprintf('admin%d.png', $i));
+            $avatar->setFilename('admin%d.png', $i));
             $avatar->setUser($user);
+
             return $avatar;
         });
         $this->manager->flush();

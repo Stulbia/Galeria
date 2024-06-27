@@ -22,6 +22,7 @@ catch {
 
 Write-Output "Running php-cs-fixer..."
 ./vendor/bin/php-cs-fixer fix src/ --dry-run -vvv --rules=@Symfony,@PSR1,@PSR2,@PSR12 | Out-File -FilePath $RESULT_FILE -Append
+php ./vendor/bin/php-cs-fixer fix src/ --dry-run -vvv --rules "@Symfony","@PSR1","@PSR2","@PSR12" | Out-File -FilePath $RESULT_FILE -Append
 
 Remove-Item -Path ".php-cs-fixer.dist.php" -ErrorAction SilentlyContinue
 Remove-Item -Path ".php-cs-fixer.cache" -ErrorAction SilentlyContinue

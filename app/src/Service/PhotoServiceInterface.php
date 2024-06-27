@@ -14,6 +14,7 @@ use App\Entity\User;
 use Doctrine\ORM\NoResultException;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Interface PhotoServiceInterface.
@@ -34,21 +35,21 @@ interface PhotoServiceInterface
      * Get paginated list.
      *
      * @param int                      $page    Page number
-     * @param User                     $author  author
+     * @param UserInterface                     $author  author
      * @param PhotoListInputFiltersDto $filters Filter
      *
      * @return PaginationInterface<string, mixed> Paginated list
      */
-    public function getPaginatedUserList(int $page, User $author, PhotoListInputFiltersDto $filters): PaginationInterface;
+    public function getPaginatedUserList(int $page, UserInterface $author, PhotoListInputFiltersDto $filters): PaginationInterface;
 
     /**
      * Save photo.
      *
      * @param Photo        $photo        Photo entity
      * @param UploadedFile $uploadedFile Uploaded file
-     * @param User         $user         User entity
+     * @param UserInterface        $user         User entity
      */
-    public function save(Photo $photo, UploadedFile $uploadedFile, User $user): void;
+    public function save(Photo $photo, UploadedFile $uploadedFile, UserInterface $user): void;
 
     /**
      * Update photo.

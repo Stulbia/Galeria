@@ -7,7 +7,6 @@
 namespace App\Controller;
 
 use App\Entity\Avatar;
-use App\Entity\User;
 use App\Form\Type\AvatarType;
 use App\Service\AvatarServiceInterface;
 use Doctrine\ORM\Exception\ORMException;
@@ -18,6 +17,8 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -37,21 +38,43 @@ class AvatarController extends AbstractController
     }
 
     /**
+     * Show action.
+     *
+     * @param UserInterface $user user
+     *
+     * @return Response HTTP response
+     */
+    #[Route('/{id}', name: 'avatar_index', methods: 'GET')]
+    #[IsGranted('VIEW', subject: 'user')]
+    public function index(UserInterface $user): Response
+    {
+        if (!$user->getAvatar()) {
+            return $this->redirectToRoute(
+                'avatar_create',
+                ['id' => $user->getId()]
+            );
+        }
+        $avatar = $user->getAvatar();
+
+        return $this->render('avatar/show.html.twig', ['avatar' => $avatar, 'user' => $user]);
+    }
+
+    /**
      * Create action.
      *
-     * @param Request $request HTTP request
+     * @param Request       $request HTTP request
+     * @param UserInterface $user    user
      *
      * @return Response HTTP response
      */
     #[Route(
-        '/create',
+        '/{id}/create',
         name: 'avatar_create',
         methods: 'GET|POST'
     )]
-    public function create(Request $request): Response
+    #[IsGranted('EDIT', subject: 'user')]
+    public function create(Request $request, UserInterface $user): Response
     {
-        /** @var User $user */
-        $user = $this->getUser();
         if ($user->getAvatar()) {
             return $this->redirectToRoute(
                 'avatar_edit',
@@ -93,19 +116,19 @@ class AvatarController extends AbstractController
     /**
      * Edit action.
      *
-     * @param Request $request HTTP request
+     * @param Request       $request HTTP request
+     * @param UserInterface $user    user
      *
      * @return Response HTTP response
      */
     #[Route(
-        '/edit',
+        '/{id}/edit',
         name: 'avatar_edit',
         methods: 'GET|PUT'
     )]
-    public function edit(Request $request): Response
+    #[IsGranted('EDIT', subject: 'user')]
+    public function edit(Request $request, UserInterface $user): Response
     {
-        /** @var User $user */
-        $user = $this->getUser();
         if (!$user->getAvatar()) {
             return $this->redirectToRoute('avatar_create');
         }
@@ -136,7 +159,7 @@ class AvatarController extends AbstractController
                 $this->translator->trans('message.edited_successfully')
             );
 
-            return $this->redirectToRoute('photo_index');
+            return $this->redirectToRoute('user_profile');
         }
 
         return $this->render(
@@ -151,7 +174,8 @@ class AvatarController extends AbstractController
     /**
      * Edit action.
      *
-     * @param Request $request HTTP request
+     * @param Request       $request HTTP request
+     * @param UserInterface $user    user
      *
      * @return Response HTTP response
      *
@@ -163,10 +187,9 @@ class AvatarController extends AbstractController
         name: 'avatar_delete',
         methods: 'GET|DELETE'
     )]
-    public function delete(Request $request): Response
+    #[IsGranted('EDIT', subject: 'user')]
+    public function delete(Request $request, UserInterface $user): Response
     {
-        /** @var User $user */
-        $user = $this->getUser();
         if (!$user->getAvatar()) {
             $this->addFlash(
                 'error',

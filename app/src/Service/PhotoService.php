@@ -21,6 +21,7 @@ use Knp\Component\Pager\PaginatorInterface;
 use Psr\Log\InvalidArgumentException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Class PhotoService.
@@ -64,7 +65,7 @@ class PhotoService implements PhotoServiceInterface
      *
      * @throws NonUniqueResultException
      */
-    public function getPaginatedUserList(int $page, User $author, PhotoListInputFiltersDto $filters): PaginationInterface
+    public function getPaginatedUserList(int $page, UserInterface $author, PhotoListInputFiltersDto $filters): PaginationInterface
     {
         $filters = $this->prepareFilters($filters);
 
@@ -101,9 +102,9 @@ class PhotoService implements PhotoServiceInterface
      *
      * @param Photo        $photo        Photo entity
      * @param UploadedFile $uploadedFile Uploaded file
-     * @param User         $user         User entity
+     * @param UserInterface         $user         User entity
      */
-    public function save(Photo $photo, UploadedFile $uploadedFile, User $user): void
+    public function save(Photo $photo, UploadedFile $uploadedFile, UserInterface $user): void
     {
         $photoFilename = $this->fileUploadService->upload($uploadedFile);
         $photo->setAuthor($user);

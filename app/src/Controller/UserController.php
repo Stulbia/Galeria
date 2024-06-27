@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * User controller.
  */
@@ -16,12 +18,12 @@ use App\Form\Type\UserUpdateType;
 use App\Service\PhotoServiceInterface;
 use App\Service\UserManagerInterface;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -42,7 +44,6 @@ class UserController extends AbstractController
     {
     }
 
-
     /**
      * Show user profile with photo list.
      *
@@ -55,11 +56,15 @@ class UserController extends AbstractController
     public function index(#[MapQueryParameter] int $page = 1): Response
     {
         $filters = new PhotoListInputFiltersDto(null, null, 'PRIVATE');
-        $user = $this ->getUser();
+        $user = $this->getUser();
         $pagination = $this->photoService->getPaginatedUserList($page, $user, $filters);
 
-        return $this->render('user/index.html.twig', ['pagination' => $pagination, 'user'  => $user]);
+        return $this->render('user/index.html.twig', [
+            'pagination' => $pagination,
+            'user' => $user,
+        ]);
     }
+
     /**
      * Register action.
      *
@@ -87,8 +92,11 @@ class UserController extends AbstractController
             return $this->redirectToRoute('photo_index');
         }
 
-        return $this->render('user/register.html.twig', ['form' => $form->createView()]);
+        return $this->render('user/register.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
+
     /**
      * Edit action.
      *
@@ -98,17 +106,12 @@ class UserController extends AbstractController
      * @return Response HTTP response
      */
     #[Route('/{id}/edit', name: 'user_edit', requirements: ['id' => '[1-9]\d*'], methods: ['GET', 'PUT'])]
-    #[IsGranted('EDIT', subject:'user')]
-    public function edit(Request $request, UserInterface $user): Response
+    #[IsGranted('EDIT', subject: 'user')]
+    public function edit(Request $request, User $user): Response
     {
-        if ($this->isGranted('ROLE_ADMIN')) {
-            $id = $user->getId();
-
-            return $this->redirectToRoute('user_edit_admin', ['id' => $id ]);
-        }
         $form = $this->createForm(UserUpdateType::class, $user, [
-                'method' => 'PUT',
-                'action' => $this->generateUrl('user_edit', ['id' => $user->getId()]),
+            'method' => 'PUT',
+            'action' => $this->generateUrl('user_edit', ['id' => $user->getId()]),
         ]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -119,8 +122,8 @@ class UserController extends AbstractController
         }
 
         return $this->render('user/edit.html.twig', [
-                'form' => $form->createView(),
-                'user' => $user,
+            'form' => $form->createView(),
+            'user' => $user,
         ]);
     }
 
@@ -135,30 +138,27 @@ class UserController extends AbstractController
     #[isGranted('ROLE_ADMIN')]
     public function list(#[MapQueryParameter] int $page = 1): Response
     {
-//        if (!$this->isGranted('ROLE_ADMIN')) {
-//            $this->redirectToRoute('user_show', ['id' => $this->getUser()->getId()]);
-//        }
         $pagination = $this->userManager->getPaginatedList($page);
 
-        return $this->render('user/list.html.twig', ['pagination' => $pagination]);
+        return $this->render('user/list.html.twig', [
+            'pagination' => $pagination,
+        ]);
     }
 
     /**
      * Show action.
      *
-     * @param UserInterface $user User
+     * @param User $user User
      *
      * @return Response HTTP response
      */
     #[Route('/{id}', name: 'user_show', requirements: ['id' => '[1-9]\d*'], methods: ['GET'])]
     #[IsGranted('VIEW', subject: 'user')]
-    public function show(UserInterface $user): Response
+    public function show(User $user): Response
     {
-//        if (!$this->isGranted('VIEW', subject: 'user')) {
-//            $this->redirectToRoute('user_show', ['id' => $user->getId()]);
-//        }
-
-        return $this->render('user/show.html.twig', ['user' => $user]);
+        return $this->render('user/show.html.twig', [
+            'user' => $user,
+        ]);
     }
 
     /**
@@ -171,11 +171,21 @@ class UserController extends AbstractController
      */
     #[Route('/{id}/edit/admin', name: 'user_edit_admin', requirements: ['id' => '[1-9]\d*'], methods: ['GET', 'PUT'])]
     #[IsGranted('ROLE_ADMIN')]
-    public function editAdmin(Request $request, UserInterface $user): Response
+    public function editAdmin(Request $request, User $user): Response
     {
+        if ($this->getUser()->getUserIdentifier() === $user->getUserIdentifier()) {
+            if (!$this->userManager->canBeDowngraded()) {
+                $this->addFlash(
+                    'warning',
+                    $this->translator->trans('message.this_is_last_admin')
+                );
+
+                return $this->redirectToRoute('user_index');
+            }
+        }
         $form = $this->createForm(UserTypeForAdmin::class, $user, [
-                'method' => 'PUT',
-                'action' => $this->generateUrl('user_edit_admin', ['id' => $user->getId()]),
+            'method' => 'PUT',
+            'action' => $this->generateUrl('user_edit_admin', ['id' => $user->getId()]),
         ]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -186,8 +196,8 @@ class UserController extends AbstractController
         }
 
         return $this->render('user/edit.html.twig', [
-                'form' => $form->createView(),
-                'user' => $user,
+            'form' => $form->createView(),
+            'user' => $user,
         ]);
     }
 
@@ -200,27 +210,27 @@ class UserController extends AbstractController
      * @return Response HTTP response
      */
     #[Route('/{id}/password', name: 'user_password', requirements: ['id' => '[1-9]\d*'], methods: ['GET', 'PUT'])]
-    #[IsGranted('EDIT', subject:'user')]
-    public function changePassword(Request $request, UserInterface $user): Response
+    #[IsGranted('EDIT', subject: 'user')]
+    public function changePassword(Request $request, User $user): Response
     {
         $form = $this->createForm(ChangePasswordType::class, $user, [
-                'method' => 'PUT',
-                'action' => $this->generateUrl('user_password', ['id' => $user->getId()]),
+            'method' => 'PUT',
+            'action' => $this->generateUrl('user_password', ['id' => $user->getId()]),
         ]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $newPassword = $form->get('newPassword')->getData();
             $confirmPassword = $form->get('confirmPassword')->getData();
             if ($newPassword !== $confirmPassword) {
-                $this->addFlash('error', 'New passwords do not match.');
+                $this->addFlash('error', 'message.passwords_not_match.');
             } else {
                 try {
                     $this->userManager->upgradePassword($user, $newPassword);
-                    $this->addFlash('success', 'Password updated successfully.');
+                    $this->addFlash('success', 'message.Password_updated_successfully.');
 
                     return $this->redirectToRoute('user_show', ['id' => $user->getId()]);
-                } catch (\Exception $e) {
-                    $this->addFlash('error', 'An error occurred while updating the password: '.$e->getMessage());
+                } catch (Exception $e) {
+                    $this->addFlash('error', 'message.error: '.$e->getMessage());
                 }
             }
         }
