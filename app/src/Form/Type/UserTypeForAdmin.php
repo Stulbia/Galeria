@@ -31,7 +31,7 @@ class UserTypeForAdmin extends AbstractType
             'choices' => [
                 'User' => 'ROLE_USER',
                 'Admin' => 'ROLE_ADMIN',
-                'Banned' => 'ROLE_BANNED',
+            //                'Banned' => 'ROLE_BANNED',
             ],
             'multiple' => true,
             'expanded' => true,

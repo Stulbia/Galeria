@@ -8,7 +8,7 @@
     <h1>{{ 'title.tag_list'|trans }}</h1>
 
     {% if is_granted('ROLE_USER') %}
-    <div class="navigation text-center">
+    <div class="navigation">
         <a class="btn btn-outline-success mt-3" href="{{ url('tag_create') }}" title="{{ 'action.create'|trans }}">
             {{ 'action.create'|trans }}
         </a>
@@ -21,9 +21,6 @@
             {{ knp_pagination_render(pagination) }}
         </div>
 
-        <a href="{{ url('tag_create') }}" title="{{ 'action.create'|trans }}">
-            {{ 'action.create'|trans }}
-        </a>
 
         <table class="table table-striped">
             <thead>
@@ -45,12 +42,16 @@
                         <a class="btn btn-outline-primary" href="{{ url('tag_show', {id: tag.id}) }}" title="{{ 'action.show'|trans }}">
                             {{ 'action.show'|trans }}
                         </a>
+                        {% if is_granted('ROLE_ADMIN') %}
                         <a class="btn btn-outline-success" href="{{ url('tag_edit', {id: tag.id}) }}" title="{{ 'action.edit'|trans }}">
                             {{ 'action.edit'|trans }}
                         </a>
+                        {% endif %}
+                        {% if is_granted('ROLE_ADMIN') %}
                         <a  class="btn btn-outline-danger" href="{{ url('tag_delete', {id: tag.id}) }}" title="{{ 'action.delete'|trans }}">
                             {{ 'action.delete'|trans }}
                         </a>
+                        {% endif %}
                     </td>
                 </tr>
             {% endfor %}

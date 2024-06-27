@@ -63,18 +63,17 @@ class AvatarController extends AbstractController
     /**
      * Create action.
      *
-     * @param Request $request HTTP request
-     * @param User    $user    user
+     * @param User $user user
      *
      * @return Response HTTP response
      */
     #[Route(
         '/{id}/create',
         name: 'avatar_create',
-        methods: 'GET|POST'
+        methods: ['GET', 'POST']
     )]
     #[IsGranted('EDIT', subject: 'user')]
-    public function create(Request $request, User $user): Response
+    public function create(User $user): Response
     {
         if ($user->getAvatar()) {
             return $this->redirectToRoute(
@@ -84,12 +83,14 @@ class AvatarController extends AbstractController
         }
 
         $avatar = new Avatar();
+        $avatar->setUser($user);
+
         $form = $this->createForm(
             AvatarType::class,
             $avatar,
-            ['action' => $this->generateUrl('avatar_create'), ['id' => $user->getId()]]
+            ['method' => 'POST',
+             'action' => $this->generateUrl('avatar_create', ['id' => $user->getId()]), ]
         );
-        $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var UploadedFile $file */
@@ -105,7 +106,7 @@ class AvatarController extends AbstractController
                 $this->translator->trans('message.created_successfully')
             );
 
-            return $this->redirectToRoute('photo_index');
+            return $this->redirectToRoute('avatar_index');
         }
 
         return $this->render(
@@ -141,7 +142,7 @@ class AvatarController extends AbstractController
             $avatar,
             [
                 'method' => 'PUT',
-                'action' => $this->generateUrl('avatar_edit', ['id' => $avatar->getId()]),
+                'action' => $this->generateUrl('avatar_edit', ['id' => $user->getId()]),
             ]
         );
         $form->handleRequest($request);

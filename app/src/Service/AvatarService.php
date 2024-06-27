@@ -48,6 +48,10 @@ class AvatarService implements AvatarServiceInterface
         $avatar->setUser($user);
         $avatar->setFilename($avatarFilename);
         $this->avatarRepository->save($avatar);
+        try {
+            $this->avatarRepository->save($avatar);
+        } catch (OptimisticLockException|ORMException) {
+        }
     }
 
     /**

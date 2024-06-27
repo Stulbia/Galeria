@@ -54,3 +54,7 @@ services:
     App\Resolver\PhotoListInputFiltersDtoResolver:
         tags:
             - { name: 'controller.argument_value_resolver' }
+
+    App\EventListener\AccessDeniedListener:
+        tags:
+            - { name: 'kernel.event_listener', event: 'kernel.exception', method: 'onKernelException' }
