@@ -16,21 +16,20 @@ use Symfony\Component\Security\Core\User\UserInterface;
 interface UserManagerInterface
 {
     /**
-     * saves a new user
+     * saves a new user.
      *
      * @param UserInterface $user user
-     *
      */
     public function register(UserInterface $user): void;
 
     /**
-    /**
-     * saves user data changes
+     * /**
+     * saves user data changes.
      *
      * @param UserInterface $user user
-     *
      */
     public function save(UserInterface $user): void;
+
     /**
      * Get paginated list.
      *
@@ -39,6 +38,7 @@ interface UserManagerInterface
      * @return PaginationInterface<string, mixed> Paginated list
      */
     public function getPaginatedList(int $page): PaginationInterface;
+
     /**
      * Change Password.
      *
@@ -46,19 +46,17 @@ interface UserManagerInterface
      * @param string $newPlainPassword New Plain Password
      */
     public function upgradePassword(UserInterface $user, string $newPlainPassword): void;
+
     /**
      * Verify Password.
      *
      * @param User   $user          User entity
      * @param string $plainPassword Plain Password
-     *
-     * @return bool
      */
     public function verifyPassword(UserInterface $user, string $plainPassword): bool;
+
     /**
      * Verify if this is the last admin.
-     *
-     * @return bool
      */
     public function canBeDowngraded(): bool;
 }

@@ -22,6 +22,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  * Class CommentController.
  */
 #[Route('/comment')]
+#[isGranted('ROLE_USER')]
 class CommentController extends AbstractController
 {
     /**

@@ -52,7 +52,7 @@ class UserController extends AbstractController
      * @return Response HTTP response
      */
     #[Route(name: 'user_index', methods: ['GET'])]
-    #[isGranted('IS_AUTHENTICATED_FULLY')]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function index(#[MapQueryParameter] int $page = 1): Response
     {
         $filters = new PhotoListInputFiltersDto(null, null, 'PRIVATE');
@@ -135,7 +135,7 @@ class UserController extends AbstractController
      * @return Response HTTP response
      */
     #[Route('/list', name: 'user_list', methods: ['GET'])]
-    #[isGranted('ROLE_ADMIN')]
+    #[IsGranted('ROLE_ADMIN')]
     public function list(#[MapQueryParameter] int $page = 1): Response
     {
         $pagination = $this->userManager->getPaginatedList($page);

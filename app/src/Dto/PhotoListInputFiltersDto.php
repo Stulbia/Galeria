@@ -17,7 +17,7 @@ class PhotoListInputFiltersDto
      * @param int|null $tagId     Tag identifier
      * @param int      $statusId  Status identifier
      */
-    public function __construct(public readonly ?int $galleryId = null, public readonly ?int $tagId = null, public readonly string $statusId ='PUBLIC')
+    public function __construct(public readonly ?int $galleryId = null, public readonly ?int $tagId = null, public readonly string $statusId = 'PUBLIC')
     {
     }
 }

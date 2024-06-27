@@ -239,7 +239,7 @@
 
             <trans-unit id="message.avatar_does_not_exist">
                 <source>message.avatar_does_not_exist</source>
-                <target>Avatar nie istnieje.</target>
+                <target>Awatar nie istnieje.</target>
             </trans-unit>
 
             <trans-unit id="message.deleted_successfully">
@@ -264,17 +264,22 @@
 
             <trans-unit id="title.avatar_create">
                 <source>title.avatar_create</source>
-                <target>Utwórz avatar</target>
+                <target>Utwórz awatar</target>
+            </trans-unit>
+
+            <trans-unit id="title.avatar_details">
+                <source>title.avatar_details</source>
+                <target>Awatar</target>
             </trans-unit>
 
             <trans-unit id="title.avatar_delete">
                 <source>title.avatar_delete</source>
-                <target>Usuń avatar</target>
+                <target>Usuń awatar</target>
             </trans-unit>
 
             <trans-unit id="title.avatar_edit">
                 <source>title.avatar_edit</source>
-                <target>Edytuj avatar</target>
+                <target>Edytuj awatar</target>
             </trans-unit>
 
             <trans-unit id="title.comment_create">
@@ -327,6 +332,12 @@
                 <target>Szczegóły komentarza</target>
             </trans-unit>
 
+            <trans-unit id="label.confirm_password">
+                <source>label.confirm_password</source>
+                <target>Powtórz hasło</target>
+            </trans-unit>
+
+
             <trans-unit id="title.photo_create">
                 <source>title.photo_create</source>
                 <target>Utwórz zdjęcie</target>
@@ -352,6 +363,38 @@
                 <target>Tag</target>
             </trans-unit>
 
+            <trans-unit id="message.this_is_last_admin">
+                <source>message.this_is_last_admin</source>
+                <target>Nie można usnunąć ostatniego administratora.</target>
+            </trans-unit>
+            <trans-unit id="label.photo">
+                <source>label.photo</source>
+                <target>Zdjęcie</target>
+            </trans-unit>
+            <trans-unit id="action.password">
+                <source>action.password</source>
+                <target>Zmień Hasło</target>
+            </trans-unit>
+            <trans-unit id="action.edit.avatar">
+                <source>action.edit.avatar</source>
+                <target>Edytuj awatar</target>
+            </trans-unit>
+            <trans-unit id="title.unpublished_photo_list">
+                <source>title.unpublished_photo_list</source>
+                <target>Lista nieopublikowanych zdjęć</target>
+            </trans-unit>
+            <trans-unit id="label.avatar">
+                <source>label.avatar</source>
+                <target>Awatar</target>
+            </trans-unit>
+            <trans-unit id="action.edit.admin">
+                <source>action.edit.admin</source>
+                <target>Zarządzaj</target>
+            </trans-unit>
+            <trans-unit id="action.edit.password">
+                <source>action.edit.password</source>
+                <target>Edytuj hasło</target>
+            </trans-unit>
 
         </body>
     </file>

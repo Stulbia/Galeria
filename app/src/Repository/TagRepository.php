@@ -34,6 +34,7 @@ class TagRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Tag::class);
     }
+
     /**
      * Query all records.
      *
@@ -47,7 +48,7 @@ class TagRepository extends ServiceEntityRepository
     }
 
     /**
-     * FindOneByTitle
+     * FindOneByTitle.
      *
      * @param string $title Title
      *
@@ -65,6 +66,7 @@ class TagRepository extends ServiceEntityRepository
             return null;
         }
     }
+
     /**
      * Save entity.
      *
@@ -76,8 +78,6 @@ class TagRepository extends ServiceEntityRepository
     public function save(Tag $tag): void
     {
         assert($this->_em instanceof EntityManager);
-
-
 
         $this->_em->persist($tag);
         $this->_em->flush();
@@ -105,7 +105,7 @@ class TagRepository extends ServiceEntityRepository
      *
      * @return QueryBuilder Query builder
      */
-    private function getOrCreateQueryBuilder(QueryBuilder $queryBuilder = null): QueryBuilder
+    private function getOrCreateQueryBuilder(?QueryBuilder $queryBuilder = null): QueryBuilder
     {
         return $queryBuilder ?? $this->createQueryBuilder('tag');
     }

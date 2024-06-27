@@ -9,7 +9,6 @@ namespace App\Entity;
 use App\Repository\CommentRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use DateTimeImmutable;
 
 /**
  * Class Comment.
@@ -22,57 +21,44 @@ class Comment
 {
     /**
      * Primary key.
-     *
-     * @var int|null
      */
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-
     /**
      * Created at.
-     *
-     * @var DateTimeImmutable
      *
      * @psalm-suppress PropertyNotSetInConstructor
      */
     #[ORM\Column]
     #[Gedmo\Timestampable(on: 'create')]
-    private DateTimeImmutable $createdAt;
+    private \DateTimeImmutable $createdAt;
 
     /**
      * Updated at.
-     *
-     * @var DateTimeImmutable
      *
      * @psalm-suppress PropertyNotSetInConstructor
      */
     #[ORM\Column]
     #[Gedmo\Timestampable(on: 'update')]
-    private DateTimeImmutable $updatedAt;
+    private \DateTimeImmutable $updatedAt;
 
     /**
      * Content.
-     *
-     * @var string
      */
     #[ORM\Column(type: 'string', nullable: true)]
     private string $content;
 
     /**
      * Photo.
-     *
-     * @var Photo|null
      */
     #[ORM\ManyToOne(targetEntity: Photo::class, fetch: 'LAZY')]
-    #[ORM\JoinColumn(nullable: false, onDelete: "CASCADE")]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Photo $photo = null;
     /**
-     * User
-     *
-     * @var User|null
+     * User.
      */
     #[ORM\ManyToOne(targetEntity: User::class, fetch: 'LAZY')]
     #[ORM\JoinColumn(nullable: false)]
@@ -91,9 +77,9 @@ class Comment
     /**
      * Getter for created at.
      *
-     * @return DateTimeImmutable Created at
+     * @return \DateTimeImmutable Created at
      */
-    public function getCreatedAt(): DateTimeImmutable
+    public function getCreatedAt(): \DateTimeImmutable
     {
         return $this->createdAt;
     }
@@ -101,9 +87,9 @@ class Comment
     /**
      * Setter for created at.
      *
-     * @param DateTimeImmutable $createdAt Created at
+     * @param \DateTimeImmutable $createdAt Created at
      */
-    public function setCreatedAt(DateTimeImmutable $createdAt): void
+    public function setCreatedAt(\DateTimeImmutable $createdAt): void
     {
         $this->createdAt = $createdAt;
     }
@@ -111,9 +97,9 @@ class Comment
     /**
      * Getter for updated at.
      *
-     * @return DateTimeImmutable Updated at
+     * @return \DateTimeImmutable Updated at
      */
-    public function getUpdatedAt(): DateTimeImmutable
+    public function getUpdatedAt(): \DateTimeImmutable
     {
         return $this->updatedAt;
     }
@@ -121,9 +107,9 @@ class Comment
     /**
      * Setter for updated at.
      *
-     * @param DateTimeImmutable|null $updatedAt Updated at
+     * @param \DateTimeImmutable|null $updatedAt Updated at
      */
-    public function setUpdatedAt(?DateTimeImmutable $updatedAt): void
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): void
     {
         $this->updatedAt = $updatedAt;
     }
@@ -142,13 +128,11 @@ class Comment
      * Setter for content.
      *
      * @param string|null $content content
-     *
      */
     public function setContent(?string $content): void
     {
         $this->content = $content;
     }
-
 
     /**
      * Getter for photo.
@@ -159,23 +143,21 @@ class Comment
     {
         return $this->photo;
     }
+
     /**
      * Setter for photo.
      *
      * @param Photo|null $photo Photo
-     *
      */
     public function setPhoto(?Photo $photo): void
     {
         $this->photo = $photo;
     }
 
-
     /**
      * Getter for User.
      *
      * @return User $user User
-     *
      */
     public function getUser(): User
     {
@@ -186,7 +168,6 @@ class Comment
      * Setter for User.
      *
      * @param User $user Photo
-     *
      */
     public function setUser(User $user): void
     {

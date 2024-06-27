@@ -54,7 +54,7 @@ class PhotoRepository extends ServiceEntityRepository
      */
     public function queryAll(PhotoListFiltersDto $filters): QueryBuilder
     {
-        $queryBuilder  = $this->getOrCreateQueryBuilder()
+        $queryBuilder = $this->getOrCreateQueryBuilder()
             ->select(
                 'partial photo.{id, createdAt, updatedAt, title, description, filename}',
                 'partial gallery.{id, title}',
@@ -96,7 +96,6 @@ class PhotoRepository extends ServiceEntityRepository
      * @param PhotoListInputFiltersDto $filters Filter
      *
      * @return QueryBuilder Query builder
-     *
      */
     public function queryByAuthor(User $user, PhotoListFiltersDto $filters): QueryBuilder
     {
@@ -107,23 +106,23 @@ class PhotoRepository extends ServiceEntityRepository
 
         return $queryBuilder;
     }
-//    /**
-//     * Select photos by Tags.
-//     *
-//     * @param Gallery $gallery Gallery
-//     *
-//     * @return QueryBuilder Query builder
-//     *
-//     * @throws NoResultException
-//     */
-//    public function findByTag($tag):QueryBuilder
-//    {
-//        return $this->createQueryBuilder('photo')
-//            ->select('partial photo.{id, createdAt, updatedAt, title}')
-//            ->join('photo.tags', 'tag')
-//            ->where('tag.id = :tag')
-//            ->setParameter('tag', $tag);
-//    }
+    //    /**
+    //     * Select photos by Tags.
+    //     *
+    //     * @param Gallery $gallery Gallery
+    //     *
+    //     * @return QueryBuilder Query builder
+    //     *
+    //     * @throws NoResultException
+    //     */
+    //    public function findByTag($tag):QueryBuilder
+    //    {
+    //        return $this->createQueryBuilder('photo')
+    //            ->select('partial photo.{id, createdAt, updatedAt, title}')
+    //            ->join('photo.tags', 'tag')
+    //            ->where('tag.id = :tag')
+    //            ->setParameter('tag', $tag);
+    //    }
 
     /**
      * Save entity.
@@ -155,9 +154,8 @@ class PhotoRepository extends ServiceEntityRepository
         $this->_em->flush();
     }
 
-
     /**
-     * Find by Tags
+     * Find by Tags.
      *
      * @param Tag[] $tags
      *
@@ -181,12 +179,10 @@ class PhotoRepository extends ServiceEntityRepository
      *
      * @return QueryBuilder Query builder
      */
-    private function getOrCreateQueryBuilder(QueryBuilder $queryBuilder = null): QueryBuilder
+    private function getOrCreateQueryBuilder(?QueryBuilder $queryBuilder = null): QueryBuilder
     {
         return $queryBuilder ?? $this->createQueryBuilder('photo');
     }
-
-
 
     /**
      * Apply filters to paginated list.

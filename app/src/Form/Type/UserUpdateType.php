@@ -19,22 +19,21 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  */
 class UserUpdateType extends AbstractType
 {
-/**
-* Constructor.
-*
- * @param FormBuilderInterface $builder The form builder*
- * @param array<string, mixed> $options Form options
- *
-*/
+    /**
+     * Constructor.
+     *
+     * @param FormBuilderInterface $builder The form builder*
+     * @param array<string, mixed> $options Form options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
         ->add('email', EmailType::class, [
             'label' => 'label.email',
             'constraints' => [
-            new NotBlank([
-                'message' => 'message.email.not_blank',
-            ]),
+                new NotBlank([
+                    'message' => 'message.email.not_blank',
+                ]),
             ],
         ])
         ->add('name', TextType::class, [
@@ -45,17 +44,17 @@ class UserUpdateType extends AbstractType
                 new NotBlank([
                     'message' => 'message.name.not_blank',
                 ]),
-                ],
+            ],
         ]);
-//        ->add('roles', ChoiceType::class, [
-//            'choices' => [
-//            'User' => 'ROLE_USER',
-//            'Admin' => 'ROLE_ADMIN',
-//            ],
-//            'multiple' => true,
-//            'expanded' => true,
-//            'label' => 'Roles',
-////        ]);
+        //        ->add('roles', ChoiceType::class, [
+        //            'choices' => [
+        //            'User' => 'ROLE_USER',
+        //            'Admin' => 'ROLE_ADMIN',
+        //            ],
+        //            'multiple' => true,
+        //            'expanded' => true,
+        //            'label' => 'Roles',
+        // //        ]);
     }
 
     /**

@@ -7,11 +7,9 @@
 namespace App\Service;
 
 use App\Dto\PhotoListInputFiltersDto;
-use App\Entity\Gallery;
 use App\Entity\Photo;
 use App\Entity\Tag;
 use App\Entity\User;
-use Doctrine\ORM\NoResultException;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -22,7 +20,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 interface PhotoServiceInterface
 {
     /**
-     * Get paginated list for all photos
+     * Get paginated list for all photos.
      *
      * @param int                      $page    Page number
      * @param PhotoListInputFiltersDto $filters Filter
@@ -35,7 +33,7 @@ interface PhotoServiceInterface
      * Get paginated list.
      *
      * @param int                      $page    Page number
-     * @param UserInterface                     $author  author
+     * @param UserInterface            $author  author
      * @param PhotoListInputFiltersDto $filters Filter
      *
      * @return PaginationInterface<string, mixed> Paginated list
@@ -45,9 +43,9 @@ interface PhotoServiceInterface
     /**
      * Save photo.
      *
-     * @param Photo        $photo        Photo entity
-     * @param UploadedFile $uploadedFile Uploaded file
-     * @param UserInterface        $user         User entity
+     * @param Photo         $photo        Photo entity
+     * @param UploadedFile  $uploadedFile Uploaded file
+     * @param UserInterface $user         User entity
      */
     public function save(Photo $photo, UploadedFile $uploadedFile, UserInterface $user): void;
 
@@ -65,9 +63,8 @@ interface PhotoServiceInterface
      */
     public function delete(Photo $photo): void;
 
-
     /**
-     * Find Photos by Tag Name
+     * Find Photos by Tag Name.
      *
      * @param Tag[] $tagName Tag Name
      *

@@ -7,12 +7,12 @@
 namespace App\Service;
 
 use App\Entity\Avatar;
+use App\Entity\User;
 use App\Repository\AvatarRepository;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\OptimisticLockException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Class AvatarService.
@@ -36,12 +36,12 @@ class AvatarService implements AvatarServiceInterface
      *
      * @param UploadedFile $uploadedFile Uploaded file
      * @param Avatar       $avatar       Avatar entity
-     * @param UserInterface         $user         User entity
+     * @param User         $user         User entity
      *
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function create(UploadedFile $uploadedFile, Avatar $avatar, UserInterface $user): void
+    public function create(UploadedFile $uploadedFile, Avatar $avatar, User $user): void
     {
         $avatarFilename = $this->avatarUploadService->upload($uploadedFile);
 
@@ -55,12 +55,12 @@ class AvatarService implements AvatarServiceInterface
      *
      * @param UploadedFile $uploadedFile Uploaded file
      * @param Avatar       $avatar       Avatar entity
-     * @param UserInterface        $user         User entity
+     * @param User         $user         User entity
      *
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function update(UploadedFile $uploadedFile, Avatar $avatar, UserInterface $user): void
+    public function update(UploadedFile $uploadedFile, Avatar $avatar, User $user): void
     {
         $filename = $avatar->getFilename();
 

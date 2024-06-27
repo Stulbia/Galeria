@@ -23,27 +23,28 @@ class GalleryVoter extends Voter
      * @const string
      */
     private const EDIT = 'EDIT';
-/**
+    /**
      * View permission.
      *
      * @const string
      */
     private const VIEW = 'VIEW';
-/**
+    /**
      * Delete permission.
      *
      * @const string
      */
     private const DELETE = 'DELETE';
-/**
+
+    /**
      *  Constructor.
      *
-     * @param  Security $security Security
-     *
+     * @param Security $security Security
      */
     public function __construct(private readonly Security $security)
     {
     }
+
     /**
      * Determines if the attribute and subject are supported by this voter.
      *
@@ -92,42 +93,45 @@ class GalleryVoter extends Voter
     /**
      * Checks if user can edit gallery.
      *
-     * @param Gallery         $gallery Gallery entity
-     * @param UserInterface $user  User
+     * @param Gallery       $gallery Gallery entity
+     * @param UserInterface $user    User
      *
      * @return bool Result
      */
     private function canEdit(Gallery $gallery, UserInterface $user): bool
     {
         return false;
+
         return $gallery->getAuthor() === $user;
     }
 
     /**
      * Checks if user can view gallery.
      *
-     * @param Gallery         $gallery Gallery entity
-     * @param UserInterface $user  User
+     * @param Gallery       $gallery Gallery entity
+     * @param UserInterface $user    User
      *
      * @return bool Result
      */
     private function canView(Gallery $gallery, UserInterface $user): bool
     {
         return true;
+
         return $gallery->getAuthor() === $user;
     }
 
     /**
      * Checks if user can delete gallery.
      *
-     * @param Gallery         $gallery Gallery entity
-     * @param UserInterface $user  User
+     * @param Gallery       $gallery Gallery entity
+     * @param UserInterface $user    User
      *
      * @return bool Result
      */
     private function canDelete(Gallery $gallery, UserInterface $user): bool
     {
         return false;
+
         return $gallery->getAuthor() === $user;
     }
 }

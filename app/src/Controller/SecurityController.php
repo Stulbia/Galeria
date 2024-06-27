@@ -6,14 +6,13 @@
 
 namespace App\Controller;
 
-use LogicException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 /**
- * Class SecurityController
+ * Class SecurityController.
  *
  * Controller responsible for handling security-related actions such as login and logout.
  */
@@ -43,11 +42,11 @@ class SecurityController extends AbstractController
      *
      * This action will be intercepted by the Symfony security system.
      *
-     * @throws LogicException This method can be blank - it will be intercepted by the logout key on your firewall.
+     * @throws \LogicException this method can be blank - it will be intercepted by the logout key on your firewall
      */
     #[Route(path: '/logout', name: 'app_logout')]
     public function logout(): void
     {
-        throw new LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
+        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
 }

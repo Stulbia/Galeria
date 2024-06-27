@@ -30,7 +30,7 @@ class AccessDeniedHandler implements AccessDeniedHandlerInterface
     {
         // Get the referrer URL (the previous page)
         $refererUrl = $request->headers->get('referer');
-// If there's no referrer, redirect to the home page or any default page
+        // If there's no referrer, redirect to the home page or any default page
         if (!$refererUrl) {
             $refererUrl = '/';
         }

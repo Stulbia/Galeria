@@ -57,15 +57,12 @@ class TagService implements TagServiceInterface
         );
     }
 
-
-
     /**
      * Find by title.
      *
      * @param string $title Tag title
      *
      * @return Tag|null Tag entity
-     *
      */
     public function findOneByTitle(string $title): ?Tag
     {
@@ -86,7 +83,6 @@ class TagService implements TagServiceInterface
         return $this->tagRepository->findOneById($id);
     }
 
-
     /**
      * Save entity.
      *
@@ -99,15 +95,15 @@ class TagService implements TagServiceInterface
     {
         $this->tagRepository->save($tag);
     }
+
     /**
      * Delete entity.
      *
      * @param Tag $tag Tag entity
      *
-     * @throws ORMException If an ORM error occurs.
-     * @throws OptimisticLockException If a version conflict occurs.
-     * @throws InvalidArgumentException If the provided tag is invalid.
-     *
+     * @throws ORMException             if an ORM error occurs
+     * @throws OptimisticLockException  if a version conflict occurs
+     * @throws InvalidArgumentException if the provided tag is invalid
      */
     public function delete(Tag $tag): void
     {

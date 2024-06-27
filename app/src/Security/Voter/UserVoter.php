@@ -7,9 +7,9 @@
 namespace App\Security\Voter;
 
 use App\Entity\User;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -22,29 +22,28 @@ class UserVoter extends Voter
      *
      * @const string
      */
-    const VIEW = 'VIEW';
-/**
+    public const VIEW = 'VIEW';
+    /**
      * Edit permission.
      *
      * @const string
      */
-    const EDIT = 'EDIT';
-/**
+    public const EDIT = 'EDIT';
+    /**
      * Delete permission.
      *
      * @const string
      */
-    const DELETE = 'DELETE';
-/**
+    public const DELETE = 'DELETE';
+
+    /**
      *  Constructor.
      *
-     * @param  Security $security Security
-     *
+     * @param Security $security Security
      */
     public function __construct(private readonly Security $security)
     {
     }
-
 
     /**
      * Determines if the attribute and subject are supported by this voter.
@@ -83,6 +82,7 @@ class UserVoter extends Voter
 
         /** @var User $targetUser */
         $targetUser = $subject;
+
         return match ($attribute) {
             self::VIEW => $this->canView($targetUser, $currentUser),
             self::EDIT => $this->canEdit($targetUser, $currentUser),
@@ -90,7 +90,6 @@ class UserVoter extends Voter
             default => false,
         };
     }
-
 
     /**
      * Checks if user can be viewed.
@@ -102,7 +101,7 @@ class UserVoter extends Voter
      */
     private function canView(UserInterface $targetUser, UserInterface $currentUser): bool
     {
-         return $currentUser === $targetUser;
+        return $currentUser === $targetUser;
     }
 
     /**
@@ -115,6 +114,10 @@ class UserVoter extends Voter
      */
     private function canEdit(UserInterface $targetUser, UserInterface $currentUser): bool
     {
+        if (!$this->security->isGranted('ROLE_USER')) {
+            return false;
+        }
+
         return $currentUser === $targetUser;
     }
 
@@ -128,6 +131,10 @@ class UserVoter extends Voter
      */
     private function canDelete(UserInterface $targetUser, UserInterface $currentUser): bool
     {
-        return $currentUser === $targetUser;
+        if (!$this->security->isGranted('ROLE_USER')) {
+            return false;
+        }
+
+            return $currentUser === $targetUser;
     }
 }

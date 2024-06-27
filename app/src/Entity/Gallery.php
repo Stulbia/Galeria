@@ -1,28 +1,30 @@
 <?php
+/**
+ * Class Gallery.
+ */
 
 namespace App\Entity;
 
 use App\Repository\GalleryRepository;
-use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Class Gallery.
  *
+ * Represents a gallery entity with title, slug, and timestamps for creation and update.
+ *
  * @psalm-suppress MissingConstructor
  */
 #[ORM\Entity(repositoryClass: GalleryRepository::class)]
 #[ORM\Table(name: 'galleries')]
-
 class Gallery
 {
     /**
      * Primary key.
      *
-     * @var int|null
+     * @var int|null The unique identifier of the gallery
      */
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -32,35 +34,39 @@ class Gallery
     /**
      * Created at.
      *
-     * @var DateTimeImmutable|null
+     * @var \DateTimeImmutable|null The date and time when the gallery was created
      */
     #[ORM\Column(type: 'datetime_immutable')]
-    #[Assert\Type(DateTimeImmutable::class)]
+    #[Assert\Type(\DateTimeImmutable::class)]
     #[Gedmo\Timestampable(on: 'create')]
-    private ?DateTimeImmutable $createdAt = null;
+    private ?\DateTimeImmutable $createdAt = null;
 
     /**
      * Updated at.
      *
-     * @var DateTimeImmutable|null
+     * @var \DateTimeImmutable|null The date and time when the gallery was last updated
      */
     #[ORM\Column(type: 'datetime_immutable')]
-    #[Assert\Type(DateTimeImmutable::class)]
+    #[Assert\Type(\DateTimeImmutable::class)]
     #[Gedmo\Timestampable(on: 'update')]
-    private ?DateTimeImmutable $updatedAt = null;
+    private ?\DateTimeImmutable $updatedAt = null;
 
     /**
      * Title.
      *
-     * @var string|null
+     * @var string|null The title of the gallery
      */
     #[ORM\Column(type: 'string', length: 64)]
-//    #[Gedmo\Slug(fields: ['title'])]
     #[Assert\Type('string')]
     #[Assert\NotBlank]
     #[Assert\Length(min: 3, max: 64)]
     private ?string $title = null;
 
+    /**
+     * Slug.
+     *
+     * @var string|null The slug generated from the title
+     */
     #[ORM\Column(length: 64, nullable: true)]
     #[Assert\Type('string')]
     #[Assert\Length(min: 3, max: 64)]
@@ -70,30 +76,29 @@ class Gallery
     /**
      * Getter for Id.
      *
-     * @return int|null Id
+     * @return int|null The unique identifier of the gallery
      */
     public function getId(): ?int
     {
         return $this->id;
     }
 
-
     /**
      * Getter for created at.
      *
-     * @return DateTimeImmutable|null Created at
+     * @return \DateTimeImmutable|null The date and time when the gallery was created
      */
-    public function getCreatedAt(): ?DateTimeImmutable
+    public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
     }
 
     /**
-     * Setter for updated at.
+     * Setter for created at.
      *
-     * @param DateTimeImmutable|null $createdAtAt Created at
+     * @param \DateTimeImmutable $createdAt The date and time when the gallery was created
      */
-    public function setCreatedAt(DateTimeImmutable $createdAt): static
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
 
@@ -103,9 +108,9 @@ class Gallery
     /**
      * Getter for updated at.
      *
-     * @return DateTimeImmutable|null Updated at
+     * @return \DateTimeImmutable|null The date and time when the gallery was last updated
      */
-    public function getUpdatedAt(): ?DateTimeImmutable
+    public function getUpdatedAt(): ?\DateTimeImmutable
     {
         return $this->updatedAt;
     }
@@ -113,17 +118,19 @@ class Gallery
     /**
      * Setter for updated at.
      *
-     * @param DateTimeImmutable|null $updatedAt Updated at
+     * @param \DateTimeImmutable $updatedAt The date and time when the gallery was last updated
      */
-    public function setUpdatedAt(?DateTimeImmutable $updatedAt): void
+    public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
     }
 
     /**
      * Getter for title.
      *
-     * @return string|null Title
+     * @return string|null The title of the gallery
      */
     public function getTitle(): ?string
     {
@@ -133,18 +140,30 @@ class Gallery
     /**
      * Setter for title.
      *
-     * @param string|null $title Title
+     * @param string $title The title of the gallery
      */
-    public function setTitle(?string $title): void
+    public function setTitle(string $title): static
     {
         $this->title = $title;
+
+        return $this;
     }
 
+    /**
+     * Getter for slug.
+     *
+     * @return string|null The slug generated from the title
+     */
     public function getSlug(): ?string
     {
         return $this->slug;
     }
 
+    /**
+     * Setter for slug.
+     *
+     * @param string $slug The slug generated from the title
+     */
     public function setSlug(string $slug): static
     {
         $this->slug = $slug;

@@ -55,14 +55,12 @@ class CommentRepository extends ServiceEntityRepository
             ->orderBy('comment.updatedAt', 'DESC');
     }
 
-
     /**
      * Select Comments by Photo.
      *
      * @param Photo $photo Photo
      *
      * @return QueryBuilder Query builder
-     *
      */
     public function findByPhoto(Photo $photo): QueryBuilder
     {
@@ -71,13 +69,13 @@ class CommentRepository extends ServiceEntityRepository
             ->where('comment.photo = :photo')
             ->setParameter('photo', $photo);
     }
+
     /**
-     * Select Comments by User
+     * Select Comments by User.
      *
      * @param User $user User
      *
      * @return QueryBuilder Query builder
-     *
      */
     public function findByUser(User $user): QueryBuilder
     {
@@ -117,7 +115,6 @@ class CommentRepository extends ServiceEntityRepository
         $this->_em->flush();
     }
 
-
     /**
      * Get or create new query builder.
      *
@@ -125,12 +122,10 @@ class CommentRepository extends ServiceEntityRepository
      *
      * @return QueryBuilder Query builder
      */
-    private function getOrCreateQueryBuilder(QueryBuilder $queryBuilder = null): QueryBuilder
+    private function getOrCreateQueryBuilder(?QueryBuilder $queryBuilder = null): QueryBuilder
     {
         return $queryBuilder ?? $this->createQueryBuilder('comment');
     }
-
-
 
     //    /**
     //     * @return Comment[] Returns an array of Comment objects

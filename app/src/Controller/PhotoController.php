@@ -12,7 +12,6 @@ use App\Entity\Photo;
 use App\Form\Type\CommentType;
 use App\Form\Type\PhotoEditType;
 use App\Form\Type\PhotoType;
-use App\Form\Type\TagSearchType;
 use App\Resolver\PhotoListInputFiltersDtoResolver;
 use App\Service\CommentServiceInterface;
 use App\Service\PhotoServiceInterface;

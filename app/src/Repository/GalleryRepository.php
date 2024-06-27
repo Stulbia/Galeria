@@ -7,16 +7,13 @@
 namespace App\Repository;
 
 use App\Entity\Gallery;
-//use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+// use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Exception\ORMException;
-use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Config\Doctrine\Orm\EntityManagerConfig;
 
 /**
  * @method Gallery|null find($id, $lockMode = null, $lockVersion = null)
@@ -37,6 +34,7 @@ class GalleryRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Gallery::class);
     }
+
     /**
      * Query all records.
      *
@@ -49,7 +47,6 @@ class GalleryRepository extends ServiceEntityRepository
             ->orderBy('gallery.updatedAt', 'DESC');
     }
 
-
     /**
      * Get or create new query builder.
      *
@@ -57,7 +54,7 @@ class GalleryRepository extends ServiceEntityRepository
      *
      * @return QueryBuilder Query builder
      */
-    private function getOrCreateQueryBuilder(QueryBuilder $queryBuilder = null): QueryBuilder
+    private function getOrCreateQueryBuilder(?QueryBuilder $queryBuilder = null): QueryBuilder
     {
         return $queryBuilder ?? $this->createQueryBuilder('gallery');
     }
@@ -66,11 +63,10 @@ class GalleryRepository extends ServiceEntityRepository
     {
         assert($this->_em instanceof EntityManager);
 
-//        $currentDateTime = new \DateTimeImmutable();
-//
-//        $gallery->setCreatedAt($currentDateTime); //moje,z zajec w serwisie
-//        $gallery->setUpdatedAt($currentDateTime);
-
+        //        $currentDateTime = new \DateTimeImmutable();
+        //
+        //        $gallery->setCreatedAt($currentDateTime); //moje,z zajec w serwisie
+        //        $gallery->setUpdatedAt($currentDateTime);
 
         $this->_em->persist($gallery);
         $this->_em->flush();

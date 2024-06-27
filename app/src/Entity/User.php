@@ -23,8 +23,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
      * Primary key.
-     *
-     * @var int|null
      */
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -33,16 +31,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * Name.
-     *
-     * @var string|null
      */
     #[ORM\Column(type: 'string', length: 180, nullable: false)]
     #[Assert\NotBlank]
     private ?string $name;
     /**
      * Email.
-     *
-     * @var string|null
      */
     #[ORM\Column(type: 'string', length: 180, unique: true)]
     #[Assert\NotBlank]
@@ -59,8 +53,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * Password.
-     *
-     * @var string|null
      */
     #[ORM\Column(type: 'string')]
     #[Assert\NotBlank]
@@ -193,6 +185,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * Returning a salt is only needed, if you are not using a modern
      * hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
      *
+     * @return string|null Salt
+     *
      * @see UserInterface
      */
     public function getSalt(): ?string
@@ -207,18 +201,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function eraseCredentials(): void
     {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
     }
 
+    /**
+     * Getter for avatar.
+     *
+     * @return Avatar|null The avatar associated with the user
+     */
     public function getAvatar(): ?Avatar
     {
         return $this->avatar;
     }
 
+    /**
+     * Setter for avatar.
+     *
+     * Sets the avatar for the user and ensures the avatar's user reference is correctly set.
+     *
+     * @param Avatar $avatar The avatar to be associated with the user
+     */
     public function setAvatar(Avatar $avatar): static
     {
-        // set the owning side of the relation if necessary
+        // Ensure the avatar's user is set to this user instance
         if ($avatar->getUser() !== $this) {
             $avatar->setUser($this);
         }

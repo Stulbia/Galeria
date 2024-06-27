@@ -37,13 +37,13 @@
                     <td>
 
                         <img src="{{ asset(photos_directory ~ photo.filename) }}" alt="photo" style="
-                                    height:215px; margin: 5px;" >
+                                    max-height:215px; max-width: 300px; margin: 5px;" >
                     </td>
                     <td>{{ photo.title }}</td>
                     <td>{{ photo.description }}</td>
                     <td>{{ photo.createdAt|format_date('long') }}</td>
                     <td>{{ photo.updatedAt|format_date('long') }}</td>
-                    <td> <a class="btn btn-outline-primary"
+                    <td> <a
                             href="{{ url('photo_index', {'galleryId' : photo.gallery.id, 'statusId' : photo.status}) }}"
                             title="{{ photo.gallery.title }}">
                             {{ photo.gallery.title }}

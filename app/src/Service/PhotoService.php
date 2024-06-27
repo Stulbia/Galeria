@@ -55,7 +55,7 @@ class PhotoService implements PhotoServiceInterface
     private const PAGINATOR_ITEMS_PER_PAGE = 10;
 
     /**
-     * Get paginated list for all photos
+     * Get paginated list for all photos.
      *
      * @param int                      $page    Page number
      * @param User                     $author  Photo author
@@ -77,7 +77,7 @@ class PhotoService implements PhotoServiceInterface
     }
 
     /**
-     * Get paginated list for all photos
+     * Get paginated list for all photos.
      *
      * @param int                      $page    Page number
      * @param PhotoListInputFiltersDto $filters Filter
@@ -100,9 +100,9 @@ class PhotoService implements PhotoServiceInterface
     /**
      * Save photo.
      *
-     * @param Photo        $photo        Photo entity
-     * @param UploadedFile $uploadedFile Uploaded file
-     * @param UserInterface         $user         User entity
+     * @param Photo         $photo        Photo entity
+     * @param UploadedFile  $uploadedFile Uploaded file
+     * @param UserInterface $user         User entity
      */
     public function save(Photo $photo, UploadedFile $uploadedFile, UserInterface $user): void
     {
@@ -111,7 +111,7 @@ class PhotoService implements PhotoServiceInterface
         $photo->setFilename($photoFilename);
         try {
             $this->photoRepository->save($photo);
-        } catch (OptimisticLockException | ORMException) {
+        } catch (OptimisticLockException|ORMException) {
         }
     }
 
@@ -124,7 +124,7 @@ class PhotoService implements PhotoServiceInterface
     {
         try {
             $this->photoRepository->save($photo);
-        } catch (OptimisticLockException | ORMException) {
+        } catch (OptimisticLockException|ORMException) {
         }
     }
 
@@ -133,9 +133,9 @@ class PhotoService implements PhotoServiceInterface
      *
      * @param Photo $photo Photo entity
      *
-     * @throws ORMException If an ORM error occurs.
-     * @throws OptimisticLockException If a version conflict occurs.
-     * @throws InvalidArgumentException If the provided tag is invalid.
+     * @throws ORMException             if an ORM error occurs
+     * @throws OptimisticLockException  if a version conflict occurs
+     * @throws InvalidArgumentException if the provided tag is invalid
      */
     public function delete(Photo $photo): void
     {
@@ -145,8 +145,9 @@ class PhotoService implements PhotoServiceInterface
         }
         $this->photoRepository->delete($photo);
     }
+
     /**
-     * Find Photos by Tag Name
+     * Find Photos by Tag Name.
      *
      * @param Tag[] $tagName Tag Name
      *
@@ -156,7 +157,6 @@ class PhotoService implements PhotoServiceInterface
     {
         return $this->photoRepository->findByTags($tagName);
     }
-
 
     /**
      * Prepare filters for the photos list.

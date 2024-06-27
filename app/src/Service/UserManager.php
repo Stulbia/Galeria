@@ -8,7 +8,6 @@ namespace App\Service;
 
 use App\Entity\User;
 use App\Repository\AvatarRepository;
-use App\Repository\PhotoRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\NonUniqueResultException;
@@ -23,23 +22,22 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * Class UserManager.
  */ class UserManager implements UserManagerInterface
 {
-/**
- * constructor.
- *
- * @param UserPasswordHasherInterface $passwordHasher   PasswordHasher
- * @param PaginatorInterface          $paginator        Paginator
- * @param UserRepository              $userRepository   UserRepository
- * @param AvatarRepository            $avatarRepository UserRepository
- *
- */
+    /**
+     * constructor.
+     *
+     * @param UserPasswordHasherInterface $passwordHasher   PasswordHasher
+     * @param PaginatorInterface          $paginator        Paginator
+     * @param UserRepository              $userRepository   UserRepository
+     * @param AvatarRepository            $avatarRepository UserRepository
+     */
     public function __construct(private readonly UserPasswordHasherInterface $passwordHasher, private readonly PaginatorInterface $paginator, private readonly UserRepository $userRepository, private readonly AvatarRepository $avatarRepository)
     {
     }
+
     /**
-     * saves a new user
+     * saves a new user.
      *
      * @param UserInterface $user user
-     *
      */
     public function register(UserInterface $user): void
     {
@@ -50,11 +48,10 @@ use Symfony\Component\Security\Core\User\UserInterface;
     }
 
     /**
-    /**
-     * saves user data changes
+     * /**
+     * saves user data changes.
      *
      * @param UserInterface $user user
-     *
      */
     public function save(UserInterface $user): void
     {
@@ -69,7 +66,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
      * @constant int
      */
     private const PAGINATOR_ITEMS_PER_PAGE = 10;
-/**
+
+    /**
      * Get paginated list.
      *
      * @param int $page Page number
@@ -80,6 +78,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
     {
         return $this->paginator->paginate($this->userRepository->queryAll(), $page, self::PAGINATOR_ITEMS_PER_PAGE);
     }
+
     /**
      * Change Password.
      *
@@ -88,7 +87,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
      */
     public function upgradePassword(UserInterface $user, string $newPlainPassword): void
     {
-
         $newHashedPassword = $this->passwordHasher->hashPassword($user, $newPlainPassword);
         $this->userRepository->upgradePassword($user, $newHashedPassword);
     }

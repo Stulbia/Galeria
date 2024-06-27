@@ -23,7 +23,7 @@ use Doctrine\Persistence\ManagerRegistry;
 class AvatarRepository extends ServiceEntityRepository
 {
     /**
-     * Constructor for avatar
+     * Constructor for avatar.
      *
      * @param ManagerRegistry $registry ManagerRegistry
      */
@@ -61,13 +61,14 @@ class AvatarRepository extends ServiceEntityRepository
         $this->_em->remove($avatar);
         $this->_em->flush();
     }
+
     /**
-    * Select avatars from database.
-    *
-    * @return QueryBuilder Query builder
-    *
-    * @throws NoResultException
-    */
+     * Select avatars from database.
+     *
+     * @return QueryBuilder Query builder
+     *
+     * @throws NoResultException
+     */
     public function queryAll(): QueryBuilder
     {
         return $this->getOrCreateQueryBuilder()
@@ -75,6 +76,7 @@ class AvatarRepository extends ServiceEntityRepository
                 'avatar.{id, filename}',
             );
     }
+
     /**
      * Select avatar by author.
      *
@@ -101,15 +103,10 @@ class AvatarRepository extends ServiceEntityRepository
      *
      * @return QueryBuilder Query builder
      */
-    private function getOrCreateQueryBuilder(QueryBuilder $queryBuilder = null): QueryBuilder
+    private function getOrCreateQueryBuilder(?QueryBuilder $queryBuilder = null): QueryBuilder
     {
         return $queryBuilder ?? $this->createQueryBuilder('avatar');
     }
-
-
-
-
-
 
     //    /**
     //     * @return Avatar[] Returns an array of Avatar objects

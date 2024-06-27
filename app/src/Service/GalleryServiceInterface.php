@@ -32,20 +32,17 @@ interface GalleryServiceInterface
      * Save entity.
      *
      * @param Gallery $gallery Gallery entity
-     *
      */
     public function save(Gallery $gallery): void;
-
 
     /**
      * Delete entity.
      *
      * @param Gallery $gallery Gallery entity
      *
-     * @throws ORMException If an ORM error occurs.
-     * @throws OptimisticLockException If a version conflict occurs.
-     * @throws InvalidArgumentException If the provided tag is invalid.
-     *
+     * @throws ORMException             if an ORM error occurs
+     * @throws OptimisticLockException  if a version conflict occurs
+     * @throws InvalidArgumentException if the provided tag is invalid
      */
     public function delete(Gallery $gallery): void;
 

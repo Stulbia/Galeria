@@ -14,6 +14,7 @@ use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\OptimisticLockException;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Class CommentService.
@@ -58,7 +59,7 @@ class CommentService implements CommentServiceInterface
     }
 
     /**
-     * Get paginated list by Photo
+     * Get paginated list by Photo.
      *
      * @param Photo $photo Photo
      * @param int   $page  Page number
@@ -75,7 +76,7 @@ class CommentService implements CommentServiceInterface
     }
 
     /**
-     * Get paginated list by Photo
+     * Get paginated list by Photo.
      *
      * @param User $user User
      * @param int  $page Page number
@@ -90,6 +91,7 @@ class CommentService implements CommentServiceInterface
             self::PAGINATOR_ITEMS_PER_PAGE
         );
     }
+
     /**
      * Save entity.
      *
@@ -100,7 +102,7 @@ class CommentService implements CommentServiceInterface
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function save(Comment $comment, User $user, Photo $photo): void
+    public function save(Comment $comment, UserInterface $user, Photo $photo): void
     {
         $comment->setUser($user);
         $comment->setPhoto($photo);
@@ -109,12 +111,12 @@ class CommentService implements CommentServiceInterface
     }
 
     /** Delete entity.
-    *
-    * @param Comment $comment Comment entity
-    *
-    * @throws ORMException
-    * @throws OptimisticLockException
-    */
+     *
+     * @param Comment $comment Comment entity
+     *
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
     public function delete(Comment $comment): void
     {
         $this->commentRepository->delete($comment);

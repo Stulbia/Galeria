@@ -47,7 +47,7 @@ class PhotoEditType extends AbstractType
         $builder->add(
             'title',
             TextType::class,
-            [   'label' => 'label.title',
+            ['label' => 'label.title',
                 'required' => true,
                 'attr' => ['max_length' => 255], ]
         );
@@ -76,8 +76,8 @@ class PhotoEditType extends AbstractType
         );
         $builder->add('status', ChoiceType::class, [
             'choices' => [
-            'label.public' => PhotoStatus::PUBLIC,
-            'label.private' => PhotoStatus::PRIVATE,
+                'label.public' => PhotoStatus::PUBLIC,
+                'label.private' => PhotoStatus::PRIVATE,
             ],
             'multiple' => false,
             'expanded' => true,

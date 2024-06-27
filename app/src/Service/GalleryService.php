@@ -32,9 +32,9 @@ class GalleryService implements GalleryServiceInterface
     /**
      * Constructor.
      *
-     * @param GalleryRepository $galleryRepository Gallery repository
-     * @param PaginatorInterface $paginator      Paginator
-     * @param PhotoRepository $photoRepository Photo repository
+     * @param GalleryRepository  $galleryRepository Gallery repository
+     * @param PaginatorInterface $paginator         Paginator
+     * @param PhotoRepository    $photoRepository   Photo repository
      */
     public function __construct(
         private readonly GalleryRepository $galleryRepository,
@@ -58,27 +58,25 @@ class GalleryService implements GalleryServiceInterface
             self::PAGINATOR_ITEMS_PER_PAGE
         );
     }
+
     /**
      * Save entity.
      *
      * @param Gallery $gallery Gallery entity
-     *
      */
     public function save(Gallery $gallery): void
     {
         $this->galleryRepository->save($gallery);
     }
 
-
     /**
      * Delete entity.
      *
      * @param Gallery $gallery Gallery entity
      *
-     * @throws ORMException If an ORM error occurs.
-     * @throws OptimisticLockException If a version conflict occurs.
-     * @throws InvalidArgumentException If the provided tag is invalid.
-     *
+     * @throws ORMException             if an ORM error occurs
+     * @throws OptimisticLockException  if a version conflict occurs
+     * @throws InvalidArgumentException if the provided tag is invalid
      */
     public function delete(Gallery $gallery): void
     {
@@ -95,13 +93,14 @@ class GalleryService implements GalleryServiceInterface
     public function canBeDeleted(Gallery $gallery): bool
     {
         try {
-            $result = $this-> photoRepository ->countByGallery($gallery);
+            $result = $this->photoRepository->countByGallery($gallery);
 
             return !($result > 0);
-        } catch (NoResultException | NonUniqueResultException) {
+        } catch (NoResultException|NonUniqueResultException) {
             return false;
         }
     }
+
     /**
      * Find by id.
      *

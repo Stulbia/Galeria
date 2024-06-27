@@ -46,7 +46,6 @@ class PhotoType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-
         $builder->add(
             'file',
             FileType::class,
@@ -56,7 +55,7 @@ class PhotoType extends AbstractType
                 'required' => true,
                 'constraints' => new Image(
                     [
-                        'maxSize' => '1024k', //1mb
+                        'maxSize' => '1024k', // 1mb
                         'mimeTypes' => [
                             'image/png',
                             'image/jpeg',
@@ -71,7 +70,7 @@ class PhotoType extends AbstractType
         $builder->add(
             'title',
             TextType::class,
-            [   'label' => 'label.title',
+            ['label' => 'label.title',
                 'required' => true,
                 'attr' => ['max_length' => 255], ]
         );

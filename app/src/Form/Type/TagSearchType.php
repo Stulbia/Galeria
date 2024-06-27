@@ -15,20 +15,20 @@ class TagSearchType extends AbstractType
     {
         $builder
         ->add('tags', EntityType::class, [
-        'class' => Tag::class,
-        'choice_label' => 'title',
-        'multiple' => true,
-        'expanded' => true,
+            'class' => Tag::class,
+            'choice_label' => 'title',
+            'multiple' => true,
+            'expanded' => true,
         ])
         ->add('search', SubmitType::class, [
-        'label' => 'Search',
+            'label' => 'Search',
         ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-// Konfiguracja formularza
+            // Konfiguracja formularza
         ]);
     }
 }

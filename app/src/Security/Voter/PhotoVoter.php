@@ -41,12 +41,12 @@ class PhotoVoter extends Voter
     /**
      *  Constructor.
      *
-     * @param  Security $security Security
-     *
+     * @param Security $security Security
      */
     public function __construct(private readonly Security $security)
     {
     }
+
     /**
      * Determines if the attribute and subject are supported by this voter.
      *
@@ -78,7 +78,7 @@ class PhotoVoter extends Voter
         }
         $user = $token->getUser();
         if (!$user instanceof UserInterface) {
-            if ($subject->getStatus() === "PUBLIC") {
+            if ('PUBLIC' === $subject->getStatus()) {
                 return match ($attribute) {
                     self::VIEW => true,
                     default => false,
@@ -109,6 +109,10 @@ class PhotoVoter extends Voter
      */
     private function canEdit(Photo $photo, UserInterface $user): bool
     {
+        if ($this->security->isGranted('ROLE_BANNED')) {
+            return false;
+        }
+
         return $photo->getAuthor() === $user;
     }
 
@@ -122,12 +126,12 @@ class PhotoVoter extends Voter
      */
     private function canView(Photo $photo, UserInterface $user): bool
     {
-        return true;
-//        if ($photo->getStatus() === 'PRIVATE') {
-//            return $photo->getAuthor() === $user;
-//        }
-//
-//        return true;
+
+        if ($photo->getStatus() === 'PRIVATE') {
+            return $photo->getAuthor() === $user;
+        }
+
+                return true;
     }
 
     /**
@@ -140,6 +144,10 @@ class PhotoVoter extends Voter
      */
     private function canDelete(Photo $photo, UserInterface $user): bool
     {
+        if ($this->security->isGranted('ROLE_BANNED')) {
+            return false;
+        }
+
         return $photo->getAuthor() === $user;
     }
 }

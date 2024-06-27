@@ -21,22 +21,21 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  */
 class UserType extends AbstractType
 {
-/**
-* Constructor.
-*
- * @param FormBuilderInterface $builder The form builder*
- * @param array<string, mixed> $options Form options
- *
-*/
+    /**
+     * Constructor.
+     *
+     * @param FormBuilderInterface $builder The form builder*
+     * @param array<string, mixed> $options Form options
+     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
         ->add('email', EmailType::class, [
             'label' => 'label.email',
             'constraints' => [
-            new NotBlank([
-                'message' => 'message.email.not_blank',
-            ]),
+                new NotBlank([
+                    'message' => 'message.email.not_blank',
+                ]),
             ],
         ])
             ->add('name', TextType::class, [
@@ -52,15 +51,15 @@ class UserType extends AbstractType
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'first_options' => [
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'message.enter_password',
-                    ]),
-                ],
-                'label' => 'Password',
+                    'constraints' => [
+                        new NotBlank([
+                            'message' => 'message.enter_password',
+                        ]),
+                    ],
+                    'label' => 'label.password',
                 ],
                 'second_options' => [
-                'label' => 'Repeat Password',
+                    'label' => 'label.confirm_password',
                 ],
                 'invalid_message' => 'message.confirm_password',
             ]);

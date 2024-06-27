@@ -41,12 +41,12 @@ class CommentVoter extends Voter
     /**
      *  Constructor.
      *
-     * @param  Security $security Security
-     *
+     * @param Security $security Security
      */
     public function __construct(private readonly Security $security)
     {
     }
+
     /**
      * Determines if the attribute and subject are supported by this voter.
      *
@@ -102,6 +102,10 @@ class CommentVoter extends Voter
      */
     private function canEdit(Comment $comment, UserInterface $user): bool
     {
+        if (!$this->security->isGranted('ROLE_USER')) {
+            return false;
+        }
+
         return $comment->getUser() === $user;
     }
 
@@ -128,6 +132,10 @@ class CommentVoter extends Voter
      */
     private function canDelete(Comment $comment, UserInterface $user): bool
     {
+        if (!$this->security->isGranted('ROLE_USER')) {
+            return false;
+        }
+
         return $comment->getUser() === $user;
     }
 }

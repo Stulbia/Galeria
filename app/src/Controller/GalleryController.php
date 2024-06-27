@@ -20,6 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -47,6 +48,7 @@ class GalleryController extends AbstractController
      *
      * @return Response HTTP response
      */
+    #[isGranted('ROLE_ADMIN')]
     #[Route('/{id}/edit', name: 'gallery_edit', requirements: ['id' => '[1-9]\d*'], methods: 'GET|PUT')]
     public function edit(Request $request, Gallery $gallery): Response
     {
@@ -131,6 +133,7 @@ class GalleryController extends AbstractController
         name: 'gallery_create',
         methods: 'GET|POST',
     )]
+    #[isGranted('ROLE_ADMIN')]
     public function create(Request $request): Response
     {
         $gallery = new Gallery();
@@ -166,6 +169,7 @@ class GalleryController extends AbstractController
      * @throws OptimisticLockException
      */
     #[Route('/{id}/delete', name: 'gallery_delete', requirements: ['id' => '[1-9]\d*'], methods: 'GET|DELETE')]
+    #[isGranted('ROLE_ADMIN')]
     public function delete(Request $request, Gallery $gallery): Response
     {
         if (!$this->galleryService->canBeDeleted($gallery)) {
