@@ -37,7 +37,7 @@ class PhotoFixtures extends AbstractBaseFixtures implements DependentFixtureInte
         $this->createMany(20, 'photos', function (int $i) {
             $photo = new Photo();
             $photo->setTitle($this->faker->sentence);
-            $photo->setFilename(sprintf('%d.png', $i));
+            $photo->setFilename(sprintf('%d.jpg', ($i % 20)));
             $photo->setDescription($this->faker->sentence);
             $photo->setStatus(PhotoStatus::PUBLIC);
             $photo->setCreatedAt(

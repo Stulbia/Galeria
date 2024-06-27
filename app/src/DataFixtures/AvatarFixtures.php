@@ -45,7 +45,7 @@ class AvatarFixtures extends AbstractBaseFixtures implements DependentFixtureInt
             /** @var User $user */
             $user = $this->getReference(sprintf('users_%s', strval($i)));
             $avatar  = new Avatar();
-            $avatar->setFilename('penguin.jpg');
+            $avatar->setFilename(sprintf('%d.jpg', $i));
             $avatar->setUser($user);
 
             return $avatar;
@@ -55,7 +55,7 @@ class AvatarFixtures extends AbstractBaseFixtures implements DependentFixtureInt
             /** @var User $user */
             $user = $this->getReference(sprintf('admins_%s', strval($i)));
             $avatar  = new Avatar();
-            $avatar->setFilename('admin%d.png', $i));
+            $avatar->setFilename(sprintf('penguin%d.png', $i));
             $avatar->setUser($user);
 
             return $avatar;
