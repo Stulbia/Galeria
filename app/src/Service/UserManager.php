@@ -10,7 +10,6 @@ use App\Entity\User;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\OptimisticLockException;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -19,23 +18,42 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Class UserManager.
- */ class UserManager implements UserManagerInterface
+ */
+class UserManager implements UserManagerInterface
 {
     /**
-     * constructor.
+     * @var UserPasswordHasherInterface
+     */
+    private UserPasswordHasherInterface $passwordHasher;
+
+    /**
+     * @var PaginatorInterface
+     */
+    private PaginatorInterface $paginator;
+
+    /**
+     * @var UserRepository
+     */
+    private UserRepository $userRepository;
+
+    /**
+     * Constructor.
      *
      * @param UserPasswordHasherInterface $passwordHasher PasswordHasher
      * @param PaginatorInterface          $paginator      Paginator
      * @param UserRepository              $userRepository UserRepository
      */
-    public function __construct(private readonly UserPasswordHasherInterface $passwordHasher, private readonly PaginatorInterface $paginator, private readonly UserRepository $userRepository)
+    public function __construct(UserPasswordHasherInterface $passwordHasher, PaginatorInterface $paginator, UserRepository $userRepository)
     {
+        $this->passwordHasher = $passwordHasher;
+        $this->paginator = $paginator;
+        $this->userRepository = $userRepository;
     }
 
     /**
-     * saves a new user.
+     * Saves a new user.
      *
-     * @param UserInterface $user user
+     * @param UserInterface $user User entity
      */
     public function register(UserInterface $user): void
     {
@@ -46,22 +64,21 @@ use Symfony\Component\Security\Core\User\UserInterface;
     }
 
     /**
-     * /**
-     * saves user data changes.
+     * Saves user data changes.
      *
-     * @param UserInterface $user user
+     * @param UserInterface $user User entity
      */
     public function save(UserInterface $user): void
     {
         try {
             $this->userRepository->save($user);
-        } catch (OptimisticLockException|ORMException $e) {
+        } catch (OptimisticLockException | ORMException $e) {
+            // Handle exceptions here
         }
     }
+
     /**
      * Items per page.
-     *
-     * @constant int
      */
     private const PAGINATOR_ITEMS_PER_PAGE = 10;
 
@@ -82,6 +99,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
      *
      * @param User   $user             User entity
      * @param string $newPlainPassword New Plain Password
+     *
      */
     public function upgradePassword(UserInterface $user, string $newPlainPassword): void
     {
@@ -111,7 +129,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
     {
         try {
             return $this->userRepository->countByAdmin() > 1;
-        } catch (NoResultException|NonUniqueResultException $e) {
+        } catch (NoResultException | NonUniqueResultException $e) {
             return false;
         }
     }
@@ -119,9 +137,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
     /**
      * Returns false if the attempt is trying to ban an admin.
      *
-     * @param User $user user
+     * @param User $user User entity
      *
-     * @return  bool
+     * @return bool
      */
     public function ifBanAdmin(User $user): bool
     {

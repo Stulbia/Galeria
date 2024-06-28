@@ -11,22 +11,21 @@ use Knp\Component\Pager\Pagination\PaginationInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * Class UserManager.
+ * Interface UserManagerInterface
  */
 interface UserManagerInterface
 {
     /**
-     * saves a new user.
+     * Saves a new user.
      *
-     * @param UserInterface $user user
+     * @param UserInterface $user The user entity
      */
     public function register(UserInterface $user): void;
 
     /**
-     * /**
-     * saves user data changes.
+     * Saves user data changes.
      *
-     * @param UserInterface $user user
+     * @param UserInterface $user The user entity
      */
     public function save(UserInterface $user): void;
 
@@ -35,36 +34,41 @@ interface UserManagerInterface
      *
      * @param int $page Page number
      *
-     * @return PaginationInterface<string, mixed> Paginated list
+     * @return PaginationInterface Paginated list
      */
     public function getPaginatedList(int $page): PaginationInterface;
 
     /**
      * Change Password.
      *
-     * @param User   $user             User entity
-     * @param string $newPlainPassword New Plain Password
+     * @param UserInterface $user             User entity
+     * @param string        $newPlainPassword New Plain Password
      */
     public function upgradePassword(UserInterface $user, string $newPlainPassword): void;
 
     /**
      * Verify Password.
      *
-     * @param User   $user          User entity
-     * @param string $plainPassword Plain Password
+     * @param UserInterface $user          User entity
+     * @param string        $plainPassword Plain Password
+     *
+     * @return bool
      */
     public function verifyPassword(UserInterface $user, string $plainPassword): bool;
 
     /**
      * Verify if this is the last admin.
+     *
+     * @return bool
      */
     public function canBeDowngraded(): bool;
+
     /**
      * Returns false if the attempt is trying to ban an admin.
      *
-     * @param User $user user
+     * @param User $user The user entity
      *
-     * @return  bool
+     * @return bool
      */
     public function ifBanAdmin(User $user): bool;
 }

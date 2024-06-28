@@ -3,10 +3,8 @@
 /**
  * AccessDeniedListener.
  *
- * Klasa nasłuchująca na wyjątki w aplikacji Symfony.
- * i przekierowuje użytkownika
+ * Class listening for exceptions in Symfony application.
  */
-
 namespace App\EventListener;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -21,7 +19,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 /**
  * AccessDeniedListener.
  *
- * Klasa nasłuchująca na wyjątki w aplikacji Symfony.
+ * Class listening for exceptions in Symfony application.
  */
 class AccessDeniedListener
 {
@@ -33,17 +31,17 @@ class AccessDeniedListener
     private $router;
 
     /**
-     * Router.
+     * RequestStack.
      *
      * @var RequestStack
-     * */
+     */
     private $requestStack;
 
     /**
-     * Konstruktor klasy.
+     * AccessDeniedListener constructor.
      *
-     * @param RouterInterface $router
-     * @param RequestStack    $requestStack
+     * @param RouterInterface $router       The router instance.
+     * @param RequestStack    $requestStack The request stack instance.
      */
     public function __construct(RouterInterface $router, RequestStack $requestStack)
     {
@@ -52,16 +50,16 @@ class AccessDeniedListener
     }
 
     /**
-     * Metoda obsługująca wyjątki.
+     * Handles exceptions.
      *
-     * @param ExceptionEvent $event
+     * @param ExceptionEvent $event The exception event.
      */
-    public function onKernelException(ExceptionEvent $event)
+    public function onKernelException(ExceptionEvent $event):void
     {
-        // Pobranie wyjątku
+        // Get the exception
         $exception = $event->getThrowable();
 
-        // Sprawdzenie, czy wyjątek jest typu AccessDeniedException, NotFoundHttpException lub ResourceNotFoundException
+        // Check if the exception is of type AccessDeniedException, NotFoundHttpException, or ResourceNotFoundException
         if (!$exception instanceof AccessDeniedException &&
             !$exception instanceof NotFoundHttpException &&
             !$exception instanceof AccessDeniedHttpException &&
@@ -69,21 +67,21 @@ class AccessDeniedListener
             return;
         }
 
-        // Pobranie aktualnego żądania
+        // Get the current request
         $request = $this->requestStack->getCurrentRequest();
 
-        // Pobranie nagłówka 'referer'
+        // Get the 'referer' header
         $referer = $request->headers->get('referer');
 
-        // Jeżeli referer jest dostępny, przekierowanie na niego
+        // Redirect to the referer if available
         if ($referer) {
             $response = new RedirectResponse($referer);
         } else {
-            // Jeżeli referer nie jest dostępny, przekierowanie na domyślną trasę
+            // Redirect to the default route if referer is not available
             $response = new RedirectResponse($this->router->generate('default_route'));
         }
 
-        // Ustawienie odpowiedzi w evencie
+        // Set the response in the event
         $event->setResponse($response);
     }
 }

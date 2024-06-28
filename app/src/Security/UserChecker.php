@@ -11,7 +11,6 @@ use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationExc
 
 /**
  * Class UserChecker
- *
  */
 class UserChecker implements UserCheckerInterface
 {
@@ -22,7 +21,7 @@ class UserChecker implements UserCheckerInterface
      *
      * @throws CustomUserMessageAuthenticationException If the user is banned.
      */
-    public function checkPreAuth(UserInterface $user):void
+    public function checkPreAuth(UserInterface $user): void
     {
         if ($user instanceof User && $user->isBanned()) {
             throw new CustomUserMessageAuthenticationException('message.banned');

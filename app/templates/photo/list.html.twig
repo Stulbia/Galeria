@@ -48,17 +48,22 @@
                             title="{{ photo.gallery.title }}">
                             {{ photo.gallery.title }}
                         </a></td>
-                    <td>  {% if photo.tags is defined and photo.tags|length %}
+                    <td>
+                        {% if photo.tags is defined and photo.tags|length %}
                             {% for tag in photo.tags %}
-                                <a class="btn btn-outline-primary"
-                                   href="{{ url('photo_index', {'tagId' : tag.id, 'statusId' : photo.status}) }}"
-                                   title="{{ tag.title }}">
-                                    {{ tag.title }}
-                                </a>
+                                <div>
+                                    <a class="btn btn-outline-primary"
+                                       href="{{ url('photo_index', {'tagId' : tag.id, 'statusId' : photo.status}) }}"
+                                       title="{{ tag.title }}">
+                                        {{ tag.title }}
+                                    </a>
+                                </div>
                             {% endfor %}
                         {% else %}
                             &nbsp;
-                        {% endif %}</td>
+                        {% endif %}
+                    </td>
+
                     <td>
 
                         {# ... #}

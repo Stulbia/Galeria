@@ -23,12 +23,14 @@ class UserVoter extends Voter
      * @const string
      */
     public const VIEW = 'VIEW';
+
     /**
      * Edit permission.
      *
      * @const string
      */
     public const EDIT = 'EDIT';
+
     /**
      * Delete permission.
      *
@@ -37,7 +39,7 @@ class UserVoter extends Voter
     public const DELETE = 'DELETE';
 
     /**
-     *  Constructor.
+     * Constructor.
      *
      * @param Security $security Security
      */
@@ -135,6 +137,6 @@ class UserVoter extends Voter
             return false;
         }
 
-            return $currentUser === $targetUser;
+        return $currentUser === $targetUser;
     }
 }

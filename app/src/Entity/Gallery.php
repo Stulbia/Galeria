@@ -99,7 +99,7 @@ class Gallery
      *
      * @param DateTimeImmutable $createdAt The date and time when the gallery was created
      */
-    public function setCreatedAt(DateTimeImmutable $createdAt):void
+    public function setCreatedAt(DateTimeImmutable $createdAt): void
     {
         $this->createdAt = $createdAt;
     }

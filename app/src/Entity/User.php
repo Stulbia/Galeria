@@ -22,6 +22,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
      * Primary key.
+     *
+     * @var int|null The unique identifier of the user
      */
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -30,14 +32,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * Name.
+     *
+     * @var string|null The name of the user
      */
     #[ORM\Column(type: 'string', length: 180, nullable: false)]
     #[Assert\NotBlank]
     #[Assert\Type('string')]
     #[Assert\Length(min: 3, max: 180)]
     private ?string $name;
+
     /**
      * Email.
+     *
+     * @var string|null The email address of the user
      */
     #[ORM\Column(type: 'string', length: 180, unique: true)]
     #[Assert\NotBlank]
@@ -47,35 +54,42 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * Roles.
      *
-     * @var array<int, string>
+     * @var array<int, string> The roles assigned to the user
      */
     #[ORM\Column(type: 'json')]
     private array $roles = [];
 
     /**
      * Password.
+     *
+     * @var string|null The hashed password of the user
      */
     #[ORM\Column(type: 'string')]
     #[Assert\NotBlank]
     private ?string $password;
 
     /**
-     * User.
+     * Avatar.
+     *
+     * @var Avatar|null The avatar associated with the user
      */
     #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
     private ?Avatar $avatar = null;
 
     /**
      * Banned.
+     *
+     * @var bool The banned status of the user
      */
     #[ORM\Column(type: "boolean")]
     #[Assert\NotBlank]
     #[Assert\Type('boolean')]
     private bool $banned = false;
+
     /**
      * Getter for id.
      *
-     * @return int|null Id
+     * @return int|null The unique identifier of the user
      */
     public function getId(): ?int
     {
@@ -85,7 +99,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * Getter for email.
      *
-     * @return string|null Email
+     * @return string|null The email address of the user
      */
     public function getEmail(): ?string
     {
@@ -95,7 +109,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * Setter for name.
      *
-     * @param string $name Name
+     * @param string $name The name of the user
      */
     public function setName(string $name): void
     {
@@ -105,7 +119,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * Getter for name.
      *
-     * @return string|null Name
+     * @return string|null The name of the user
      */
     public function getName(): ?string
     {
@@ -115,7 +129,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * Setter for email.
      *
-     * @param string $email Email
+     * @param string $email The email address of the user
      */
     public function setEmail(string $email): void
     {
@@ -147,7 +161,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * Getter for roles.
      *
-     * @return array<int, string> Roles
+     * @return array<int, string> The roles assigned to the user
      *
      * @see UserInterface
      */
@@ -155,7 +169,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-//        $roles[] = UserRole::ROLE_USER->value;
+        // $roles[] = UserRole::ROLE_USER->value;
 
         return array_unique($roles);
     }
@@ -163,7 +177,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * Setter for roles.
      *
-     * @param array<int, string> $roles Roles
+     * @param array<int, string> $roles The roles assigned to the user
      */
     public function setRoles(array $roles): void
     {
@@ -173,7 +187,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * Getter for password.
      *
-     * @return string|null Password
+     * @return string|null The hashed password of the user
      *
      * @see PasswordAuthenticatedUserInterface
      */
@@ -185,7 +199,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * Setter for password.
      *
-     * @param string $password User password
+     * @param string $password The hashed password of the user
      */
     public function setPassword(string $password): void
     {
@@ -231,7 +245,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      *
      * @param Avatar|null $avatar The avatar to be associated with the user
      */
-    public function setAvatar(?Avatar $avatar):void
+    public function setAvatar(?Avatar $avatar): void
     {
         $this->avatar = $avatar;
     }
@@ -239,7 +253,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * Getter for banned.
      *
-     * @return bool user banned status.
+     * @return bool The banned status of the user
      */
     public function isBanned(): bool
     {
@@ -249,9 +263,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * Setter for banned.
      *
-     * Sets the banned status
+     * Sets the banned status of the user.
      *
-     * @param bool $banned banned flag
+     * @param bool $banned The banned status of the user
      */
     public function setBanned(bool $banned): void
     {

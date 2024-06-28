@@ -13,7 +13,7 @@ use Doctrine\ORM\OptimisticLockException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
- * Class Avatar service.
+ * Interface AvatarServiceInterface
  */
 interface AvatarServiceInterface
 {
@@ -35,12 +35,11 @@ interface AvatarServiceInterface
      */
     public function update(UploadedFile $uploadedFile, Avatar $avatar, User $user): void;
 
-
     /**
      * Delete avatar.
      *
      * @param Avatar $avatar Avatar entity
-     * @param User   $user   Use
+     * @param User   $user   User entity
      *
      * @throws ORMException
      * @throws OptimisticLockException

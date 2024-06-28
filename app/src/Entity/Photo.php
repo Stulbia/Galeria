@@ -62,6 +62,7 @@ class Photo
     #[Assert\Type('string')]
     #[Assert\NotBlank]
     private string $status = 'PUBLIC';
+
     /**
      * Title.
      */
@@ -78,7 +79,6 @@ class Photo
     #[ORM\JoinColumn(nullable: false)]
     private ?Gallery $gallery = null;
 
-    // ...
     /**
      * Author.
      */
@@ -103,16 +103,8 @@ class Photo
     #[ORM\JoinTable(name: 'photos_tags')]
     private Collection $tags;
 
-//    /**
-//     * @var Collection|<int, Comment>
-//     */
-//    #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'photo', fetch: 'EXTRA_LAZY', cascade: ['remove'])]
-//    #[ORM\JoinTable(name: 'photos_comments')]
-//    private Collection $comments;
-
     /**
-     * Photo Description
-     *  text|null.
+     * Photo Description.
      */
     #[ORM\Column(type: Types::TEXT, length: 255, nullable: true)]
     #[Assert\NotBlank]
@@ -127,6 +119,13 @@ class Photo
     #[Assert\Type('string')]
     #[Assert\Length(min: 1, max: 200)]
     private ?string $filename = null;
+
+    /**
+     * @var Collection<int, Comment>
+     */
+    #[ORM\OneToMany(mappedBy: 'photo', targetEntity: Comment::class, cascade: ['remove'], fetch: 'EXTRA_LAZY')]
+    #[ORM\JoinTable(name: 'photos_comments')]
+    private Collection $comments;
 
     /**
      * Constructor.
@@ -150,11 +149,10 @@ class Photo
     /**
      * Getter for status.
      *
-     * @return string status
+     * @return string Status
      */
     public function getStatus(): string
     {
-
         return $this->status;
     }
 
@@ -232,7 +230,7 @@ class Photo
     /**
      * Getter for gallery.
      *
-     * @return Gallery|null $gallery
+     * @return Gallery|null Gallery
      */
     public function getGallery(): ?Gallery
     {
@@ -243,20 +241,16 @@ class Photo
      * Setter for gallery.
      *
      * @param Gallery|null $gallery Gallery
-     *
-     * @return Photo $this Photo
      */
-    public function setGallery(?Gallery $gallery): static
+    public function setGallery(?Gallery $gallery): void
     {
         $this->gallery = $gallery;
-
-        return $this;
     }
 
     /**
-     * Getter for Slug.
+     * Getter for slug.
      *
-     * @return string|null $slug Slug
+     * @return string|null Slug
      */
     public function getSlug(): ?string
     {
@@ -264,23 +258,19 @@ class Photo
     }
 
     /**
-     * Setter for Slug.
+     * Setter for slug.
      *
      * @param string|null $slug Slug
-     *
-     * @return Photo $this Photo
      */
-    public function setSlug(?string $slug): static
+    public function setSlug(?string $slug): void
     {
         $this->slug = $slug;
-
-        return $this;
     }
 
     /**
      * Getter for author.
      *
-     * @return User|null $author User
+     * @return User|null Author
      */
     public function getAuthor(): ?User
     {
@@ -290,67 +280,17 @@ class Photo
     /**
      * Setter for author.
      *
-     * @param User|null $author User
-     *
-     * @return Photo $this Photo
+     * @param User|null $author Author
      */
-    public function setAuthor(?User $author): static
+    public function setAuthor(?User $author): void
     {
         $this->author = $author;
-
-        return $this;
-    }
-
-//    /**
-//     * Get Comments.
-//     *
-//     * @return Collection<int, Comment>
-//     */
-//    public function getComments(): Collection
-//    {
-//        return $this->comments;
-//    }
-//
-//    /**
-//     * Adds Comments.
-//     *
-//     * @param Comment $comment Comment
-//     *
-//     * @return Photo $this Photo
-//     */
-//    public function addComment(Comment $comment): static
-//    {
-//        if (!$this->comments->contains($comment)) {
-//            $this->comments->add($comment);
-//            $comment->setPhoto($this); // Ensure the inverse side of the relation is updated
-//        }
-//
-//        return $this;
-//    }
-
-    /**
-     * Removes Comments.
-     *
-     * @param Comment $comment Comment
-     *
-     * @return Photo $this Photo
-     */
-    public function removeComment(Comment $comment): static
-    {
-        if ($this->comments->removeElement($comment)) {
-            // Ensure the inverse side of the relation is nullified
-            if ($comment->getPhoto() === $this) {
-                $comment->setPhoto(null);
-            }
-        }
-
-        return $this;
     }
 
     /**
-     * Get Tags.
+     * Getter for tags.
      *
-     * @return Collection<int, Tag>
+     * @return Collection Tags
      */
     public function getTags(): Collection
     {
@@ -358,39 +298,31 @@ class Photo
     }
 
     /**
-     * Adds Tags.
+     * Adds a tag.
      *
      * @param Tag $tag Tag
-     *
-     * @return Photo $this Photo
      */
-    public function addTag(Tag $tag): static
+    public function addTag(Tag $tag): void
     {
         if (!$this->tags->contains($tag)) {
             $this->tags->add($tag);
         }
-
-        return $this;
     }
 
     /**
-     * Removes Tags.
+     * Removes a tag.
      *
      * @param Tag $tag Tag
-     *
-     * @return Photo $this Photo
      */
-    public function removeTag(Tag $tag): static
+    public function removeTag(Tag $tag): void
     {
         $this->tags->removeElement($tag);
-
-        return $this;
     }
 
     /**
      * Getter for description.
      *
-     * @return string|null $description
+     * @return string|null Description
      */
     public function getDescription(): ?string
     {
@@ -400,15 +332,11 @@ class Photo
     /**
      * Setter for description.
      *
-     * @param string|null $description string
-     *
-     * @return Photo $this Photo
+     * @param string|null $description Description
      */
-    public function setDescription(?string $description): static
+    public function setDescription(?string $description): void
     {
         $this->description = $description;
-
-        return $this;
     }
 
     /**
@@ -429,5 +357,39 @@ class Photo
     public function setFilename(?string $filename): void
     {
         $this->filename = $filename;
+    }
+
+    /**
+     * Getter for comments.
+     *
+     * @return Collection Comments
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    /**
+     * Adds a comment.
+     *
+     * @param Comment $comment Comment
+     */
+    public function addComment(Comment $comment): void
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments->add($comment);
+            $comment->setPhoto($this); // Ensure the inverse side of the relation is updated
+        }
+    }
+
+    /**
+     * Removes a comment.
+     *
+     * @param Comment $comment Comment
+     */
+    public function removeComment(Comment $comment): void
+    {
+        $this->comments->removeElement($comment);
+        $comment->setPhoto(null); // Ensure the inverse side of the relation is updated
     }
 }

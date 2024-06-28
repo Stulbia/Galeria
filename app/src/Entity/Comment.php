@@ -65,6 +65,7 @@ class Comment
     #[ORM\ManyToOne(targetEntity: Photo::class, fetch: 'LAZY')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Photo $photo = null;
+
     /**
      * User.
      */

@@ -50,14 +50,15 @@ class AvatarController extends AbstractController
     {
         $id = $user->getId();
         if (!$user->getAvatar()) {
-            return $this->redirectToRoute(
-                'avatar_create',
-                ['id' => $id]
-            );
+            return $this->redirectToRoute('avatar_create', ['id' => $id]);
         }
+
         $avatar = $user->getAvatar();
 
-        return $this->render('avatar/show.html.twig', ['avatar' => $avatar, 'user' => $user]);
+        return $this->render('avatar/show.html.twig', [
+            'avatar' => $avatar,
+            'user' => $user,
+        ]);
     }
 
     /**
@@ -65,7 +66,6 @@ class AvatarController extends AbstractController
      *
      * @param Request $request HTTP request
      * @param User    $user    user
-     *
      *
      * @return Response HTTP response
      */
@@ -78,30 +78,27 @@ class AvatarController extends AbstractController
     public function create(Request $request, User $user): Response
     {
         if ($user->getAvatar()) {
-            return $this->redirectToRoute(
-                'avatar_edit',
-                ['id' => $user->getId()]
-            );
+            return $this->redirectToRoute('avatar_edit', ['id' => $user->getId()]);
         }
 
         $avatar = new Avatar();
         $avatar->setUser($user);
+        $avatar->setFilename(' ');
 
         $form = $this->createForm(
             AvatarType::class,
             $avatar,
-            ['method' => 'POST',
-             'action' => $this->generateUrl('avatar_create', ['id' => $user->getId()]), ]
+            [
+                'method' => 'POST',
+                'action' => $this->generateUrl('avatar_create', ['id' => $user->getId()]),
+            ]
         );
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var UploadedFile $file */
             $file = $form->get('file')->getData();
-            $this->avatarService->create(
-                $file,
-                $avatar,
-                $user
-            );
+            $this->avatarService->create($file, $avatar, $user);
 
             $this->addFlash(
                 'success',
@@ -111,10 +108,10 @@ class AvatarController extends AbstractController
             return $this->redirectToRoute('avatar_index', ['id' => $user->getId()]);
         }
 
-        return $this->render(
-            'avatar/create.html.twig',
-            ['form' => $form->createView()]
-        );
+        return $this->render('avatar/create.html.twig', [
+            'form' => $form->createView(),
+            'avatar' => $avatar,
+        ]);
     }
 
     /**
@@ -147,16 +144,13 @@ class AvatarController extends AbstractController
                 'action' => $this->generateUrl('avatar_edit', ['id' => $user->getId()]),
             ]
         );
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var UploadedFile $file */
             $file = $form->get('file')->getData();
-            $this->avatarService->update(
-                $file,
-                $avatar,
-                $user
-            );
+            $this->avatarService->update($file, $avatar, $user);
 
             $this->addFlash(
                 'success',
@@ -166,13 +160,10 @@ class AvatarController extends AbstractController
             return $this->redirectToRoute('avatar_index', ['id' => $user->getId()]);
         }
 
-        return $this->render(
-            'avatar/edit.html.twig',
-            [
-                'form' => $form->createView(),
-                'avatar' => $avatar,
-            ]
-        );
+        return $this->render('avatar/edit.html.twig', [
+            'form' => $form->createView(),
+            'avatar' => $avatar,
+        ]);
     }
 
     /**
@@ -224,12 +215,9 @@ class AvatarController extends AbstractController
             return $this->redirectToRoute('avatar_index', ['id' => $user->getId()]);
         }
 
-        return $this->render(
-            'avatar/delete.html.twig',
-            [
-                'form' => $form->createView(),
-                'avatar' => $avatar,
-            ]
-        );
+        return $this->render('avatar/delete.html.twig', [
+            'form' => $form->createView(),
+            'avatar' => $avatar,
+        ]);
     }
 }

@@ -55,7 +55,7 @@ class UserController extends AbstractController
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function index(#[MapQueryParameter] int $page = 1): Response
     {
-        $filters = new PhotoListInputFiltersDto(null, null, 'PRIVATE');
+        $filters = new PhotoListInputFiltersDto(null, null, 'PRIVATE'); // Fully qualified name due to global namespace import removal
         $user = $this->getUser();
         $pagination = $this->photoService->getPaginatedUserList($page, $user, $filters);
 

@@ -9,6 +9,8 @@ namespace App\Controller;
 use App\Entity\Comment;
 use App\Form\Type\CommentType;
 use App\Service\CommentServiceInterface;
+use Doctrine\ORM\Exception\ORMException;
+use Doctrine\ORM\OptimisticLockException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\Request;
@@ -42,6 +44,9 @@ class CommentController extends AbstractController
      * @param Comment $comment Comment entity
      *
      * @return Response HTTP response
+     *
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     #[Route('/{id}/edit', name: 'comment_edit', requirements: ['id' => '[1-9]\d*'], methods: 'GET|PUT')]
     #[IsGranted('EDIT', subject: 'comment')]
@@ -119,6 +124,9 @@ class CommentController extends AbstractController
      * @param Comment $comment Comment entity
      *
      * @return Response HTTP response
+     *
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     #[Route('/{id}/delete', name: 'comment_delete', requirements: ['id' => '[1-9]\d*'], methods: 'GET|DELETE')]
     #[IsGranted('DELETE', subject: 'comment')]

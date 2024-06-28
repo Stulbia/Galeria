@@ -20,26 +20,26 @@ class PhotoVoter extends Voter
     /**
      * Edit permission.
      *
-     * @const string
+     * @var string
      */
     private const EDIT = 'EDIT';
 
     /**
      * View permission.
      *
-     * @const string
+     * @var string
      */
     private const VIEW = 'VIEW';
 
     /**
      * Delete permission.
      *
-     * @const string
+     * @var string
      */
     private const DELETE = 'DELETE';
 
     /**
-     *  Constructor.
+     * Constructor.
      *
      * @param Security $security Security
      */
@@ -76,7 +76,9 @@ class PhotoVoter extends Voter
         if ($this->security->isGranted('ROLE_ADMIN')) {
             return true;
         }
+
         $user = $token->getUser();
+
         if (!$user instanceof UserInterface) {
             if ('PUBLIC' === $subject->getStatus()) {
                 return match ($attribute) {
@@ -87,6 +89,7 @@ class PhotoVoter extends Voter
 
             return false;
         }
+
         if (!$subject instanceof Photo) {
             return false;
         }
@@ -126,12 +129,11 @@ class PhotoVoter extends Voter
      */
     private function canView(Photo $photo, UserInterface $user): bool
     {
-
         if ($photo->getStatus() === 'PRIVATE') {
             return $photo->getAuthor() === $user;
         }
 
-                return true;
+        return true;
     }
 
     /**

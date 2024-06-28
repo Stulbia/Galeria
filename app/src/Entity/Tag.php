@@ -108,7 +108,7 @@ class Tag
      *
      * @param DateTimeImmutable $updatedAt The update timestamp
      */
-    public function setUpdatedAt(DateTimeImmutable $updatedAt):void
+    public function setUpdatedAt(DateTimeImmutable $updatedAt): void
     {
         $this->updatedAt = $updatedAt;
     }
@@ -148,7 +148,7 @@ class Tag
      *
      * @param string $title The title
      */
-    public function setTitle(string $title):void
+    public function setTitle(string $title): void
     {
         $this->title = $title;
     }
