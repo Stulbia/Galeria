@@ -63,17 +63,19 @@ class AvatarController extends AbstractController
     /**
      * Create action.
      *
-     * @param User $user user
+     * @param Request $request HTTP request
+     * @param User    $user    user
+     *
      *
      * @return Response HTTP response
      */
     #[Route(
         '/{id}/create',
         name: 'avatar_create',
-        methods: ['GET', 'POST']
+        methods: 'GET|POST'
     )]
     #[IsGranted('EDIT', subject: 'user')]
-    public function create(User $user): Response
+    public function create(Request $request, User $user): Response
     {
         if ($user->getAvatar()) {
             return $this->redirectToRoute(
@@ -91,7 +93,7 @@ class AvatarController extends AbstractController
             ['method' => 'POST',
              'action' => $this->generateUrl('avatar_create', ['id' => $user->getId()]), ]
         );
-
+        $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var UploadedFile $file */
             $file = $form->get('file')->getData();
@@ -106,7 +108,7 @@ class AvatarController extends AbstractController
                 $this->translator->trans('message.created_successfully')
             );
 
-            return $this->redirectToRoute('avatar_index');
+            return $this->redirectToRoute('avatar_index', ['id' => $user->getId()]);
         }
 
         return $this->render(
@@ -174,7 +176,7 @@ class AvatarController extends AbstractController
     }
 
     /**
-     * Edit action.
+     * Delete action.
      *
      * @param Request $request HTTP request
      * @param User    $user    user
@@ -213,7 +215,7 @@ class AvatarController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->avatarService->delete($avatar);
+            $this->avatarService->delete($avatar, $user);
             $this->addFlash(
                 'success',
                 $this->translator->trans('message.deleted_successfully')

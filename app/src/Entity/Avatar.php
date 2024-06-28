@@ -40,7 +40,9 @@ class Avatar
      * Filename.
      */
     #[ORM\Column(type: 'string', length: 191)]
+    #[Assert\NotBlank]
     #[Assert\Type('string')]
+    #[Assert\Length(min: 1, max: 200)]
     private ?string $filename;
 
     /**

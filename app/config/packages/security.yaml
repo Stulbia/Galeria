@@ -17,12 +17,13 @@ security:
         dev:
 #            pattern: ^/secured
             access_denied_handler: App\Security\AccessDeniedHandler
-#            moja konfiguracja ^^^^
+#            moja konfiguracja ^
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
             lazy: true
             provider: app_user_provider
+            user_checker: App\Security\UserChecker
             custom_authenticator: App\Security\LoginFormAuthenticator
             logout:
                 path: app_logout

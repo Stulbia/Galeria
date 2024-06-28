@@ -6,6 +6,7 @@
 namespace App\Entity;
 
 use App\Repository\TagRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -31,18 +32,20 @@ class Tag
     private ?int $id = null;
 
     /**
-     * @var \DateTimeImmutable|null The date and time when the tag was created
+     * @var DateTimeImmutable|null The date and time when the tag was created
      */
     #[ORM\Column]
     #[Gedmo\Timestampable(on: 'create')]
-    private ?\DateTimeImmutable $createdAt = null;
+    #[Assert\Type(DateTimeImmutable::class)]
+    private ?DateTimeImmutable $createdAt = null;
 
     /**
-     * @var \DateTimeImmutable|null The date and time when the tag was last updated
+     * @var DateTimeImmutable|null The date and time when the tag was last updated
      */
     #[ORM\Column]
     #[Gedmo\Timestampable(on: 'update')]
-    private ?\DateTimeImmutable $updatedAt = null;
+    #[Assert\Type(DateTimeImmutable::class)]
+    private ?DateTimeImmutable $updatedAt = null;
 
     /**
      * @var string|null The slug generated from the title
@@ -56,6 +59,7 @@ class Tag
      */
     #[ORM\Column(length: 64)]
     #[Assert\NotBlank]
+    #[Assert\Type('string')]
     #[Assert\Length(min: 3, max: 64)]
     private ?string $title = null;
 
@@ -72,9 +76,9 @@ class Tag
     /**
      * Get the creation timestamp.
      *
-     * @return \DateTimeImmutable|null The creation timestamp
+     * @return DateTimeImmutable|null The creation timestamp
      */
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?DateTimeImmutable
     {
         return $this->createdAt;
     }
@@ -82,21 +86,19 @@ class Tag
     /**
      * Set the creation timestamp.
      *
-     * @param \DateTimeImmutable $createdAt The creation timestamp
+     * @param DateTimeImmutable $createdAt The creation timestamp
      */
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    public function setCreatedAt(DateTimeImmutable $createdAt): void
     {
         $this->createdAt = $createdAt;
-
-        return $this;
     }
 
     /**
      * Get the update timestamp.
      *
-     * @return \DateTimeImmutable|null The update timestamp
+     * @return DateTimeImmutable|null The update timestamp
      */
-    public function getUpdatedAt(): ?\DateTimeImmutable
+    public function getUpdatedAt(): ?DateTimeImmutable
     {
         return $this->updatedAt;
     }
@@ -104,13 +106,11 @@ class Tag
     /**
      * Set the update timestamp.
      *
-     * @param \DateTimeImmutable $updatedAt The update timestamp
+     * @param DateTimeImmutable $updatedAt The update timestamp
      */
-    public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
+    public function setUpdatedAt(DateTimeImmutable $updatedAt):void
     {
         $this->updatedAt = $updatedAt;
-
-        return $this;
     }
 
     /**
@@ -128,11 +128,9 @@ class Tag
      *
      * @param string $slug The slug
      */
-    public function setSlug(string $slug): static
+    public function setSlug(string $slug): void
     {
         $this->slug = $slug;
-
-        return $this;
     }
 
     /**
@@ -150,10 +148,8 @@ class Tag
      *
      * @param string $title The title
      */
-    public function setTitle(string $title): static
+    public function setTitle(string $title):void
     {
         $this->title = $title;
-
-        return $this;
     }
 }

@@ -189,6 +189,7 @@ class UserController extends AbstractController
         ]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->userManager->ifBanAdmin($user);
             $this->userManager->save($user);
             $this->addFlash('success', $this->translator->trans('message.updated_successfully'));
 

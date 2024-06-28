@@ -8,6 +8,7 @@ namespace App\Form\Type;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -31,11 +32,14 @@ class UserTypeForAdmin extends AbstractType
             'choices' => [
                 'User' => 'ROLE_USER',
                 'Admin' => 'ROLE_ADMIN',
-            //                'Banned' => 'ROLE_BANNED',
             ],
             'multiple' => true,
             'expanded' => true,
-        ]);
+        ])
+            ->add('banned', CheckboxType::class, [
+                'label' => 'label.banned',
+                'required' => false,
+            ]);
     }
 
     /**

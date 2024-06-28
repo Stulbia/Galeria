@@ -413,6 +413,22 @@
         <source>action.edit.password</source>
         <target>Edit password</target>
       </trans-unit>
+      <trans-unit id="message.Email_in_use">
+        <source>message.Email_in_use</source>
+        <target>Email already in use</target>
+      </trans-unit>
+      <trans-unit id="label.photo_status">
+        <source>label.photo_status</source>
+        <target>Photo Status</target>
+      </trans-unit>
+      <trans-unit id="label.public">
+        <source>label.public</source>
+        <target>Public</target>
+      </trans-unit>
+      <trans-unit id="label.private">
+        <source>label.private</source>
+        <target>Sketch</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

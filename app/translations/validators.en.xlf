@@ -26,6 +26,7 @@
                 <source>message.name.not_blank</source>
                 <target>To pole nie może być puste.</target>
             </trans-unit>
+
         </body>
     </file>
 </xliff>

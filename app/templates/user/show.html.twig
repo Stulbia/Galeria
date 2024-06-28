@@ -19,8 +19,15 @@
                     {{ role }}{% if not loop.last %}, {% endif %}
                 {% endfor %}
             </dd>
+            <dd>
+                {% if user.banned  %}
+                    <p style="color: #B0413E"> {{ 'label.banned'|trans }} </p>
+                {% else %}
+                    <p style="color: green"> {{ 'label.active'|trans }} </p>
+                {% endif %}
+            </dd>
         <p>
-            <a href="{{ url('user_list') }}" title="{{ 'action.back_to_list'|trans }}">
+            <a class="btn btn-outline-secondary" href="{{ url('user_list') }}" title="{{ 'action.back_to_list'|trans }}">
                 {{ 'action.back_to_list'|trans }}
             </a>
         </p>
@@ -30,15 +37,13 @@
             <a class="btn btn-outline-success" href="{{ url('user_edit_admin', {id: user.id}) }}" title="{{ 'action.edit.admin'|trans }}">
                 {{ 'action.edit.admin'|trans }}
             </a>
-            <a class="btn btn-outline-success" href="{{ url('user_password', {id: user.id}) }}" title="{{ 'action.edit.password'|trans }}">
-                {{ 'action.edit.password'|trans }}
-            </a>
             <a class="btn btn-outline-success" href="{{ url('avatar_index', {id: user.id}) }}" title="{{ 'action.edit.avatar'|trans }}">
                 {{ 'action.edit.password'|trans }}
             </a>
             <a class="btn btn-outline-success" href="{{ url('avatar_index', {id: user.id}) }}" title="{{ 'action.edit.avatar'|trans }}">
                 {{ 'action.edit.avatar'|trans }}
             </a>
+
         {% endif %}
     {% else %}
         <p>

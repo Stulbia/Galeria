@@ -58,3 +58,7 @@ services:
     App\EventListener\AccessDeniedListener:
         tags:
             - { name: 'kernel.event_listener', event: 'kernel.exception', method: 'onKernelException' }
+
+    App\Security\UserChecker:
+        tags:
+            - { name: 'security.user_checker', alias: 'app.user_checker' }

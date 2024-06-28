@@ -8,6 +8,8 @@ namespace App\Service;
 
 use App\Entity\Avatar;
 use App\Entity\User;
+use Doctrine\ORM\Exception\ORMException;
+use Doctrine\ORM\OptimisticLockException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -32,4 +34,15 @@ interface AvatarServiceInterface
      * @param User         $user         User
      */
     public function update(UploadedFile $uploadedFile, Avatar $avatar, User $user): void;
+
+
+    /**
+     * Delete avatar.
+     *
+     * @param Avatar $avatar Avatar entity
+     *
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function delete(Avatar $avatar, User $user): void;
 }

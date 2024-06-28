@@ -20,6 +20,7 @@
                 <th>{{ knp_pagination_sortable(pagination, 'label.email'|trans, 'user.email') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'label.roles'|trans, 'user.roles') }}</a></th>
                 <th>{{ 'label.actions'|trans }}</th>
+                <th>{{ 'label.status'|trans }}</th>
             </tr>
             </thead>
             <tbody>
@@ -31,7 +32,7 @@
                         {% if user.avatar.filename is defined and user.avatar.filename|length %}
                         <img class="nav-profile-img" src="{{ asset(avatars_directory~user.avatar.filename) }}" alt="avatar" style="width: 50px; height: 50px;" >
                         {% else %}
-                            <img class="nav-profile-img" src="{{ asset('uploads/avatars/default.png') }}"
+                            <img class="nav-profile-img" src="{{ asset('uploads/default.png') }}"
                                  alt="avatar" style="width: 50px; height: 50px;" >
                         {% endif %}
 
@@ -59,6 +60,13 @@
                             {{ 'action.edit.password'|trans }}
                         </a>
                     </td>
+                     <td>
+                     {% if user.banned  %}
+                         <p style="color: #B0413E"> {{ 'label.banned'|trans }} </p>
+                     {% else %}
+                         <p style="color: green"> {{ 'label.active'|trans }} </p>
+                     {% endif %}
+                     </td>
                  {% endif %}
                 </tr>
             {% endfor %}

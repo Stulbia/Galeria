@@ -85,7 +85,7 @@ class AvatarService implements AvatarServiceInterface
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function delete(Avatar $avatar): void
+    public function delete(Avatar $avatar, User $user): void
     {
         $filename = $avatar->getFilename();
 
@@ -94,6 +94,8 @@ class AvatarService implements AvatarServiceInterface
                 $this->targetDirectory.'/'.$filename
             );
         }
+        $avatar->setUser(null);
+        $avatar->setFilename(null);
         $this->avatarRepository->delete($avatar);
     }
 }

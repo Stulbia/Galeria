@@ -6,6 +6,7 @@
 namespace App\Entity;
 
 use App\Repository\GalleryRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -34,22 +35,22 @@ class Gallery
     /**
      * Created at.
      *
-     * @var \DateTimeImmutable|null The date and time when the gallery was created
+     * @var DateTimeImmutable|null The date and time when the gallery was created
      */
     #[ORM\Column(type: 'datetime_immutable')]
-    #[Assert\Type(\DateTimeImmutable::class)]
+    #[Assert\Type(DateTimeImmutable::class)]
     #[Gedmo\Timestampable(on: 'create')]
-    private ?\DateTimeImmutable $createdAt = null;
+    private ?DateTimeImmutable $createdAt = null;
 
     /**
      * Updated at.
      *
-     * @var \DateTimeImmutable|null The date and time when the gallery was last updated
+     * @var DateTimeImmutable|null The date and time when the gallery was last updated
      */
     #[ORM\Column(type: 'datetime_immutable')]
-    #[Assert\Type(\DateTimeImmutable::class)]
+    #[Assert\Type(DateTimeImmutable::class)]
     #[Gedmo\Timestampable(on: 'update')]
-    private ?\DateTimeImmutable $updatedAt = null;
+    private ?DateTimeImmutable $updatedAt = null;
 
     /**
      * Title.
@@ -86,9 +87,9 @@ class Gallery
     /**
      * Getter for created at.
      *
-     * @return \DateTimeImmutable|null The date and time when the gallery was created
+     * @return DateTimeImmutable|null The date and time when the gallery was created
      */
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?DateTimeImmutable
     {
         return $this->createdAt;
     }
@@ -96,21 +97,19 @@ class Gallery
     /**
      * Setter for created at.
      *
-     * @param \DateTimeImmutable $createdAt The date and time when the gallery was created
+     * @param DateTimeImmutable $createdAt The date and time when the gallery was created
      */
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    public function setCreatedAt(DateTimeImmutable $createdAt):void
     {
         $this->createdAt = $createdAt;
-
-        return $this;
     }
 
     /**
      * Getter for updated at.
      *
-     * @return \DateTimeImmutable|null The date and time when the gallery was last updated
+     * @return DateTimeImmutable|null The date and time when the gallery was last updated
      */
-    public function getUpdatedAt(): ?\DateTimeImmutable
+    public function getUpdatedAt(): ?DateTimeImmutable
     {
         return $this->updatedAt;
     }
@@ -118,13 +117,11 @@ class Gallery
     /**
      * Setter for updated at.
      *
-     * @param \DateTimeImmutable $updatedAt The date and time when the gallery was last updated
+     * @param DateTimeImmutable $updatedAt The date and time when the gallery was last updated
      */
-    public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
+    public function setUpdatedAt(DateTimeImmutable $updatedAt): void
     {
         $this->updatedAt = $updatedAt;
-
-        return $this;
     }
 
     /**
@@ -142,11 +139,9 @@ class Gallery
      *
      * @param string $title The title of the gallery
      */
-    public function setTitle(string $title): static
+    public function setTitle(string $title): void
     {
         $this->title = $title;
-
-        return $this;
     }
 
     /**
@@ -164,10 +159,8 @@ class Gallery
      *
      * @param string $slug The slug generated from the title
      */
-    public function setSlug(string $slug): static
+    public function setSlug(string $slug): void
     {
         $this->slug = $slug;
-
-        return $this;
     }
 }

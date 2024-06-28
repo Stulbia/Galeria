@@ -59,4 +59,12 @@ interface UserManagerInterface
      * Verify if this is the last admin.
      */
     public function canBeDowngraded(): bool;
+    /**
+     * Returns false if the attempt is trying to ban an admin.
+     *
+     * @param User $user user
+     *
+     * @return  bool
+     */
+    public function ifBanAdmin(User $user): bool;
 }

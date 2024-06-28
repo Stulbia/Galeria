@@ -8,6 +8,7 @@ namespace App\Entity;
 
 use App\Entity\Enum\PhotoStatus;
 use App\Repository\PhotoRepository;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -17,6 +18,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Class Photo.
+ *
+ * @property ArrayCollection $comments
  *
  * @psalm-suppress MissingConstructor
  */
@@ -39,7 +42,8 @@ class Photo
      */
     #[ORM\Column(type: 'datetime_immutable')]
     #[Gedmo\Timestampable(on: 'create')]
-    private ?\DateTimeImmutable $createdAt;
+    #[Assert\Type(DateTimeImmutable::class)]
+    private ?DateTimeImmutable $createdAt;
 
     /**
      * Updated at.
@@ -48,17 +52,23 @@ class Photo
      */
     #[ORM\Column(type: 'datetime_immutable')]
     #[Gedmo\Timestampable(on: 'update')]
-    private ?\DateTimeImmutable $updatedAt;
+    #[Assert\Type(DateTimeImmutable::class)]
+    private ?DateTimeImmutable $updatedAt;
 
     /**
      * Status.
      */
     #[ORM\Column(type: 'string')]
+    #[Assert\Type('string')]
+    #[Assert\NotBlank]
     private string $status = 'PUBLIC';
     /**
      * Title.
      */
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Type('string')]
+    #[Assert\Length(min: 3, max: 64)]
     private ?string $title = null;
 
     /**
@@ -93,25 +103,29 @@ class Photo
     #[ORM\JoinTable(name: 'photos_tags')]
     private Collection $tags;
 
-    /**
-     * @var Collection|<int, Comment>
-     */
-    #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'photo', fetch: 'EXTRA_LAZY', cascade: ['remove'])]
-    #[ORM\JoinTable(name: 'photos_comments')]
-    private Collection $comments;
+//    /**
+//     * @var Collection|<int, Comment>
+//     */
+//    #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'photo', fetch: 'EXTRA_LAZY', cascade: ['remove'])]
+//    #[ORM\JoinTable(name: 'photos_comments')]
+//    private Collection $comments;
 
     /**
      * Photo Description
      *  text|null.
      */
     #[ORM\Column(type: Types::TEXT, length: 255, nullable: true)]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 1, max: 255)]
     private ?string $description = null;
 
     /**
      * Filename.
      */
     #[ORM\Column(name: 'fileName', type: 'string', length: 191)]
+    #[Assert\NotBlank]
     #[Assert\Type('string')]
+    #[Assert\Length(min: 1, max: 200)]
     private ?string $filename = null;
 
     /**
@@ -140,8 +154,6 @@ class Photo
      */
     public function getStatus(): string
     {
-        //        //gwarancja, że jest zawsze status?
-        //        $roles[] = PhotoStatus::ROLE_USER->value;
 
         return $this->status;
     }
@@ -160,9 +172,9 @@ class Photo
     /**
      * Getter for created at.
      *
-     * @return \DateTimeImmutable|null Created at
+     * @return DateTimeImmutable|null Created at
      */
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?DateTimeImmutable
     {
         return $this->createdAt;
     }
@@ -170,9 +182,9 @@ class Photo
     /**
      * Setter for created at.
      *
-     * @param \DateTimeImmutable|null $createdAt Created at
+     * @param DateTimeImmutable|null $createdAt Created at
      */
-    public function setCreatedAt(?\DateTimeImmutable $createdAt): void
+    public function setCreatedAt(?DateTimeImmutable $createdAt): void
     {
         $this->createdAt = $createdAt;
     }
@@ -180,9 +192,9 @@ class Photo
     /**
      * Getter for updated at.
      *
-     * @return \DateTimeImmutable|null Updated at
+     * @return DateTimeImmutable|null Updated at
      */
-    public function getUpdatedAt(): ?\DateTimeImmutable
+    public function getUpdatedAt(): ?DateTimeImmutable
     {
         return $this->updatedAt;
     }
@@ -190,9 +202,9 @@ class Photo
     /**
      * Setter for updated at.
      *
-     * @param \DateTimeImmutable|null $updatedAt Updated at
+     * @param DateTimeImmutable|null $updatedAt Updated at
      */
-    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): void
+    public function setUpdatedAt(?DateTimeImmutable $updatedAt): void
     {
         $this->updatedAt = $updatedAt;
     }
@@ -289,32 +301,32 @@ class Photo
         return $this;
     }
 
-    /**
-     * Get Comments.
-     *
-     * @return Collection<int, Comment>
-     */
-    public function getComments(): Collection
-    {
-        return $this->comments;
-    }
-
-    /**
-     * Adds Comments.
-     *
-     * @param Comment $comment Comment
-     *
-     * @return Photo $this Photo
-     */
-    public function addComment(Comment $comment): static
-    {
-        if (!$this->comments->contains($comment)) {
-            $this->comments->add($comment);
-            $comment->setPhoto($this); // Ensure the inverse side of the relation is updated
-        }
-
-        return $this;
-    }
+//    /**
+//     * Get Comments.
+//     *
+//     * @return Collection<int, Comment>
+//     */
+//    public function getComments(): Collection
+//    {
+//        return $this->comments;
+//    }
+//
+//    /**
+//     * Adds Comments.
+//     *
+//     * @param Comment $comment Comment
+//     *
+//     * @return Photo $this Photo
+//     */
+//    public function addComment(Comment $comment): static
+//    {
+//        if (!$this->comments->contains($comment)) {
+//            $this->comments->add($comment);
+//            $comment->setPhoto($this); // Ensure the inverse side of the relation is updated
+//        }
+//
+//        return $this;
+//    }
 
     /**
      * Removes Comments.

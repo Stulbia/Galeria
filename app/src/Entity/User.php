@@ -6,7 +6,6 @@
 
 namespace App\Entity;
 
-use App\Entity\Enum\UserRole;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -34,6 +33,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column(type: 'string', length: 180, nullable: false)]
     #[Assert\NotBlank]
+    #[Assert\Type('string')]
+    #[Assert\Length(min: 3, max: 180)]
     private ?string $name;
     /**
      * Email.
@@ -58,9 +59,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotBlank]
     private ?string $password;
 
+    /**
+     * User.
+     */
     #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
     private ?Avatar $avatar = null;
 
+    /**
+     * Banned.
+     */
+    #[ORM\Column(type: "boolean")]
+    #[Assert\NotBlank]
+    #[Assert\Type('boolean')]
+    private bool $banned = false;
     /**
      * Getter for id.
      *
@@ -218,17 +229,32 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      *
      * Sets the avatar for the user and ensures the avatar's user reference is correctly set.
      *
-     * @param Avatar $avatar The avatar to be associated with the user
+     * @param Avatar|null $avatar The avatar to be associated with the user
      */
-    public function setAvatar(Avatar $avatar): static
+    public function setAvatar(?Avatar $avatar):void
     {
-        // Ensure the avatar's user is set to this user instance
-        if ($avatar->getUser() !== $this) {
-            $avatar->setUser($this);
-        }
-
         $this->avatar = $avatar;
+    }
 
-        return $this;
+    /**
+     * Getter for banned.
+     *
+     * @return bool user banned status.
+     */
+    public function isBanned(): bool
+    {
+        return $this->banned;
+    }
+
+    /**
+     * Setter for banned.
+     *
+     * Sets the banned status
+     *
+     * @param bool $banned banned flag
+     */
+    public function setBanned(bool $banned): void
+    {
+        $this->banned = $banned;
     }
 }

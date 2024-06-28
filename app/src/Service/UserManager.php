@@ -7,7 +7,6 @@
 namespace App\Service;
 
 use App\Entity\User;
-use App\Repository\AvatarRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\NonUniqueResultException;
@@ -25,12 +24,11 @@ use Symfony\Component\Security\Core\User\UserInterface;
     /**
      * constructor.
      *
-     * @param UserPasswordHasherInterface $passwordHasher   PasswordHasher
-     * @param PaginatorInterface          $paginator        Paginator
-     * @param UserRepository              $userRepository   UserRepository
-     * @param AvatarRepository            $avatarRepository UserRepository
+     * @param UserPasswordHasherInterface $passwordHasher PasswordHasher
+     * @param PaginatorInterface          $paginator      Paginator
+     * @param UserRepository              $userRepository UserRepository
      */
-    public function __construct(private readonly UserPasswordHasherInterface $passwordHasher, private readonly PaginatorInterface $paginator, private readonly UserRepository $userRepository, private readonly AvatarRepository $avatarRepository)
+    public function __construct(private readonly UserPasswordHasherInterface $passwordHasher, private readonly PaginatorInterface $paginator, private readonly UserRepository $userRepository)
     {
     }
 
@@ -116,5 +114,24 @@ use Symfony\Component\Security\Core\User\UserInterface;
         } catch (NoResultException|NonUniqueResultException $e) {
             return false;
         }
+    }
+
+    /**
+     * Returns false if the attempt is trying to ban an admin.
+     *
+     * @param User $user user
+     *
+     * @return  bool
+     */
+    public function ifBanAdmin(User $user): bool
+    {
+        $roles = $user->getRoles();
+        if (in_array('ROLE_ADMIN', $roles, true)) {
+            if ($user->isBanned()) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

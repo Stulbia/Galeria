@@ -25,10 +25,18 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class AccessDeniedListener
 {
-    // Router Symfony, używany do generowania URL-i
+    /**
+     * Router.
+     *
+     * @var RouterInterface
+     */
     private $router;
 
-    // RequestStack, używany do pobierania aktualnego żądania
+    /**
+     * Router.
+     *
+     * @var RequestStack
+     * */
     private $requestStack;
 
     /**

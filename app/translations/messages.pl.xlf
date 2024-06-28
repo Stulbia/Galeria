@@ -396,6 +396,23 @@
                 <target>Edytuj hasło</target>
             </trans-unit>
 
+            <trans-unit id="message.Email_in_use">
+                <source>message.Email_in_use</source>
+                <target>Email jest zajęty.</target>
+            </trans-unit>
+
+            <trans-unit id="label.photo_status">
+                <source>label.photo_status</source>
+                <target>Status zdjęcia</target>
+            </trans-unit>
+            <trans-unit id="label.public">
+                <source>label.public</source>
+                <target>Opublikowane</target>
+            </trans-unit>
+            <trans-unit id="label.private">
+                <source>label.private</source>
+                <target>Szkic</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
