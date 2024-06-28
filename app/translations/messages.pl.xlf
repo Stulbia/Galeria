@@ -413,6 +413,44 @@
                 <source>label.private</source>
                 <target>Szkic</target>
             </trans-unit>
+            <trans-unit id="label.status">
+                <source>label.status</source>
+                <target>Status</target>
+            </trans-unit>
+
+            <trans-unit id="label.active">
+                <source>label.active</source>
+                <target>Aktywny</target>
+            </trans-unit>
+
+            <trans-unit id="label.banned">
+                <source>label.banned</source>
+                <target>Zablokowany</target>
+            </trans-unit>
+
+            <trans-unit id="message.banned">
+                <source>message.banned</source>
+                <target>Użytkownik został zablokowany.</target>
+            </trans-unit>
+
+            <trans-unit id="ROLE_USER">
+                <source>ROLE_USER</source>
+                <target>Użytkownik</target>
+            </trans-unit>
+
+            <trans-unit id="ROLE_ADMIN">
+                <source>ROLE_ADMIN</source>
+                <target>Administrator</target>
+            </trans-unit>
+            <trans-unit id="label.user">
+                <source>label.user</source>
+                <target>Użytkownik</target>
+            </trans-unit>
+
+            <trans-unit id="label.admin">
+                <source>label.admin</source>
+                <target>Administrator</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

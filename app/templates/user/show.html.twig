@@ -16,7 +16,7 @@
             <dt>{{ 'label.roles'|trans }}</dt>
             <dd>
                 {% for role in user.roles %}
-                    {{ role }}{% if not loop.last %}, {% endif %}
+                    {{ role|trans }}{% if not loop.last %}, {% endif %}
                 {% endfor %}
             </dd>
             <dd>
