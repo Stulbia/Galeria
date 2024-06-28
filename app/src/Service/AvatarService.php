@@ -81,6 +81,7 @@ class AvatarService implements AvatarServiceInterface
      * Delete avatar.
      *
      * @param Avatar $avatar Avatar entity
+     * @param User   $user   User   entity
      *
      * @throws ORMException
      * @throws OptimisticLockException

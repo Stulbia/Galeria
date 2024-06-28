@@ -36,11 +36,8 @@ class GalleryService implements GalleryServiceInterface
      * @param PaginatorInterface $paginator         Paginator
      * @param PhotoRepository    $photoRepository   Photo repository
      */
-    public function __construct(
-        private readonly GalleryRepository $galleryRepository,
-        private readonly PaginatorInterface $paginator,
-        private readonly PhotoRepository $photoRepository
-    ) {
+    public function __construct(private readonly GalleryRepository $galleryRepository, private readonly PaginatorInterface $paginator, private readonly PhotoRepository $photoRepository)
+    {
     }
 
     /**

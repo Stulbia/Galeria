@@ -40,6 +40,7 @@ interface AvatarServiceInterface
      * Delete avatar.
      *
      * @param Avatar $avatar Avatar entity
+     * @param User   $user   Use
      *
      * @throws ORMException
      * @throws OptimisticLockException

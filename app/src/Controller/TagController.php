@@ -22,7 +22,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  * Class TagController.
  */
 #[Route('/tag')]
-//#[isGranted('IS_AUTHENTICATED_FULLY')]
+#[isGranted('IS_AUTHENTICATED_FULLY')]
 class TagController extends AbstractController
 {
     /**

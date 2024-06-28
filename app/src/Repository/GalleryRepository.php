@@ -48,17 +48,13 @@ class GalleryRepository extends ServiceEntityRepository
     }
 
     /**
-     * Get or create new query builder.
+     * Save entity.
      *
-     * @param QueryBuilder|null $queryBuilder Query builder
+     * @param Gallery $gallery Gallery entity
      *
-     * @return QueryBuilder Query builder
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
-    private function getOrCreateQueryBuilder(?QueryBuilder $queryBuilder = null): QueryBuilder
-    {
-        return $queryBuilder ?? $this->createQueryBuilder('gallery');
-    }
-
     public function save(Gallery $gallery): void
     {
         assert($this->_em instanceof EntityManager);
@@ -86,4 +82,17 @@ class GalleryRepository extends ServiceEntityRepository
         $this->_em->remove($gallery);
         $this->_em->flush();
     }
+
+    /**
+     * Get or create new query builder.
+     *
+     * @param QueryBuilder|null $queryBuilder Query builder
+     *
+     * @return QueryBuilder Query builder
+     */
+    private function getOrCreateQueryBuilder(?QueryBuilder $queryBuilder = null): QueryBuilder
+    {
+        return $queryBuilder ?? $this->createQueryBuilder('gallery');
+    }
+
 }
