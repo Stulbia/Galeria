@@ -62,7 +62,7 @@ class Comment
      * Photo.
      */
     #[Assert\Valid]
-    #[ORM\ManyToOne(targetEntity: Photo::class, fetch: 'LAZY')]
+    #[ORM\ManyToOne(targetEntity: Photo::class, fetch: 'LAZY' inversedBy: 'comments')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Photo $photo = null;
 
@@ -70,7 +70,7 @@ class Comment
      * User.
      */
     #[Assert\Valid]
-    #[ORM\ManyToOne(targetEntity: User::class, fetch: 'LAZY', inversedBy: 'comments')]
+    #[ORM\ManyToOne(targetEntity: User::class, fetch: 'LAZY')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
